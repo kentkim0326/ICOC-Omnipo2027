@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Sports Omnipo 2027 — ICOC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0B1F3A;
+  --gold: #C9A84C;
+  --gold-light: #E8C97A;
+  --cream: #F5F0E8;
+  --border: rgba(201,168,76,0.3);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--navy);
+  color:var(--cream);
+  font-family:'Noto Sans KR',sans-serif;
+  font-weight:300;
+  line-height:1.8;
+  overflow-x:hidden;
+}
+body.lang-zh { font-family:'Noto Sans SC',sans-serif; }
+body.lang-ja { font-family:'Noto Sans JP',sans-serif; }
+body.lang-en { font-family:'Playfair Display',Georgia,serif; }
+
+/* ── LANG BAR ── */
+.lang-bar {
+  position:fixed; top:0; left:0; right:0; z-index:1000;
+  display:flex; justify-content:flex-end; align-items:center;
+  padding:12px 40px;
+  background:rgba(11,31,58,0.93);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.lang-bar .logo-mini {
+  margin-right:auto;
+  font-family:'Playfair Display',serif;
+  font-size:15px; font-weight:700;
+  color:var(--gold); letter-spacing:0.15em;
+}
+.lang-btns { display:flex; gap:6px; }
+.lang-btn {
+  padding:5px 14px;
+  border:1px solid var(--border);
+  background:transparent; color:var(--cream);
+  font-size:12px; letter-spacing:0.08em;
+  cursor:pointer; border-radius:2px;
+  transition:all 0.25s; font-family:inherit;
+}
+.lang-btn:hover,.lang-btn.active {
+  background:var(--gold); border-color:var(--gold);
+  color:var(--navy); font-weight:700;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh;
+  display:flex; flex-direction:column;
+  justify-content:center; align-items:center;
+  text-align:center;
+  padding:140px 40px 100px;
+  position:relative; overflow:hidden;
+}
+.hero::before {
+  content:'';
+  position:absolute; inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.09) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.05) 0%, transparent 60%);
+}
+
+/* OMNIPO 메인 로고 */
+.omnipo-badge {
+  display:inline-flex; flex-direction:column; align-items:center;
+  margin-bottom:40px;
+  position:relative;
+  opacity:0; animation:fadeUp 0.7s 0.1s ease forwards;
+}
+.omnipo-ring {
+  width:140px; height:140px;
+  border:1.5px solid var(--gold);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+  animation:rotateSlow 40s linear infinite;
+}
+.omnipo-ring::before {
+  content:'';
+  position:absolute; width:124px; height:124px;
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:50%;
+}
+.omnipo-ring-inner {
+  animation:rotateSlow 40s linear infinite reverse;
+  display:flex; flex-direction:column; align-items:center;
+}
+.omnipo-ring-text {
+  font-family:'Playfair Display',serif;
+  font-size:28px; font-weight:900;
+  color:var(--gold); letter-spacing:0.05em;
+  line-height:1;
+}
+.omnipo-ring-sub {
+  font-size:9px; letter-spacing:0.3em;
+  color:rgba(201,168,76,0.7);
+  text-transform:uppercase; margin-top:2px;
+}
+
+@keyframes rotateSlow { to { transform:rotate(360deg); } }
+
+.hero-eyebrow {
+  font-family:'Playfair Display',serif;
+  font-size:11px; letter-spacing:0.35em;
+  color:var(--gold); text-transform:uppercase;
+  margin-bottom:20px;
+  opacity:0; animation:fadeUp 0.7s 0.25s ease forwards;
+}
+.hero-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(44px,8vw,104px);
+  font-weight:900; line-height:1.0;
+  letter-spacing:-0.025em; margin-bottom:12px;
+  opacity:0; animation:fadeUp 0.7s 0.4s ease forwards;
+}
+.hero-title .accent { color:var(--gold); }
+.hero-year {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,64px);
+  font-weight:400; color:rgba(245,240,232,0.45);
+  letter-spacing:0.15em; margin-bottom:36px;
+  opacity:0; animation:fadeUp 0.7s 0.55s ease forwards;
+}
+.hero-sub {
+  font-size:clamp(13px,1.8vw,17px);
+  font-weight:300; color:rgba(245,240,232,0.65);
+  max-width:580px; margin-bottom:52px;
+  line-height:1.85;
+  opacity:0; animation:fadeUp 0.7s 0.7s ease forwards;
+}
+.hero-cta {
+  display:flex; gap:16px; flex-wrap:wrap; justify-content:center;
+  opacity:0; animation:fadeUp 0.7s 0.85s ease forwards;
+}
+.btn-primary {
+  padding:14px 38px;
+  background:var(--gold); color:var(--navy);
+  font-weight:700; font-size:12px; letter-spacing:0.14em;
+  text-transform:uppercase; text-decoration:none;
+  border-radius:2px; transition:all 0.3s;
+  border:none; cursor:pointer; font-family:inherit;
+}
+.btn-primary:hover {
+  background:var(--gold-light);
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(201,168,76,0.3);
+}
+.btn-outline {
+  padding:14px 38px;
+  border:1px solid var(--gold); color:var(--gold);
+  font-size:12px; letter-spacing:0.14em;
+  text-transform:uppercase; text-decoration:none;
+  border-radius:2px; transition:all 0.3s;
+  font-family:inherit;
+}
+.btn-outline:hover {
+  background:rgba(201,168,76,0.1);
+  transform:translateY(-2px);
+}
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── STATS ── */
+.stats-band {
+  background:rgba(201,168,76,0.06);
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  padding:72px 40px;
+}
+.stats-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+  gap:48px; max-width:960px; margin:0 auto; text-align:center;
+}
+.stat-num {
+  font-family:'Playfair Display',serif;
+  font-size:54px; font-weight:900;
+  color:var(--gold); line-height:1; margin-bottom:8px;
+}
+.stat-label {
+  font-size:11px; letter-spacing:0.22em;
+  color:rgba(245,240,232,0.55); text-transform:uppercase;
+}
+
+/* ── SECTIONS ── */
+.section-wrap {
+  padding:100px 40px;
+  max-width:1200px; margin:0 auto;
+}
+.section-label {
+  font-family:'Playfair Display',serif;
+  font-size:11px; letter-spacing:0.3em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:14px;
+}
+.section-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(30px,4vw,52px);
+  font-weight:700; line-height:1.15; margin-bottom:20px;
+}
+.section-body {
+  font-size:15px; color:rgba(245,240,232,0.7);
+  max-width:640px; line-height:1.95; margin-bottom:60px;
+}
+.full-divider { width:100%; height:1px; background:var(--border); }
+
+/* ── SPORTS GRID ── */
+.sports-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:1px; background:var(--border);
+  border:1px solid var(--border); margin-top:56px;
+}
+.sport-card {
+  background:var(--navy); padding:40px 36px;
+  transition:background 0.3s; position:relative; overflow:hidden;
+}
+.sport-card::before {
+  content:''; position:absolute;
+  top:0; left:0; right:0; height:2px;
+  background:var(--gold);
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 0.4s ease;
+}
+.sport-card:hover::before { transform:scaleX(1); }
+.sport-card:hover { background:rgba(201,168,76,0.05); }
+.sport-icon { font-size:34px; margin-bottom:18px; display:block; }
+.sport-name {
+  font-family:'Playfair Display',serif;
+  font-size:21px; font-weight:700;
+  color:var(--cream); margin-bottom:8px;
+}
+.sport-desc { font-size:13px; color:rgba(245,240,232,0.55); line-height:1.75; }
+.sport-players {
+  margin-top:18px; font-size:11px;
+  letter-spacing:0.15em; color:var(--gold); text-transform:uppercase;
+}
+
+/* ── ABOUT GRID ── */
+.about-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:72px; align-items:start; margin-top:60px;
+}
+@media(max-width:768px){ .about-grid { grid-template-columns:1fr; gap:40px; } }
+.about-quote {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(20px,3vw,30px);
+  font-weight:400; line-height:1.55;
+  border-left:3px solid var(--gold);
+  padding-left:28px; margin-bottom:28px;
+}
+.info-box {
+  border:1px solid var(--border); padding:32px; margin-bottom:20px;
+}
+.info-box-label {
+  font-family:'Playfair Display',serif;
+  font-size:11px; letter-spacing:0.22em;
+  color:var(--gold); margin-bottom:14px; text-transform:uppercase;
+}
+.info-box-title { font-size:16px; font-weight:700; margin-bottom:6px; }
+.info-box-sub { font-size:13px; color:rgba(245,240,232,0.58); line-height:1.75; }
+
+/* ── TIMELINE ── */
+.timeline {
+  position:relative; padding-left:28px; margin-top:48px;
+}
+.timeline::before {
+  content:''; position:absolute;
+  left:0; top:8px; bottom:8px; width:1px;
+  background:linear-gradient(to bottom, var(--gold), transparent);
+}
+.timeline-item { position:relative; padding-bottom:48px; padding-left:32px; }
+.timeline-item::before {
+  content:''; position:absolute; left:-5px; top:7px;
+  width:10px; height:10px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--navy);
+  box-shadow:0 0 0 4px rgba(201,168,76,0.2);
+}
+.timeline-date {
+  font-family:'Playfair Display',serif;
+  font-size:11px; letter-spacing:0.22em;
+  color:var(--gold); text-transform:uppercase; margin-bottom:7px;
+}
+.timeline-title { font-size:18px; font-weight:700; margin-bottom:6px; }
+.timeline-desc { font-size:13px; color:rgba(245,240,232,0.58); line-height:1.75; }
+
+/* ── CONTACT ── */
+.contact-wrap {
+  text-align:center; padding:120px 40px;
+  position:relative; overflow:hidden;
+}
+.contact-wrap::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 60% 50% at 50% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
+}
+.contact-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(34px,5vw,60px); font-weight:900;
+  margin-bottom:20px; position:relative;
+}
+.contact-body {
+  font-size:16px; color:rgba(245,240,232,0.65);
+  margin-bottom:44px; position:relative; line-height:1.8;
+}
+.contact-btns {
+  display:flex; gap:16px; justify-content:center;
+  flex-wrap:wrap; position:relative;
+}
+
+/* ── CONTACT FORM ── */
+.contact-form-wrap {
+  max-width:680px; margin:0 auto;
+  text-align:left;
+}
+.form-row {
+  display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-bottom:20px;
+}
+@media(max-width:600px){ .form-row { grid-template-columns:1fr; } }
+.form-group { display:flex; flex-direction:column; gap:8px; margin-bottom:0; }
+.form-label {
+  font-size:11px; letter-spacing:0.2em; text-transform:uppercase;
+  color:rgba(245,240,232,0.55);
+}
+.form-input {
+  background:rgba(255,255,255,0.04);
+  border:1px solid var(--border);
+  color:var(--cream);
+  padding:12px 16px;
+  font-size:14px; font-family:inherit;
+  border-radius:2px;
+  outline:none;
+  transition:border-color 0.25s;
+  width:100%;
+}
+.form-input:focus { border-color:var(--gold); }
+.form-input::placeholder { color:rgba(245,240,232,0.25); }
+.form-select { cursor:pointer; appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 14px center;
+  padding-right:40px;
+}
+.form-select option { background:#0B1F3A; color:var(--cream); }
+.form-textarea { resize:vertical; min-height:120px; }
+#submit-btn:disabled { opacity:0.6; cursor:not-allowed; }
+
+footer {
+  border-top:1px solid var(--border);
+  padding:44px 40px; text-align:center;
+  font-size:12px; color:rgba(245,240,232,0.38);
+  letter-spacing:0.08em;
+}
+footer a { color:var(--gold); text-decoration:none; }
+.footer-logo {
+  font-family:'Playfair Display',serif;
+  font-size:18px; font-weight:900;
+  color:var(--gold); letter-spacing:0.2em;
+  margin-bottom:10px; display:block;
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* ── MOBILE ── */
+@media(max-width:640px){
+  .lang-bar { padding:10px 20px; }
+  .section-wrap { padding:72px 24px; }
+  .hero { padding:110px 24px 72px; }
+  .stats-band { padding:56px 24px; }
+  .contact-wrap { padding:80px 24px; }
+}
+</style>
+</head>
+<body>
+
+<!-- LANG BAR -->
+<nav class="lang-bar">
+  <span class="logo-mini">ICOC · OMNIPO</span>
+  <div class="lang-btns">
+    <button class="lang-btn active" onclick="setLang('ko')">한국어</button>
+    <button class="lang-btn" onclick="setLang('en')">English</button>
+    <button class="lang-btn" onclick="setLang('zh')">中文</button>
+    <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="omnipo-badge">
+    <div class="omnipo-ring">
+      <div class="omnipo-ring-inner">
+        <div class="omnipo-ring-text">OMNIPO</div>
+        <div class="omnipo-ring-sub">2027 · Seoul</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="hero-eyebrow" data-i18n="hero_eyebrow">ICOC · International Council of Open Competition</p>
+  <h1 class="hero-title">
+    <span class="accent" data-i18n="hero_t1">Brain Sports</span><br>
+    <span data-i18n="hero_t2">Omnipo</span>
+  </h1>
+  <div class="hero-year">2027</div>
+  <p class="hero-sub" data-i18n="hero_sub">
+    바둑·체스·장기·당구·브릿지·스크린골프<br>
+    세계 최초 멀티종목 국제 브레인스포츠 대회
+  </p>
+  <div class="hero-cta">
+    <a href="mailto:info@deother.me" class="btn-primary" data-i18n="cta_reg">참가 문의</a>
+    <a href="#about" class="btn-outline" data-i18n="cta_about">대회 소개</a>
+  </div>
+</header>
+
+<!-- STATS -->
+<div class="full-divider"></div>
+<div class="stats-band">
+  <div class="stats-grid">
+    <div class="reveal">
+      <div class="stat-num">8</div>
+      <div class="stat-label" data-i18n="s1">공식 종목</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-num">300M+</div>
+      <div class="stat-label" data-i18n="s2">글로벌 플레이어</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-num">15+</div>
+      <div class="stat-label" data-i18n="s3">참가국 목표</div>
+    </div>
+    <div class="reveal">
+      <div class="stat-num">2027</div>
+      <div class="stat-label" data-i18n="s4">서울 개최</div>
+    </div>
+  </div>
+</div>
+<div class="full-divider"></div>
+
+<!-- SPORTS -->
+<div class="section-wrap" id="sports">
+  <div class="reveal">
+    <p class="section-label">8 Official Sports</p>
+    <h2 class="section-title" data-i18n="sp_title">8개 공식 종목</h2>
+    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 여섯 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다.</p>
+  </div>
+  <div class="sports-grid reveal">
+    <div class="sport-card">
+      <span class="sport-icon">⚫</span>
+      <div class="sport-name" data-i18n="c1n">바둑 (Go)</div>
+      <div class="sport-desc" data-i18n="c1d">수천 년의 역사를 가진 전략 보드게임. 한국은 세계 최강 선수 배출국으로 글로벌 바둑 문화의 중심입니다.</div>
+      <div class="sport-players" data-i18n="c1p">60M players worldwide</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">♟</span>
+      <div class="sport-name" data-i18n="c2n">체스 (Chess)</div>
+      <div class="sport-desc" data-i18n="c2d">170개국, 6억 명이 즐기는 세계 최대 마인드스포츠. FIDE 공인 국제 대회 형식으로 진행합니다.</div>
+      <div class="sport-players" data-i18n="c2p">600M players worldwide</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">🀄</span>
+      <div class="sport-name" data-i18n="c3n">장기 (Janggi)</div>
+      <div class="sport-desc" data-i18n="c3d">한국 고유의 전통 보드게임. 국내외 한인 커뮤니티와 연계하여 글로벌 저변 확대를 목표로 합니다.</div>
+      <div class="sport-players" data-i18n="c3p">10M players worldwide</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">🎱</span>
+      <div class="sport-name" data-i18n="c4n">당구 (Billiards)</div>
+      <div class="sport-desc" data-i18n="c4d">3쿠션·포켓볼 부문으로 진행. 한국은 세계 3쿠션 랭킹 상위권을 독점하는 당구 강국입니다.</div>
+      <div class="sport-players" data-i18n="c4p">100M players worldwide</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">🃏</span>
+      <div class="sport-name" data-i18n="c5n">브릿지 (Bridge)</div>
+      <div class="sport-desc" data-i18n="c5d">120개국 WBF 회원국이 경쟁하는 카드 전략 게임. 협력과 추론이 결합된 고도의 두뇌 스포츠입니다.</div>
+      <div class="sport-players" data-i18n="c5p">60M players worldwide</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">⛳</span>
+      <div class="sport-name" data-i18n="c6n">스크린골프 (Screen Golf)</div>
+      <div class="sport-desc" data-i18n="c6d">한국이 종주국인 차세대 스포츠. 골프존·카카오VX 글로벌 1·2위 브랜드를 보유한 한국만의 강점입니다.</div>
+      <div class="sport-players" data-i18n="c6p">5M+ players & growing</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">🀇</span>
+      <div class="sport-name" data-i18n="c7n">마작 (Mahjong)</div>
+      <div class="sport-desc" data-i18n="c7d">중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 리치마작·광동마작 등 다양한 룰로 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.</div>
+      <div class="sport-players" data-i18n="c7p">600M+ players worldwide</div>
+    </div>
+    <div class="sport-card">
+      <span class="sport-icon">⬤</span>
+      <div class="sport-name" data-i18n="c8n">오목 (Omok / Gomoku)</div>
+      <div class="sport-desc" data-i18n="c8d">한국과 일본에서 발전한 순수 전략 보드게임. 렌주 룰 기반 국제 대회가 활성화되어 있으며 한국은 세계 정상급 선수를 다수 보유하고 있습니다.</div>
+      <div class="sport-players" data-i18n="c8p">100M+ players worldwide</div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="full-divider"></div>
+<div class="section-wrap" id="about">
+  <div class="reveal">
+    <p class="section-label">About ICOC & Omnipo</p>
+    <h2 class="section-title" data-i18n="ab_title">왜 Brain Sports Omnipo인가</h2>
+  </div>
+  <div class="about-grid">
+    <div class="reveal">
+      <blockquote class="about-quote" data-i18n="ab_quote">"세계 최초.<br>6개 브레인스포츠를<br>하나의 무대에서."</blockquote>
+      <p style="font-size:14px;color:rgba(245,240,232,0.62);line-height:1.95;" data-i18n="ab_body">
+        바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 여섯 종목을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.
+      </p>
+    </div>
+    <div class="reveal">
+      <div class="info-box">
+        <div class="info-box-label" data-i18n="org_l">주관 기관</div>
+        <div class="info-box-title">ICOC 국제브레인스포츠협회</div>
+        <div class="info-box-sub" data-i18n="org_d">문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)</div>
+      </div>
+      <div class="info-box">
+        <div class="info-box-label" data-i18n="op_l">운영사</div>
+        <div class="info-box-title">디아더 (Deather)</div>
+        <div class="info-box-sub" data-i18n="op_d">대표 김형섭 (Kent Kim)<br>Harvard University, Economics<br>info@deother.me</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ROADMAP -->
+<div class="full-divider"></div>
+<div class="section-wrap" id="roadmap">
+  <div class="reveal">
+    <p class="section-label">Roadmap</p>
+    <h2 class="section-title" data-i18n="rm_title">대회 로드맵</h2>
+    <p class="section-body" data-i18n="rm_body">서울에서 시작해 아시아로, 그리고 세계로. Brain Sports Omnipo를 향한 여정입니다.</p>
+  </div>
+  <div class="timeline reveal">
+    <div class="timeline-item">
+      <div class="timeline-date" data-i18n="t1d">2026 · 준비기</div>
+      <div class="timeline-title" data-i18n="t1t">ICOC 공식 출범 및 스폰서 유치</div>
+      <div class="timeline-desc" data-i18n="t1b">문체부 사단법인 완비 · 6개 종목 네트워크 구성 · 종목별 국제 기구 협약 체결 · 스폰서십 확보</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date" data-i18n="t2d">2027 · 서울</div>
+      <div class="timeline-title" data-i18n="t2t">제1회 Brain Sports Omnipo 2027</div>
+      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 15개국 · 해외 참가자 200명+ · 6개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date" data-i18n="t3d">2028</div>
+      <div class="timeline-title" data-i18n="t3t">아시아 위성 예선 확대</div>
+      <div class="timeline-desc" data-i18n="t3b">30개국 · 아시아 3개 도시 위성 예선 · 브릿지·바둑 전문 리그 신설 · 미디어 파트너십 확대</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-date" data-i18n="t4d">2029~</div>
+      <div class="timeline-title" data-i18n="t4t">아시아 브레인스포츠 리그 창설</div>
+      <div class="timeline-desc" data-i18n="t4b">시즌제 리그 운영 · 서울 파이널 정례화 · 글로벌 Brain Sports Omnipo로 성장</div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="full-divider"></div>
+<div class="contact-wrap" id="contact">
+  <h2 class="contact-title reveal" data-i18n="ct_title">참가·스폰서 문의</h2>
+  <p class="contact-body reveal" data-i18n="ct_body">대회 참가, 스폰서십, 종목별 파트너십 문의를 환영합니다.</p>
+
+  <div class="contact-form-wrap reveal">
+    <div id="form-success" style="display:none; padding:32px; border:1px solid var(--gold); text-align:center;">
+      <div style="font-family:'Playfair Display',serif; font-size:22px; color:var(--gold); margin-bottom:12px;" data-i18n="form_ok_title">문의가 접수되었습니다</div>
+      <div style="font-size:14px; color:rgba(245,240,232,0.65);" data-i18n="form_ok_body">빠른 시일 내에 답변 드리겠습니다.</div>
+    </div>
+
+    <form id="contact-form" onsubmit="submitForm(event)">
+      <input type="hidden" name="access_key" value="ae5312cc-c384-4109-8e8d-4b3ab0516670">
+      <input type="hidden" name="subject" id="form-subject" value="[ICOC Omnipo] 문의">
+      <input type="hidden" name="from_name" value="Brain Sports Omnipo Website">
+      <input type="checkbox" name="botcheck" style="display:none">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" data-i18n="fl_name">이름 / Name</label>
+          <input class="form-input" type="text" name="name" required placeholder="Hong Gildong">
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="fl_email">이메일 / Email</label>
+          <input class="form-input" type="email" name="email" required placeholder="you@example.com">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" data-i18n="fl_type">문의 유형 / Type</label>
+          <select class="form-input form-select" name="inquiry_type" onchange="updateSubject(this)">
+            <option value="participation" data-i18n-opt="opt_part">참가 신청 / Participation</option>
+            <option value="sponsorship" data-i18n-opt="opt_spon">스폰서십 / Sponsorship</option>
+            <option value="partnership" data-i18n-opt="opt_part2">파트너십 / Partnership</option>
+            <option value="media" data-i18n-opt="opt_med">미디어 / Media</option>
+            <option value="other" data-i18n-opt="opt_etc">기타 / Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" data-i18n="fl_sport">관심 종목 / Sport</label>
+          <select class="form-input form-select" name="sport">
+            <option data-i18n-opt="opt_all">전체 / All Sports</option>
+            <option>바둑 / Go</option>
+            <option>체스 / Chess</option>
+            <option>장기 / Janggi</option>
+            <option>당구 / Billiards</option>
+            <option>브릿지 / Bridge</option>
+            <option>스크린골프 / Screen Golf</option>
+            <option>마작 / Mahjong</option>
+            <option>오목 / Gomoku</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" data-i18n="fl_msg">메시지 / Message</label>
+        <textarea class="form-input form-textarea" name="message" required placeholder="..." rows="5"></textarea>
+      </div>
+
+      <div style="text-align:center; margin-top:32px;">
+        <button type="submit" class="btn-primary" id="submit-btn" data-i18n="fl_send">문의 보내기</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">OMNIPO · 2027</span>
+  <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인</p>
+</footer>
+
+<script>
+const T = {
+  ko:{
+    hero_eyebrow:"ICOC · International Council of Open Competition",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"바둑·체스·장기·당구·브릿지·스크린골프<br>세계 최초 멀티종목 국제 브레인스포츠 대회",
+    cta_reg:"참가 문의", cta_about:"대회 소개",
+    s1:"공식 종목", s2:"글로벌 플레이어", s3:"참가국 목표", s4:"서울 개최",
+    sp_title:"8개 공식 종목",
+    sp_body:"인류의 지성이 겨루는 여덟 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다.",
+    c1n:"바둑 (Go)", c1d:"수천 년의 역사를 가진 전략 보드게임. 한국은 세계 최강 선수 배출국으로 글로벌 바둑 문화의 중심입니다.", c1p:"전 세계 6천만 명",
+    c2n:"체스 (Chess)", c2d:"170개국, 6억 명이 즐기는 세계 최대 마인드스포츠. FIDE 공인 국제 대회 형식으로 진행합니다.", c2p:"전 세계 6억 명",
+    c3n:"장기 (Janggi)", c3d:"한국 고유의 전통 보드게임. 국내외 한인 커뮤니티와 연계하여 글로벌 저변 확대를 목표로 합니다.", c3p:"전 세계 1천만 명",
+    c4n:"당구 (Billiards)", c4d:"3쿠션·포켓볼 부문으로 진행. 한국은 세계 3쿠션 랭킹 상위권을 독점하는 당구 강국입니다.", c4p:"전 세계 1억 명",
+    c5n:"브릿지 (Bridge)", c5d:"120개국 WBF 회원국이 경쟁하는 카드 전략 게임. 협력과 추론이 결합된 고도의 두뇌 스포츠입니다.", c5p:"전 세계 6천만 명",
+    c6n:"스크린골프 (Screen Golf)", c6d:"한국이 종주국인 차세대 스포츠. 골프존·카카오VX 글로벌 1·2위 브랜드를 보유한 한국만의 강점입니다.", c6p:"500만 명 이상·성장 중",
+    c7n:"마작 (Mahjong)", c7d:"중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 리치마작·광동마작 등 다양한 룰로 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.", c7p:"전 세계 6억 명 이상",
+    c8n:"오목 (Omok / Gomoku)", c8d:"한국과 일본에서 발전한 순수 전략 보드게임. 렌주 룰 기반 국제 대회가 활성화되어 있으며 한국은 세계 정상급 선수를 다수 보유하고 있습니다.", c8p:"전 세계 1억 명 이상",
+    ab_title:"왜 Brain Sports Omnipo인가",
+    ab_quote:'"세계 최초.<br>6개 브레인스포츠를<br>하나의 무대에서."',
+    ab_body:"바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 여섯 종목을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.",
+    org_l:"주관 기관", org_d:"문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)",
+    op_l:"운영사", op_d:"대표 김형섭 (Kent Kim)<br>Harvard University, Economics<br>info@deother.me",
+    rm_title:"대회 로드맵", rm_body:"서울에서 시작해 아시아로, 그리고 세계로. Brain Sports Omnipo를 향한 여정입니다.",
+    t1d:"2026 · 준비기", t1t:"ICOC 공식 출범 및 스폰서 유치", t1b:"문체부 사단법인 완비 · 6개 종목 네트워크 구성 · 종목별 국제 기구 협약 체결 · 스폰서십 확보",
+    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 6개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
+    t3d:"2028", t3t:"아시아 위성 예선 확대", t3b:"30개국 · 아시아 3개 도시 위성 예선 · 브릿지·바둑 전문 리그 신설 · 미디어 파트너십 확대",
+    t4d:"2029~", t4t:"아시아 브레인스포츠 리그 창설", t4b:"시즌제 리그 운영 · 서울 파이널 정례화 · 글로벌 Brain Sports Omnipo로 성장",
+    ct_title:"참가·스폰서 문의", ct_body:"대회 참가, 스폰서십, 종목별 파트너십 문의를 환영합니다.",
+    fl_name:"이름", fl_email:"이메일", fl_type:"문의 유형", fl_sport:"관심 종목", fl_msg:"메시지", fl_send:"문의 보내기",
+    form_ok_title:"문의가 접수되었습니다", form_ok_body:"빠른 시일 내에 답변 드리겠습니다.",
+    ft:"© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인",
+  },
+  en:{
+    hero_eyebrow:"ICOC · International Council of Open Competition",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go · Chess · Janggi · Billiards · Bridge · Screen Golf<br>The World's First Multi-Discipline Brain Sports Championship",
+    cta_reg:"Contact Us", cta_about:"Learn More",
+    s1:"Official Sports", s2:"Global Players", s3:"Target Countries", s4:"Seoul 2027",
+    sp_title:"8 Official Sports",
+    sp_body:"Eight disciplines. One stage. For the first time in history, the world's greatest mind sports compete together.",
+    c1n:"Baduk / Go", c1d:"The ancient strategy game with millennia of history. Korea dominates world rankings and leads global Go culture.", c1p:"60M players worldwide",
+    c2n:"Chess", c2d:"The world's largest mind sport with 600M players across 170 countries. Held under FIDE-recognized format.", c2p:"600M players worldwide",
+    c3n:"Janggi (Korean Chess)", c3d:"Korea's traditional board game, connecting diaspora communities worldwide and expanding its global footprint.", c3p:"10M players worldwide",
+    c4n:"Billiards", c4d:"3-cushion and pocket billiards divisions. Korean players dominate the world 3-cushion rankings.", c4p:"100M players worldwide",
+    c5n:"Contract Bridge", c5d:"The ultimate partnership card game, with 120 WBF member countries competing at the highest level.", c5p:"60M players worldwide",
+    c6n:"Screen Golf", c6d:"Korea invented it. Golfzon and Kakao VX hold the #1 and #2 global positions in simulator golf.", c6p:"5M+ players & growing",
+    c7n:"Mahjong", c7d:"The strategic tile game originating in China and beloved across East Asia. Hundreds of millions play worldwide.", c7p:"600M+ players worldwide",
+    c8n:"Omok / Gomoku", c8d:"A pure strategy board game developed in Korea and Japan. Active international competitions under Renju rules.", c8p:"100M+ players worldwide",
+    ab_title:"Why Brain Sports Omnipo?",
+    ab_quote:'"World First.<br>Six Brain Sports.<br>One Stage."',
+    ab_body:"Go (IGF), Chess (FIDE), Billiards (UMB), Bridge (WBF) — each discipline has millions of international players and a governing body. Yet no event in history has unified all six on a single platform. Brain Sports Omnipo 2027 changes that.",
+    org_l:"Organizer", org_d:"Incorporated Association under<br>Ministry of Culture, Sports and Tourism (Korea)",
+    op_l:"Operating Company", op_d:"CEO: Kent Kim (김형섭)<br>Harvard University, Economics<br>info@deother.me",
+    rm_title:"Tournament Roadmap", rm_body:"Starting in Seoul, expanding across Asia, growing into the global Brain Sports Omnipo.",
+    t1d:"2026 · Preparation", t1t:"ICOC Launch & Sponsorship", t1b:"Legal entity complete · 6-sport network · International federation agreements · Sponsor acquisition",
+    t2d:"2027 · Seoul", t2t:"1st Brain Sports Omnipo 2027", t2b:"Seoul · 15+ countries · 200+ international players · All 6 disciplines · K-Culture opening ceremony · Live streaming",
+    t3d:"2028", t3t:"Asia Satellite Qualifiers", t3b:"30+ countries · Satellite qualifiers in 3 Asian cities · Dedicated Bridge & Go leagues · Media partnerships",
+    t4d:"2029~", t4t:"Asia Brain Sports League", t4b:"Season-format league · Seoul Finals as permanent venue · Growing into global Brain Sports Omnipo",
+    ct_title:"Get in Touch", ct_body:"We welcome inquiries about participation, sponsorship, and partnerships.",
+    fl_name:"Name", fl_email:"Email", fl_type:"Inquiry Type", fl_sport:"Sport of Interest", fl_msg:"Message", fl_send:"Send Message",
+    form_ok_title:"Message Received", form_ok_body:"We'll get back to you as soon as possible.",
+    ft:"© 2026 ICOC International Brain Sports Association · Deather · Ministry of Culture, Sports and Tourism (Korea)",
+  },
+  zh:{
+    hero_eyebrow:"国际开放竞技委员会 · ICOC",
+    hero_t1:"脑力运动", hero_t2:"全能波",
+    hero_sub:"围棋·国际象棋·将棋·台球·桥牌·模拟高尔夫<br>世界首届多项目国际脑力运动锦标赛",
+    cta_reg:"联系我们", cta_about:"了解更多",
+    s1:"正式项目", s2:"全球选手", s3:"目标参赛国", s4:"首尔 2027",
+    sp_title:"八大官方项目",
+    sp_body:"八个项目，一个舞台。人类智慧的巅峰对决，史无前例地汇聚于此。",
+    c1n:"围棋", c1d:"拥有数千年历史的战略棋盘游戏。韩国是世界顶级棋手的摇篮。", c1p:"全球6000万玩家",
+    c2n:"国际象棋", c2d:"覆盖170个国家、拥有6亿玩家的世界最大脑力运动。", c2p:"全球6亿玩家",
+    c3n:"韩国将棋", c3d:"韩国传统棋盘游戏，致力于扩大全球影响力。", c3p:"全球1000万玩家",
+    c4n:"台球", c4d:"设三库台球和落袋台球两个项目。韩国选手独占鳌头。", c4p:"全球1亿玩家",
+    c5n:"桥牌", c5d:"集合WBF 120个成员国参赛的纸牌策略运动。", c5p:"全球6000万玩家",
+    c6n:"模拟高尔夫", c6d:"韩国首创的新兴运动项目。GolfZon和Kakao VX位居全球前两位。", c6p:"500万以上且持续增长",
+    c7n:"麻将", c7d:"起源于中国、风靡东亚的战略牌类游戏。全球数亿玩家。", c7p:"全球6亿以上玩家",
+    c8n:"五子棋", c8d:"在韩国和日本发展起来的纯策略棋盘游戏。国际赛事十分活跃。", c8p:"全球1亿以上玩家",
+    ab_title:"为什么是Brain Sports全能波？",
+    ab_quote:'"世界首创。<br>六大脑力运动。<br>同台竞技。"',
+    ab_body:"围棋(IGF)、国际象棋(FIDE)、台球(UMB)、桥牌(WBF)——将这六个项目整合于同一平台的国际赛事，迄今为止在全球尚属空白。Brain Sports全能波2027将填补这一历史空白。",
+    org_l:"主办机构", org_d:"韩国文化体育观光部认可社团法人",
+    op_l:"运营公司", op_d:"CEO：金炯燮 (Kent Kim)<br>哈佛大学经济学<br>info@deother.me",
+    rm_title:"赛事路线图", rm_body:"从首尔出发，走向亚洲，迈向世界。",
+    t1d:"2026年·准备期", t1t:"ICOC正式启动及赞助商招募", t1b:"社团法人完备 · 六项目网络构建 · 各项目国际机构协议签订 · 赞助商招募",
+    t2d:"2027年·首尔", t2t:"首届Brain Sports全能波2027", t2b:"首尔举办 · 15个以上国家 · 200名以上国际选手 · 六大项目同时进行",
+    t3d:"2028年", t3t:"亚洲卫星预选赛扩大", t3b:"30个以上国家 · 亚洲3个城市卫星预选赛 · 媒体合作扩大",
+    t4d:"2029年~", t4t:"亚洲脑力运动联赛成立", t4b:"赛季制联赛运营 · 首尔决赛常态化",
+    ct_title:"联系我们", ct_body:"欢迎就参赛、赞助及合作事宜进行咨询。",
+    fl_name:"姓名", fl_email:"电子邮件", fl_type:"咨询类型", fl_sport:"感兴趣的项目", fl_msg:"留言内容", fl_send:"发送咨询",
+    form_ok_title:"咨询已收到", form_ok_body:"我们将尽快与您联系。",
+    ft:"© 2026 ICOC国际脑力运动协会 · Deather · 韩国文化体育观光部认可社团法人",
+  },
+  ja:{
+    hero_eyebrow:"国際オープン競技評議会 · ICOC",
+    hero_t1:"ブレインスポーツ", hero_t2:"オムニポ",
+    hero_sub:"囲碁·チェス·チャンギ·ビリヤード·ブリッジ·スクリーンゴルフ<br>世界初・複数種目国際ブレインスポーツ選手権",
+    cta_reg:"お問い合わせ", cta_about:"大会について",
+    s1:"公式種目", s2:"グローバル競技人口", s3:"参加国目標", s4:"ソウル 2027",
+    sp_title:"8つの公式種目",
+    sp_body:"8種目、1つのステージ。各々の伝統と深みを持つブレインスポーツが、初めて一堂に会します。",
+    c1n:"囲碁", c1d:"数千年の歴史を持つ戦略ボードゲーム。韓国は世界最強の棋士を輩出しています。", c1p:"世界6000万人",
+    c2n:"チェス", c2d:"170カ国・6億人が楽しむ世界最大のマインドスポーツ。", c2p:"世界6億人",
+    c3n:"チャンギ", c3d:"韓国固有の伝統ボードゲーム。グローバルな普及を目指します。", c3p:"世界1000万人",
+    c4n:"ビリヤード", c4d:"スリークッション・ポケットの2部門。韓国選手が世界ランキング上位を独占。", c4p:"世界1億人",
+    c5n:"ブリッジ", c5d:"WBF加盟120カ国が競うカード戦略競技。", c5p:"世界6000万人",
+    c6n:"スクリーンゴルフ", c6d:"韓国が発祥の次世代スポーツ。GolfzonとKakaoVXが世界シェア1・2位。", c6p:"500万人以上·成長中",
+    c7n:"麻雀", c7d:"中国発祥で東アジア全域に広まった戦略タイルゲーム。世界数億人が楽しむ。", c7p:"世界6億人以上",
+    c8n:"五目並べ / オモク", c8d:"韓国と日本で発展した純粋な戦略ボードゲーム。連珠ルールで国際大会が活発。", c8p:"世界1億人以上",
+    ab_title:"なぜBrain Sports Omnipoなのか",
+    ab_quote:'"世界初。<br>6つのブレインスポーツを<br>ひとつの舞台で。"',
+    ab_body:"囲碁(IGF)、チェス(FIDE)、ビリヤード(UMB)、ブリッジ(WBF) — これら6種目を一つのプラットフォームで統合運営する国際大会は、世界に前例がありません。Brain Sports Omnipo 2027がその歴史を刻みます。",
+    org_l:"主催機関", org_d:"文化体育観光部認可社団法人<br>Ministry of Culture, Sports and Tourism (Korea)",
+    op_l:"運営会社", op_d:"代表：キム・ヒョンソプ (Kent Kim)<br>ハーバード大学 経済学部<br>info@deother.me",
+    rm_title:"大会ロードマップ", rm_body:"ソウルから始まり、アジアへ、そして世界へ。",
+    t1d:"2026年·準備期", t1t:"ICOC正式発足とスポンサー獲得", t1b:"法人設立完了 · 6種目ネットワーク構築 · 国際機関との協定締結 · スポンサー確保",
+    t2d:"2027年·ソウル", t2t:"第1回 Brain Sports Omnipo 2027", t2b:"ソウル開催 · 15カ国以上 · 海外参加者200名+ · 6種目同時開催",
+    t3d:"2028年", t3t:"アジア衛星予選の拡大", t3b:"30カ国以上 · アジア3都市で衛星予選 · メディアパートナーシップ拡大",
+    t4d:"2029年~", t4t:"アジアブレインスポーツリーグ創設", t4b:"シーズン制リーグ運営 · ソウルファイナルの定例化",
+    ct_title:"お問い合わせ", ct_body:"参加、スポンサーシップ、パートナーシップのお問い合わせを歓迎します。",
+    fl_name:"お名前", fl_email:"メールアドレス", fl_type:"お問い合わせ種別", fl_sport:"関心のある種目", fl_msg:"メッセージ", fl_send:"送信する",
+    form_ok_title:"お問い合わせを受け付けました", form_ok_body:"できる限り早くご返答いたします。",
+    ft:"© 2026 ICOC国際ブレインスポーツ協会 · Deather · 文化体育観光部認可社団法人",
+  }
+};
+
+function updateSubject(sel) {
+  const labels = {
+    participation: '[ICOC Omnipo] 참가 문의',
+    sponsorship:   '[ICOC Omnipo] 스폰서십 문의',
+    partnership:   '[ICOC Omnipo] 파트너십 문의',
+    media:         '[ICOC Omnipo] 미디어 문의',
+    other:         '[ICOC Omnipo] 문의',
+  };
+  document.getElementById('form-subject').value = labels[sel.value] || '[ICOC Omnipo] 문의';
+}
+
+async function submitForm(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const form = document.getElementById('contact-form');
+  btn.disabled = true;
+  btn.textContent = '...';
+  const data = new FormData(form);
+  try {
+    const res = await fetch('https://api.web3forms.com/submit', { method:'POST', body:data });
+    const json = await res.json();
+    if (json.success) {
+      form.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      alert('전송 실패. 잠시 후 다시 시도해주세요.');
+      btn.disabled = false; btn.textContent = '문의 보내기';
+    }
+  } catch {
+    alert('네트워크 오류. 잠시 후 다시 시도해주세요.');
+    btn.disabled = false; btn.textContent = '문의 보내기';
+  }
+}
+
+function setLang(lang) {
+  const d = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (d[k] !== undefined) el.innerHTML = d[k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  document.body.className = lang === 'ko' ? '' : `lang-${lang}`;
+  document.documentElement.lang = lang;
+}
+
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
