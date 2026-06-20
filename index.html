@@ -763,12 +763,16 @@ footer a { color:var(--gold); text-decoration:none; }
 </footer>
 <div id="go-modal" class="go-modal-overlay" style="display: none;">
   <div class="go-modal-content">
-    <button class="go-modal-close" onclick="closeGoGame()">✕</button>
-    <h3 class="go-modal-title">Mini Baduk (13x13)</h3>
+    <button class="go-modal-close" onclick="closeGoGame()">×</button>
+    <h2 class="go-modal-title">Mini Baduk (13x13)</h2>
     
     <div class="go-scoreboard">
-      <div id="turn-black" class="go-turn-box active">⚫ 흑 차례 (따낸 백돌: <span id="cap-white">0</span>)</div>
-      <div id="turn-white" class="go-turn-box"> White Turn (Captured Black: <span id="cap-black">0</span>)</div>
+      <div id="turn-black" class="go-turn-box active">⚫ 당신의 차례 (흑)</div>
+      <div id="turn-white" class="go-turn-box"> White AI 대기 중</div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 12px; color: #555; padding: 0 4px;">
+      <div>내가 따낸 AI 돌: <span id="cap-white" style="font-weight: bold; color: #b91c1c;">0</span>개</div>
+      <div>AI가 따낸 내 돌: <span id="cap-black" style="font-weight: bold; color: #1e3a8a;">0</span>개</div>
     </div>
 
     <div id="go-board-grid" class="go-board-grid"></div>
@@ -985,7 +989,7 @@ function initGoData() {
 
 function openGoGame() {
   document.getElementById('go-modal').style.display = 'flex';
-  resetGoGame();
+  resetGoGame(); // 👈 이 함수가 실행되면서 화면에 클릭 가능한 세포(cell)들을 주입합니다!
 }
 
 function closeGoGame() {
