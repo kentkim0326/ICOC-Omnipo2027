@@ -451,7 +451,9 @@ footer a { color:var(--gold); text-decoration:none; }
   <div class="sports-grid reveal">
     <div class="sport-card">
       <span class="sport-icon">⚫</span>
-      <div class="sport-name" data-i18n="c1n">바둑 (Go)</div>
+      <div class="sport-card" onclick="openGoGame()" style="cursor: pointer;">
+  <span class="sport-icon">⚫</span>
+  <div class="sport-name" data-i18n="c1n">바둑 (Go)</div>
       <div class="sport-desc" data-i18n="c1d">수천 년의 역사를 가진 전략 보드게임. 한국은 세계 최강 선수 배출국으로 글로벌 바둑 문화의 중심입니다.</div>
       <div class="sport-players" data-i18n="c1p">60M players worldwide</div>
     </div>
@@ -491,9 +493,11 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-desc" data-i18n="c7d">중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 리치마작·광동마작 등 다양한 룰로 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.</div>
       <div class="sport-players" data-i18n="c7p">600M+ players worldwide</div>
     </div>
-    <div class="sport-card" onclick="openGoGame()" style="cursor: pointer;">
+    
+  <span class="sport-icon">⬤</span>
+  <div class="sport-name" data-i18n="c8n">육목 (Omok / Gomoku)</div>
       <span class="sport-icon">⬤</span>
-      <div class="sport-name" data-i18n="c8n">육목 (Omok / Gomoku)</div>
+      <div class="sport-card" onclick="openConnect6Game()" style="cursor: pointer;">
       <div class="sport-desc" data-i18n="c8d">한국과 일본에서 발전한 순수 전략 보드게임. 렌주 룰 기반 국제 대회가 활성화되어 있으며 한국은 세계 정상급 선수를 다수 보유하고 있습니다.</div>
       <div class="sport-players" data-i18n="c8p">100M+ players worldwide</div>
     </div>
@@ -820,7 +824,10 @@ window.dispatchEvent(new Event('scroll'));
 </script>
 
 <!-- 외부 분리형 게임 인공지능 엔진들 연동 -->
+
+<script src="js/go.js"></script>
 <script src="js/connect6.js"></script>
 <script src="js/chess.js"></script>
+</body>
 </body>
 </html>
