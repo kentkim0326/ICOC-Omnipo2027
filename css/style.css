@@ -151,6 +151,23 @@
   content:''; width:78%; height:78%; border-radius:50%;
   background:rgba(255,255,255,0.2);
 }
+
+/* ── Chess ── */
+.chess-cell.chess-light { background:#eed9b5; }
+.chess-cell.chess-dark { background:#a9764f; }
+.chess-cell { border:none !important; }
+.chess-piece {
+  font-size:min(8vw, 34px); line-height:1; user-select:none;
+  filter:drop-shadow(0 1px 2px rgba(0,0,0,0.35));
+}
+.chess-piece-w { color:#f7f3ea; }
+.chess-piece-b { color:#161616; }
+.chess-cell.chess-selected { box-shadow:inset 0 0 0 3px var(--gold); }
+.chess-cell.chess-target::after {
+  content:''; position:absolute; width:30%; height:30%; border-radius:50%;
+  background:rgba(201,168,76,0.55);
+}
+.chess-cell.chess-last { background-color:rgba(201,168,76,0.35) !important; }
 .stone {
   width:84%; height:84%; border-radius:50%;
   box-shadow:0 2px 4px rgba(0,0,0,0.4);
