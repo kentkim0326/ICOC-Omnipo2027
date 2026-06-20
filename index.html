@@ -968,14 +968,14 @@ function setLang(lang) {
   document.documentElement.lang = lang;
 }
 
-/* ── 바둑 게임 코어 엔진 엔진 ── */
+/* ── 바둑 게임 코어 엔진 (AI 대국 모드) ── */
 const BOARD_SIZE = 13;
 let goBoard = [];
 let isBlackTurn = true;
-let capBlack = 0;
-let capWhite = 0;
+let capBlack = 0; // AI가 따낸 내 돌
+let capWhite = 0; // 내가 따낸 AI 돌
+let isAiThinking = false; // AI 연산 중 조작 방지
 
-// 바둑판 초기화 함수
 function initGoData() {
   goBoard = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
 }
@@ -994,10 +994,10 @@ function resetGoGame() {
   isBlackTurn = true;
   capBlack = 0;
   capWhite = 0;
+  isAiThinking = false;
   updateGoUI();
 }
 
-// 화면을 다시 그려주는 가상 DOM 렌더러 기능
 function updateGoUI() {
   const grid = document.getElementById('go-board-grid');
   grid.innerHTML = '';
@@ -1005,12 +1005,19 @@ function updateGoUI() {
   document.getElementById('cap-black').innerText = capBlack;
   document.getElementById('cap-white').innerText = capWhite;
 
+  const turnBlackEl = document.getElementById('turn-black');
+  const turnWhiteEl = document.getElementById('turn-white');
+
   if (isBlackTurn) {
-    document.getElementById('turn-black').classList.add('active');
-    document.getElementById('turn-white').classList.remove('active');
+    turnBlackEl.className = 'go-turn-box active';
+    turnBlackEl.innerText = '⚫ 당신의 차례 (흑)';
+    turnWhiteEl.className = 'go-turn-box';
+    turnWhiteEl.innerText = '⚪ AI 대기 중';
   } else {
-    document.getElementById('turn-white').classList.add('active');
-    document.getElementById('turn-black').classList.remove('active');
+    turnBlackEl.className = 'go-turn-box';
+    turnBlackEl.innerText = '⚫ 당신 (대기)';
+    turnWhiteEl.className = 'go-turn-box active';
+    turnWhiteEl.innerText = '⚪ AI 생각 중...';
   }
 
   const stars = [3, 6, 9];
@@ -1020,13 +1027,13 @@ function updateGoUI() {
       const cell = document.createElement('div');
       cell.className = 'go-cell';
       
-      // 화점 자리에 시각적 점 표기용 클래스 부여
       if (stars.includes(r) && stars.includes(c)) {
         cell.classList.add('go-star');
       }
 
-      // 현재 턴에 맞는 호버 가이드 부여
-      cell.classList.add(isBlackTurn ? 'hover-black' : 'hover-white');
+      if (isBlackTurn && !isAiThinking) {
+        cell.classList.add('hover-black');
+      }
 
       const stoneState = goBoard[r][c];
       if (stoneState !== 0) {
@@ -1042,60 +1049,61 @@ function updateGoUI() {
   }
 }
 
+// 플레이어(유저)의 착수 처리
 function handleGoClick(r, c) {
-  if (goBoard[r][c] !== 0) return;
+  if (!isBlackTurn || isAiThinking || goBoard[r][c] !== 0) return;
 
-  const currentStone = isBlackTurn ? 1 : 2;
-  const opponentStone = isBlackTurn ? 2 : 1;
+  const result = tryPlaceStone(r, c, 1); // 흑돌(1) 착수 시도
+  if (result.success) {
+    goBoard = result.board;
+    capWhite += result.captured;
+    isBlackTurn = false;
+    updateGoUI();
 
-  // 1. 가상 가안 임시 배치
-  let nextBoard = goBoard.map(row => [...row]);
-  nextBoard[r][c] = currentStone;
+    // 0.5초 뒤 AI 차례 실행
+    isAiThinking = true;
+    setTimeout(makeAiMove, 500);
+  }
+}
 
-  // 2. 사석(둘러싸여 활로가 막힌 상대 돌) 판정 및 제거
-  let stonesCaptured = 0;
+// 특정 위치에 돌을 놓았을 때의 결과를 계산하는 논리 함수
+function tryPlaceStone(r, c, color, targetBoard = goBoard) {
+  const opponentColor = color === 1 ? 2 : 1;
+  let nextBoard = targetBoard.map(row => [...row]);
+  nextBoard[r][c] = color;
+
+  let captured = 0;
   let visited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
   const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
 
+  // 상대 돌 포위 판정 및 제거
   for (let i = 0; i < 4; i++) {
     const nr = r + dirs[i][0];
     const nc = c + dirs[i][1];
-
     if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
-      if (nextBoard[nr][nc] === opponentStone && !visited[nr][nc]) {
+      if (nextBoard[nr][nc] === opponentColor && !visited[nr][nc]) {
         let group = [];
-        let hasLiberty = checkGroupLiberty(nr, nc, opponentStone, nextBoard, visited, group);
-        
+        let hasLiberty = checkGroupLiberty(nr, nc, opponentColor, nextBoard, visited, group);
         if (!hasLiberty) {
-          stonesCaptured += group.length;
-          group.forEach(([gr, gc]) => {
-            nextBoard[gr][gc] = 0;
-          });
+          captured += group.length;
+          group.forEach(([gr, gc]) => { nextBoard[gr][gc] = 0; });
         }
       }
     }
   }
 
-  // 3. 자충수 필터링 (내 돌이 살길이 없고, 상대를 잡아내지도 못하는 곳)
+  // 자충수 체크
   let selfVisited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
   let selfGroup = [];
-  let selfHasLiberty = checkGroupLiberty(r, c, currentStone, nextBoard, selfVisited, selfGroup);
+  let selfHasLiberty = checkGroupLiberty(r, c, color, nextBoard, selfVisited, selfGroup);
 
-  if (!selfHasLiberty && stonesCaptured === 0) {
-    alert("자충수(Suicide Move)이므로 착수할 수 없습니다.");
-    return;
+  if (!selfHasLiberty && captured === 0) {
+    return { success: false, board: targetBoard, captured: 0 };
   }
 
-  // 데이터 최종 세이브 및 차례 전환
-  goBoard = nextBoard;
-  if (isBlackTurn) capWhite += stonesCaptured;
-  else capBlack += stonesCaptured;
-
-  isBlackTurn = !isBlackTurn;
-  updateGoUI();
+  return { success: true, board: nextBoard, captured: captured };
 }
 
-// 활로 검출 재귀 탐색 알고리즘
 function checkGroupLiberty(r, c, color, boardState, visited, group) {
   visited[r][c] = true;
   group.push([r, c]);
@@ -1106,7 +1114,6 @@ function checkGroupLiberty(r, c, color, boardState, visited, group) {
   for (let i = 0; i < 4; i++) {
     const nr = r + dirs[i][0];
     const nc = c + dirs[i][1];
-
     if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
       if (boardState[nr][nc] === 0) {
         hasLiberty = true;
@@ -1118,6 +1125,85 @@ function checkGroupLiberty(r, c, color, boardState, visited, group) {
     }
   }
   return hasLiberty;
+}
+
+/* ── 브레인 스포츠 AI 의사결정 시스템 ── */
+function makeAiMove() {
+  let bestMove = null;
+  let highestScore = -10000;
+
+  // 바둑판의 모든 전술적 좌표 전수조사
+  for (let r = 0; r < BOARD_SIZE; r++) {
+    for (let c = 0; c < BOARD_SIZE; c++) {
+      if (goBoard[r][c] !== 0) continue;
+
+      // AI(백돌: 2)가 여기 두었을 때 합법적인 수인지 예산 계산
+      const simulation = tryPlaceStone(r, c, 2);
+      if (!simulation.success) continue; // 자충수면 패스
+
+      let score = 0;
+
+      // 규칙 1: 유저의 돌을 많이 따낼 수 있는 자리면 최우선 순위 (공격 점수)
+      if (simulation.captured > 0) {
+        score += simulation.captured * 1000;
+      }
+
+      // 규칙 2: 적(유저)이 두면 내 돌이 무더기로 잡히는 급소 자리 방어 (수비 점수)
+      const opponentSim = tryPlaceStone(r, c, 1);
+      if (opponentSim.captured > 0) {
+        score += opponentSim.captured * 800; // 방어 가치 부여
+      }
+
+      // 규칙 3: 주변에 아군 돌(백돌)이나 적군 돌(흑돌)이 밀집한 전투 구역 중심 가중치
+      const neighborWeights = getNeighborWeights(r, c);
+      score += neighborWeights.white * 15; // 모양 키우기 연결
+      score += neighborWeights.black * 10; // 압박 및 차단
+
+      // 규칙 4: 초반 포석을 위해 중앙 및 화점 근처 선호 지형 점수
+      const distFromCenter = Math.abs(r - 6) + Math.abs(c - 6);
+      score += (24 - distFromCenter) * 2; 
+
+      // 규칙 5: 지나치게 구석진 1선 배제
+      if (r === 0 || r === BOARD_SIZE - 1 || c === 0 || c === BOARD_SIZE - 1) {
+        score -= 50;
+      }
+
+      // 약간의 무작위성 부여로 매 대국마다 다른 전략을 펼치도록 유도
+      score += Math.random() * 5;
+
+      if (score > highestScore) {
+        highestScore = score;
+        bestMove = { r, c, sim: simulation };
+      }
+    }
+  }
+
+  // 둘 곳이 남아있다면 착수 처리
+  if (bestMove) {
+    goBoard = bestMove.sim.board;
+    capBlack += bestMove.sim.captured;
+  } else {
+    // 더 이상 착수 가능한 곳이 없으면 패스 처리 (기권 및 계가 상태 유도)
+    alert("AI가 더 둘 곳이 없어 착수를 패스합니다.");
+  }
+
+  isBlackTurn = true;
+  isAiThinking = false;
+  updateGoUI();
+}
+
+function getNeighborWeights(r, c) {
+  let black = 0, white = 0;
+  const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
+  for (let i = 0; i < dirs.length; i++) {
+    const nr = r + dirs[i][0];
+    const nc = c + dirs[i][1];
+    if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
+      if (goBoard[nr][nc] === 1) black++;
+      else if (goBoard[nr][nc] === 2) white++;
+    }
+  }
+  return { black, white };
 }
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
