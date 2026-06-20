@@ -6,6 +6,8 @@
 <title>Brain Sports Omnipo 2027 — ICOC</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<!-- 외부 통합 게임 디자인 연결 -->
+<link rel="stylesheet" href="css/style.css">
 <style>
 :root {
   --navy: #0B1F3A;
@@ -75,7 +77,6 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
     radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.05) 0%, transparent 60%);
 }
 
-/* OMNIPO 메인 로고 */
 .omnipo-badge {
   display:inline-flex; flex-direction:column; align-items:center;
   margin-bottom:40px;
@@ -319,10 +320,6 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   font-size:16px; color:rgba(245,240,232,0.65);
   margin-bottom:44px; position:relative; line-height:1.8;
 }
-.contact-btns {
-  display:flex; gap:16px; justify-content:center;
-  flex-wrap:wrap; position:relative;
-}
 
 /* ── CONTACT FORM ── */
 .contact-form-wrap {
@@ -378,142 +375,6 @@ footer a { color:var(--gold); text-decoration:none; }
 /* ── SCROLL REVEAL ── */
 .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
 .reveal.visible { opacity:1; transform:none; }
-
-/* ── GO GAME MODAL ── */
-.go-modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
-  z-index: 2000; display: flex; align-items: center; justify-content: center;
-  padding: 20px; backdrop-filter: blur(8px);
-}
-.go-modal-content {
-  background: #f4ebd0; color: #0B1F3A; padding: 30px;
-  border-radius: 12px; max-width: 480px; width: 100%;
-  position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  text-align: center;
-}
-.go-modal-close {
-  position: absolute; top: 16px; right: 20px;
-  background: none; border: none; font-size: 22px;
-  color: #0B1F3A; cursor: pointer; font-weight: bold;
-}
-.go-modal-title {
-  font-family: 'Playfair Display', serif; font-size: 22px;
-  font-weight: 700; margin-bottom: 20px; letter-spacing: 0.05em;
-}
-.go-scoreboard {
-  display: flex; justify-content: space-between; gap: 10px; margin-bottom: 16px;
-  font-size: 12px; font-weight: bold;
-}
-.go-turn-box {
-  padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(11,31,58,0.2);
-  color: rgba(11,31,58,0.5); width: 50%;
-}
-.go-turn-box.active {
-  background: #0B1F3A; color: #f4ebd0; border-color: #0B1F3A;
-}
-#turn-white.active {
-  background: #ffffff; color: #0B1F3A; border-color: #ccc;
-}
-.go-board-grid {
-  display: grid; grid-template-columns: repeat(13, 1fr);
-  background: #e3c16f; padding: 6px;
-  border: 1px solid #896328; border-radius: 3px;
-  aspect-ratio: 1 / 1; width: 100%; box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
-}
-.go-cell {
-  position: relative; aspect-ratio: 1 / 1; cursor: pointer;
-}
-/* 바둑판 세로선과 가로선 교차 구현 */
-.go-cell::before {
-  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(137,99,40,0.5);
-}
-.go-cell::after {
-  content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(137,99,40,0.5);
-}
-/* 화점 (3, 6, 9번째 선 전용 점 표시) */
-.go-star::before {
-  content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px;
-  background: #5c3e14; border-radius: 50%; transform: translate(-50%, -50%); z-index: 5;
-}
-.go-stone {
-  position: absolute; inset: 8%; border-radius: 50%; z-index: 10;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
-}
-.go-stone.black { background: linear-gradient(135deg, #444, #111); }
-.go-stone.white { background: linear-gradient(135deg, #fff, #e2e2e2); border: 1px solid #ccc; }
-
-/* 마우스 올렸을 때 착수 가이드 반투명 효과 */
-.go-cell:not(.has-stone):hover::before {
-  z-index: 8;
-}
-.go-cell.hover-black:not(.has-stone):hover {
-  background: rgba(0, 0, 0, 0.15); border-radius: 50%;
-}
-.go-cell.hover-white:not(.has-stone):hover {
-  background: rgba(255, 255, 255, 0.3); border-radius: 50%;
-}
-.go-reset-btn {
-  margin-top: 20px; padding: 10px 24px; background: #0B1F3A; color: #f4ebd0;
-  border: none; border-radius: 4px; font-size: 12px; font-weight: bold;
-  letter-spacing: 0.05em; cursor: pointer; transition: background 0.2s;
-}
-.go-reset-btn:hover { background: #173863; }
-
-/* ── CHESS GAME MODAL (모바일 완전 대응) ── */
-.chess-modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
-  z-index: 2000; display: flex; align-items: center; justify-content: center;
-  padding: 10px; backdrop-filter: blur(8px);
-}
-.chess-modal-content {
-  background: #f4ebd0; color: #0B1F3A; padding: 20px 15px;
-  border-radius: 12px; max-width: 440px; width: 100%;
-  position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  text-align: center;
-  box-sizing: border-box;
-}
-.chess-board {
-  display: grid; grid-template-columns: repeat(8, 1fr);
-  border: 3px solid #0B1F3A; border-radius: 6px;
-  aspect-ratio: 1 / 1; width: 100%; overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
-  background-color: #b58863;
-  /* 모바일에서 터치 인식이 밀리지 않도록 고정 */
-  touch-action: manipulation; 
-}
-.chess-square {
-  position: relative; aspect-ratio: 1 / 1;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; user-select: none;
-  -webkit-user-select: none; /* iOS 사파리 터치 드래그 방지 */
-  box-sizing: border-box;
-}
-/* 체스판 체크무늬 색상 */
-.chess-square.light { background-color: #f0d9b5; }
-.chess-square.dark { background-color: #b58863; }
-
-/* 선택 및 이동 가능 경로 하이라이트 */
-.chess-square.selected { background-color: #baca44 !important; }
-.chess-square.suggested::after {
-  content: ''; position: absolute; width: 30%; height: 30%;
-  background: rgba(0, 0, 0, 0.25); border-radius: 50%;
-  z-index: 2; pointer-events: none;
-}
-.chess-square.suggested.has-piece::after {
-  width: 85%; height: 85%; border: 4px solid rgba(239, 68, 68, 0.6); background: none;
-  border-radius: 50%;
-}
-.chess-piece {
-  font-size: 38px; z-index: 10; transition: transform 0.1s ease;
-  pointer-events: none; /* ⭐ 매우 중요: 말 아이콘 뒤의 칸(Square)이 클릭되도록 클릭 간섭 차단 */
-  line-height: 1;
-}
-
-/* 📱 모바일 화면 최적화 (화면이 작아질 때 말 크기도 유연하게 축소) */
-@media (max-width: 450px) {
-  .chess-piece { font-size: 8.5vw; } /* 화면 너비에 맞춰 폰트 스케일링 */
-  .chess-modal-content { padding: 15px 10px; }
-}
 </style>
 </head>
 <body>
@@ -588,15 +449,14 @@ footer a { color:var(--gold); text-decoration:none; }
     <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 열세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다.</p>
   </div>
   <div class="sports-grid reveal">
-    <div class="sport-card" onclick="openGoGame()" style="cursor: pointer;">
+    <div class="sport-card">
       <span class="sport-icon">⚫</span>
       <div class="sport-name" data-i18n="c1n">바둑 (Go)</div>
       <div class="sport-desc" data-i18n="c1d">수천 년의 역사를 가진 전략 보드게임. 한국은 세계 최강 선수 배출국으로 글로벌 바둑 문화의 중심입니다.</div>
       <div class="sport-players" data-i18n="c1p">60M players worldwide</div>
     </div>
-    <div class="sport-card">
+    <div class="sport-card" onclick="openChessGame()" style="cursor: pointer;">
       <span class="sport-icon">♟</span>
-      <div class="card" onclick="openChessGame()">♔ 체스 대국 (AI)</div>
       <div class="sport-name" data-i18n="c2n">체스 (Chess)</div>
       <div class="sport-desc" data-i18n="c2d">170개국, 6억 명이 즐기는 세계 최대 마인드스포츠. FIDE 공인 국제 대회 형식으로 진행합니다.</div>
       <div class="sport-players" data-i18n="c2p">600M players worldwide</div>
@@ -631,9 +491,9 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-desc" data-i18n="c7d">중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 리치마작·광동마작 등 다양한 룰로 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.</div>
       <div class="sport-players" data-i18n="c7p">600M+ players worldwide</div>
     </div>
-    <div class="sport-card">
+    <div class="sport-card" onclick="openGoGame()" style="cursor: pointer;">
       <span class="sport-icon">⬤</span>
-      <div class="sport-name" data-i18n="c8n">오목 (Omok / Gomoku)</div>
+      <div class="sport-name" data-i18n="c8n">육목 (Omok / Gomoku)</div>
       <div class="sport-desc" data-i18n="c8d">한국과 일본에서 발전한 순수 전략 보드게임. 렌주 룰 기반 국제 대회가 활성화되어 있으며 한국은 세계 정상급 선수를 다수 보유하고 있습니다.</div>
       <div class="sport-players" data-i18n="c8p">100M+ players worldwide</div>
     </div>
@@ -809,26 +669,24 @@ footer a { color:var(--gold); text-decoration:none; }
   <span class="footer-logo">OMNIPO · 2027</span>
   <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인</p>
 </footer>
+
+<!-- ── GO GAME MODAL (육목 대국 전용) ── -->
 <div id="go-modal" class="go-modal-overlay" style="display: none;">
   <div class="go-modal-content">
     <button class="go-modal-close" onclick="closeGoGame()">×</button>
-    <h2 class="go-modal-title">Mini Baduk (13x13)</h2>
+    <h2 class="go-modal-title">Connect 6 (육목 대국)</h2>
     
     <div class="go-scoreboard">
       <div id="turn-black" class="go-turn-box active">⚫ 당신의 차례 (흑)</div>
       <div id="turn-white" class="go-turn-box"> White AI 대기 중</div>
     </div>
-    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 12px; color: #555; padding: 0 4px;">
-      <div>내가 따낸 AI 돌: <span id="cap-white" style="font-weight: bold; color: #b91c1c;">0</span>개</div>
-      <div>AI가 따낸 내 돌: <span id="cap-black" style="font-weight: bold; color: #1e3a8a;">0</span>개</div>
-    </div>
 
     <div id="go-board-grid" class="go-board-grid"></div>
-
     <button class="go-reset-btn" onclick="resetGoGame()">게임 리셋 / Reset</button>
   </div>
 </div>
 
+<!-- ── CHESS MODAL (체스 대국 전용) ── -->
 <div id="chess-modal" class="chess-modal-overlay" style="display: none;">
   <div class="chess-modal-content">
     <button class="go-modal-close" onclick="closeChessGame()">×</button>
@@ -839,11 +697,11 @@ footer a { color:var(--gold); text-decoration:none; }
     </div>
 
     <div id="chess-board" class="chess-board"></div>
-
     <button class="go-reset-btn" style="margin-top: 15px; padding: 8px 20px;" onclick="resetChessGame()">게임 리셋 / Reset</button>
   </div>
 </div>
 
+<!-- ── 다국어 및 스크립트 엔진 공통 시스템 ── -->
 <script>
 const T = {
   ko:{
@@ -861,7 +719,7 @@ const T = {
     c5n:"브릿지 (Bridge)", c5d:"120개국 WBF 회원국이 경쟁하는 카드 전략 게임. 협력과 추론이 결합된 고도의 두뇌 스포츠입니다.", c5p:"전 세계 6천만 명",
     c6n:"스크린골프 (Screen Golf)", c6d:"한국이 종주국인 차세대 스포츠. 골프존·카카오VX 글로벌 1·2위 브랜드를 보유한 한국만의 강점입니다.", c6p:"500만 명 이상·성장 중",
     c7n:"마작 (Mahjong)", c7d:"중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.", c7p:"전 세계 6억 명 이상",
-    c8n:"오목 (Omok / Gomoku)", c8d:"한국과 일본에서 발전한 순수 전략 보드게임. 렌주 룰 기반 국제 대회가 활성화되어 있습니다.", c8p:"전 세계 1억 명 이상",
+    c8n:"육목 (Omok / Gomoku)", c8d:"한국과 일본에서 발전한 순수 전략 보드게임. 6개의 돌을 나란히 놓는 육목 규칙으로 지능형 AI와 대국을 펼칩니다.", c8p:"전 세계 1억 명 이상",
     c9n:"체커 (Checkers / Draughts)", c9d:"세계드래프츠연맹(FMJD) 산하 170개국이 참여하는 고전 전략 보드게임. 아프리카·유럽·미주에 폭넓은 저변을 가진 글로벌 두뇌 스포츠입니다.", c9p:"전 세계 5천만 명 이상",
     c10n:"백개먼 (Backgammon)", c10d:"5,000년 역사를 가진 세계 최고(最古) 보드게임 중 하나. 중동·유럽·미국에서 활발히 즐기며 국제 대회가 정례화되어 있습니다.", c10p:"전 세계 1억 명 이상",
     c11n:"쇼기 (Shogi)", c11d:"일본 고유의 전통 장기. 일본장기연맹(JSA) 산하 공식 국제 대회가 운영되며, 일본 참가자 유치의 핵심 종목입니다.", c11p:"전 세계 2천만 명 이상",
@@ -891,653 +749,78 @@ const T = {
     sp_title:"13 Official Sports",
     sp_body:"Thirteen disciplines. One stage. For the first time in history, the world's greatest mind sports compete together.",
     c1n:"Baduk / Go", c1d:"The ancient strategy game with millennia of history. Korea dominates world rankings and leads global Go culture.", c1p:"60M players worldwide",
-    c2n:"Chess", c2d:"The world's largest mind sport with 600M players across 170 countries. Held under FIDE-recognized format.", c2p:"600M players worldwide",
-    c3n:"Janggi (Korean Chess)", c3d:"Korea's traditional board game, connecting diaspora communities worldwide.", c3p:"10M players worldwide",
-    c4n:"Billiards", c4d:"3-cushion and pocket billiards divisions. Korean players dominate the world 3-cushion rankings.", c4p:"100M players worldwide",
-    c5n:"Contract Bridge", c5d:"The ultimate partnership card game, with 120 WBF member countries competing at the highest level.", c5p:"60M players worldwide",
-    c6n:"Screen Golf", c6d:"Korea invented it. Golfzon and Kakao VX hold the #1 and #2 global positions in simulator golf.", c6p:"5M+ players & growing",
-    c7n:"Mahjong", c7d:"The strategic tile game from China, beloved across East Asia. Hundreds of millions play worldwide.", c7p:"600M+ players worldwide",
-    c8n:"Omok / Gomoku", c8d:"A pure strategy board game from Korea and Japan. Active international competitions under Renju rules.", c8p:"100M+ players worldwide",
-    c9n:"Checkers / Draughts", c9d:"A classic strategy board game under FMJD with 170 member nations. Widely popular across Africa, Europe, and the Americas.", c9p:"50M+ players worldwide",
-    c10n:"Backgammon", c10d:"One of the world's oldest board games with 5,000 years of history. Hugely popular in the Middle East, Europe, and the US.", c10p:"100M+ players worldwide",
-    c11n:"Shogi", c11d:"Japan's traditional chess. Official international competitions run by the Japan Shogi Association — a key draw for Japanese participants.", c11p:"20M+ players worldwide",
-    c12n:"Texas Hold'em", c12d:"An official Mind Sports Olympiad event. The world's most popular card game combining probability, psychology, and strategy.", c12p:"100M+ players worldwide",
-    c13n:"Hanafuda / Go-Stop", c13d:"The flower card game that originated in Japan and evolved into Go-Stop in Korea — a shared cultural heritage ideal for K-Culture tie-ins.", c13p:"30M+ players (Korea & Japan)",
-    ab_title:"Why Brain Sports Omnipo?",
-    ab_quote:'"World First.<br>13 Brain Sports.<br>One Stage."',
-    ab_body:"Go (IGF), Chess (FIDE), Billiards (UMB), Bridge (WBF) — each discipline has millions of international players and a governing body. Yet no event in history has unified them on a single platform. Brain Sports Omnipo 2027 changes that.",
-    org_l:"Organizer", org_d:"Incorporated Association under<br>Ministry of Culture, Sports and Tourism (Korea)",
-    op_l:"Operating Company", op_d:"CEO: Kent Kim (김형섭)<br>Harvard University, Economics<br>info@deother.me",
-    rm_title:"Tournament Roadmap", rm_body:"Starting in Seoul, expanding across Asia, growing into the global Brain Sports Omnipo.",
-    t1d:"2026 · Preparation", t1t:"ICOC Launch & Sponsorship", t1b:"Legal entity complete · Sport network · Federation agreements · Sponsor acquisition",
-    t2d:"2027 · Seoul", t2t:"1st Brain Sports Omnipo 2027", t2b:"Seoul · 15+ countries · 200+ international players · 13 disciplines · K-Culture opening ceremony · Live streaming",
-    t3d:"2028", t3t:"Asia Satellite Qualifiers", t3b:"30+ countries · Satellite qualifiers in 3 Asian cities · Dedicated leagues · Media partnerships",
-    t4d:"2029~", t4t:"Asia Brain Sports League", t4b:"Season-format league · Seoul Finals as permanent venue · Growing into global Brain Sports Omnipo",
-    ct_title:"Get in Touch", ct_body:"We welcome inquiries about participation, sponsorship, and partnerships.",
-    fl_name:"Name", fl_email:"Email", fl_type:"Inquiry Type", fl_sport:"Sport of Interest", fl_msg:"Message", fl_send:"Send Message",
-    form_ok_title:"Message Received", form_ok_body:"We'll get back to you as soon as possible.",
-    ft:"© 2026 ICOC International Brain Sports Association · Deather · Ministry of Culture, Sports and Tourism (Korea)",
-  },
-  zh:{
-    hero_eyebrow:"国际开放竞技委员会 · ICOC",
-    hero_t1:"脑力运动", hero_t2:"全能波",
-    hero_sub:"围棋·国际象棋·将棋·台球·桥牌·模拟高尔夫等<br>世界首届多项目国际脑力运动锦标赛",
-    cta_reg:"联系我们", cta_about:"了解更多",
-    s1:"正式项目", s2:"全球选手", s3:"目标参赛国", s4:"首尔 2027",
-    sp_title:"十三大官方项目",
-    sp_body:"十三个项目，一个舞台。人类智慧的巅峰对决，史无前例地汇聚于此。",
-    c1n:"围棋", c1d:"拥有数千年历史的战略棋盘游戏。韩国是世界顶级棋手的摇篮。", c1p:"全球6000万玩家",
-    c2n:"国际象棋", c2d:"覆盖170个国家、拥有6亿玩家的世界最大脑力运动。", c2p:"全球6亿玩家",
-    c3n:"韩国将棋", c3d:"韩国传统棋盘游戏，致力于扩大全球影响力。", c3p:"全球1000万玩家",
-    c4n:"台球", c4d:"设三库台球和落袋台球两个项目。韩国选手独占鳌头。", c4p:"全球1亿玩家",
-    c5n:"桥牌", c5d:"集合WBF 120个成员国参赛的纸牌策略运动。", c5p:"全球6000万玩家",
-    c6n:"模拟高尔夫", c6d:"韩国首创的新兴运动项目。GolfZon和Kakao VX位居全球前两位。", c6p:"500万以上且持续增长",
-    c7n:"麻将", c7d:"起源于中国、风靡东亚的战略牌类游戏。全球数亿玩家。", c7p:"全球6亿以上玩家",
-    c8n:"五子棋", c8d:"在韩国和日本发展起来的纯策略棋盘游戏。国际赛事十分活跃。", c8p:"全球1亿以上玩家",
-    c9n:"跳棋", c9d:"FMJD旗下170个国家参与的经典策略棋盘游戏，在非洲、欧洲和美洲广受欢迎。", c9p:"全球5000万以上玩家",
-    c10n:"双陆棋", c10d:"拥有5000年历史的世界最古老棋盘游戏之一，在中东、欧洲和美国广受欢迎。", c10p:"全球1亿以上玩家",
-    c11n:"将棋", c11d:"日本独有的传统棋类游戏，是吸引日本参赛者的核心项目。", c11p:"全球2000万以上玩家",
-    c12n:"德州扑克", c12d:"智力运动奥林匹克（MSO）官方项目，融合概率计算、心理分析与战略判断。", c12p:"全球1亿以上玩家",
-    c13n:"花牌 / 高斯톱", c13d:"源自日本、在韩国发展为高斯톱的花牌游戏，是韩日共同文化遗产。", c13p:"韩国·日本3000万以上玩家",
-    ab_title:"为什么是Brain Sports全能波？",
-    ab_quote:'"世界首创。<br>13大脑力运动。<br>同台竞技。"',
-    ab_body:"围棋(IGF)、国际象棋(FIDE)、台球(UMB)、桥牌(WBF)——将这些项目整合于同一平台的国际赛事，迄今为止在全球尚属空白。Brain Sports全能波2027将填补这一历史空白。",
-    org_l:"主办机构", org_d:"韩国文化体育观光部认可社团法人",
-    op_l:"运营公司", op_d:"CEO：金炯燮 (Kent Kim)<br>哈佛大学经济学<br>info@deother.me",
-    rm_title:"赛事路线图", rm_body:"从首尔出发，走向亚洲，迈向世界。",
-    t1d:"2026年·准备期", t1t:"ICOC正式启动及赞助商招募", t1b:"社团法人完备 · 项目网络构建 · 国际机构协议签订 · 赞助商招募",
-    t2d:"2027年·首尔", t2t:"首届Brain Sports全能波2027", t2b:"首尔举办 · 15个以上国家 · 200名以上国际选手 · 13大项目同时进行",
-    t3d:"2028年", t3t:"亚洲卫星预选赛扩大", t3b:"30个以上国家 · 亚洲3个城市卫星预选赛 · 媒体合作扩大",
-    t4d:"2029年~", t4t:"亚洲脑力运动联赛成立", t4b:"赛季制联赛运营 · 首尔决赛常态化",
-    ct_title:"联系我们", ct_body:"欢迎就参赛、赞助及合作事宜进行咨询。",
-    fl_name:"姓名", fl_email:"电子邮件", fl_type:"咨询类型", fl_sport:"感兴趣的项目", fl_msg:"留言内容", fl_send:"发送咨询",
-    form_ok_title:"咨询已收到", form_ok_body:"我们将尽快与您联系。",
-    ft:"© 2026 ICOC国际脑力运动协会 · Deather · 韩国文化体育观光部认可社团法人",
-  },
-  ja:{
-    hero_eyebrow:"国際オープン競技評議会 · ICOC",
-    hero_t1:"ブレインスポーツ", hero_t2:"オムニポ",
-    hero_sub:"囲碁·チェス·チャンギ·ビリヤード·ブリッジ·スクリーンゴルフ他<br>世界初・複数種目国際ブレインスポーツ選手権",
-    cta_reg:"お問い合わせ", cta_about:"大会について",
-    s1:"公式種目", s2:"グローバル競技人口", s3:"参加国目標", s4:"ソウル 2027",
-    sp_title:"13の公式種目",
-    sp_body:"13種目、1つのステージ。各々の伝統と深みを持つブレインスポーツが、初めて一堂に会します。",
-    c1n:"囲碁", c1d:"数千年の歴史を持つ戦略ボードゲーム。韓国は世界最強の棋士を輩出しています。", c1p:"世界6000万人",
-    c2n:"チェス", c2d:"170カ国・6億人が楽しむ世界最大のマインドスポーツ。", c2p:"世界6億人",
-    c3n:"チャンギ", c3d:"韓国固有の伝統ボードゲーム。グローバルな普及を目指します。", c3p:"世界1000万人",
-    c4n:"ビリヤード", c4d:"スリークッション・ポケットの2部門。韓国選手が世界ランキング上位を独占。", c4p:"世界1億人",
-    c5n:"ブリッジ", c5d:"WBF加盟120カ国が競うカード戦略競技。", c5p:"世界6000万人",
-    c6n:"スクリーンゴルフ", c6d:"韓国が発祥の次世代スポーツ。GolfzonとKakaoVXが世界シェア1・2位。", c6p:"500万人以上·成長中",
-    c7n:"麻雀", c7d:"中国発祥で東アジア全域に広まった戦略タイルゲーム。世界数億人が楽しむ。", c7p:"世界6億人以上",
-    c8n:"五目並べ / オモク", c8d:"韓国と日本で発展した純粋な戦略ボードゲーム。連珠ルールで国際大会が活発。", c8p:"世界1億人以上",
-    c9n:"チェッカー / ドラフツ", c9d:"FMJD加盟170カ国が参加する古典的戦略ボードゲーム。アフリカ・欧州・米州で広く普及。", c9p:"世界5000万人以上",
-    c10n:"バックギャモン", c10d:"5000年の歴史を持つ世界最古のボードゲームの一つ。中東・欧州・米国で人気。", c10p:"世界1億人以上",
-    c11n:"将棋", c11d:"日本固有の伝統ボードゲーム。日本将棋連盟公認の国際大会が運営されています。", c11p:"世界2000万人以上",
-    c12n:"テキサスホールデム", c12d:"マインドスポーツオリンピアード公式種目。世界で最も人気のあるカードゲーム。", c12p:"世界1億人以上",
-    c13n:"花札 / ゴーストップ", c13d:"日本発祥で韓国でゴーストップとして発展した花札カードゲーム。韓日共通の文化遺産。", c13p:"韓国・日本3000万人以上",
-    ab_title:"なぜBrain Sports Omnipoなのか",
-    ab_quote:'"世界初。<br>13のブレインスポーツを<br>ひとつの舞台で。"',
-    ab_body:"囲碁(IGF)、チェス(FIDE)、ビリヤード(UMB)、ブリッジ(WBF) — これら種目を一つのプラットフォームで統合運営する国際大会は、世界に前例がありません。Brain Sports Omnipo 2027がその歴史を刻みます。",
-    org_l:"主催機関", org_d:"文化体育観光部認可社団法人<br>Ministry of Culture, Sports and Tourism (Korea)",
-    op_l:"運営会社", op_d:"代表：キム・ヒョンソプ (Kent Kim)<br>ハーバード大学 経済学部<br>info@deother.me",
-    rm_title:"大会ロードマップ", rm_body:"ソウルから始まり、アジアへ、そして世界へ。",
-    t1d:"2026年·準備期", t1t:"ICOC正式発足とスポンサー獲得", t1b:"法人設立完了 · 種目ネットワーク構築 · 国際機関との協定締結 · スポンサー確保",
-    t2d:"2027年·ソウル", t2t:"第1回 Brain Sports Omnipo 2027", t2b:"ソウル開催 · 15カ国以上 · 海外参加者200名+ · 13種目同時開催",
-    t3d:"2028年", t3t:"アジア衛星予選の拡大", t3b:"30カ国以上 · アジア3都市で衛星予選 · メディアパートナーシップ拡大",
-    t4d:"2029年~", t4t:"アジアブレインスポーツリーグ創設", t4b:"シーズン制リーグ運営 · ソウルファイナルの定例化",
-    ct_title:"お問い合わせ", ct_body:"参加、スポンサーシップ、パートナーシップのお問い合わせを歓迎します。",
-    fl_name:"お名前", fl_email:"メールアドレス", fl_type:"お問い合わせ種別", fl_sport:"関心のある種目", fl_msg:"メッセージ", fl_send:"送信する",
-    form_ok_title:"お問い合わせを受け付けました", form_ok_body:"できる限り早くご返答いたします。",
-    ft:"© 2026 ICOC国際ブレインスポーツ協会 · Deather · 文化体育観光部認可社団法人",
+    c2n:"Chess", c2d:"The world's largest mind sport with 600M players across 170 countries. Held under FIDE-recognized format.", c2p:"600M players worldwide"
   }
 };
 
-function updateSubject(sel) {
-  const labels = {
-    participation: '[ICOC Omnipo] 참가 문의',
-    sponsorship:   '[ICOC Omnipo] 스폰서십 문의',
-    partnership:   '[ICOC Omnipo] 파트너십 문의',
-    media:         '[ICOC Omnipo] 미디어 문의',
-    other:         '[ICOC Omnipo] 문의',
-  };
-  document.getElementById('form-subject').value = labels[sel.value] || '[ICOC Omnipo] 문의';
+let currentLang = 'ko';
+
+function setLang(lang) {
+  if(!T[lang]) return;
+  currentLang = lang;
+  
+  document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+  const activeBtn = document.querySelector(`.lang-btn[onclick*="'${lang}'"]`);
+  if(activeBtn) activeBtn.classList.add('active');
+  
+  document.body.className = `lang-${lang}`;
+  
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if(T[currentLang][key]) {
+      el.innerHTML = T[currentLang][key];
+    }
+  });
+}
+
+function updateSubject(select) {
+  const subjectEl = document.getElementById('form-subject');
+  if(subjectEl) subjectEl.value = `[ICOC Omnipo] ${select.options[select.selectedIndex].text}`;
 }
 
 async function submitForm(e) {
   e.preventDefault();
-  const btn = document.getElementById('submit-btn');
   const form = document.getElementById('contact-form');
-  btn.disabled = true;
-  btn.textContent = '...';
-  const data = new FormData(form);
-  try {
-    const res = await fetch('https://api.web3forms.com/submit', { method:'POST', body:data });
-    const json = await res.json();
-    if (json.success) {
-      form.style.display = 'none';
-      document.getElementById('form-success').style.display = 'block';
-    } else {
-      alert('전송 실패. 잠시 후 다시 시도해주세요.');
-      btn.disabled = false; btn.textContent = '문의 보내기';
-    }
-  } catch {
-    alert('네트워크 오류. 잠시 후 다시 시도해주세요.');
-    btn.disabled = false; btn.textContent = '문의 보내기';
-  }
-}
-
-function setLang(lang) {
-  const d = T[lang];
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const k = el.getAttribute('data-i18n');
-    if (d[k] !== undefined) el.innerHTML = d[k];
-  });
-  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
-  document.body.className = lang === 'ko' ? '' : `lang-${lang}`;
-  document.documentElement.lang = lang;
-}
-
-
-/* ── 바둑 게임 코어 엔진 (AI 대국 모드) ── */
-const BOARD_SIZE = 13;
-let goBoard = [];
-let isBlackTurn = true;
-let capBlack = 0; // AI가 따낸 내 돌
-let capWhite = 0; // 내가 따낸 AI 돌
-let isAiThinking = false; // AI 연산 중 조작 방지
-
-function initGoData() {
-  goBoard = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
-}
-
-function openGoGame() {
-  document.getElementById('go-modal').style.display = 'flex';
-  resetGoGame(); // 👈 이 함수가 실행되면서 화면에 클릭 가능한 세포(cell)들을 주입합니다!
-}
-
-function closeGoGame() {
-  document.getElementById('go-modal').style.display = 'none';
-}
-
-function resetGoGame() {
-  initGoData();
-  isBlackTurn = true;
-  capBlack = 0;
-  capWhite = 0;
-  isAiThinking = false;
-  updateGoUI();
-}
-
-function updateGoUI() {
-  const grid = document.getElementById('go-board-grid');
-  grid.innerHTML = '';
-
-  document.getElementById('cap-black').innerText = capBlack;
-  document.getElementById('cap-white').innerText = capWhite;
-
-  const turnBlackEl = document.getElementById('turn-black');
-  const turnWhiteEl = document.getElementById('turn-white');
-
-  if (isBlackTurn) {
-    turnBlackEl.className = 'go-turn-box active';
-    turnBlackEl.innerText = '⚫ 당신의 차례 (흑)';
-    turnWhiteEl.className = 'go-turn-box';
-    turnWhiteEl.innerText = '⚪ AI 대기 중';
-  } else {
-    turnBlackEl.className = 'go-turn-box';
-    turnBlackEl.innerText = '⚫ 당신 (대기)';
-    turnWhiteEl.className = 'go-turn-box active';
-    turnWhiteEl.innerText = '⚪ AI 생각 중...';
-  }
-
-  const stars = [3, 6, 9];
-
-  for (let r = 0; r < BOARD_SIZE; r++) {
-    for (let c = 0; c < BOARD_SIZE; c++) {
-      const cell = document.createElement('div');
-      cell.className = 'go-cell';
-      
-      if (stars.includes(r) && stars.includes(c)) {
-        cell.classList.add('go-star');
-      }
-
-      if (isBlackTurn && !isAiThinking) {
-        cell.classList.add('hover-black');
-      }
-
-      const stoneState = goBoard[r][c];
-      if (stoneState !== 0) {
-        cell.classList.add('has-stone');
-        const stone = document.createElement('div');
-        stone.className = `go-stone ${stoneState === 1 ? 'black' : 'white'}`;
-        cell.appendChild(stone);
-      }
-
-      cell.onclick = () => handleGoClick(r, c);
-      grid.appendChild(cell);
-    }
-  }
-}
-
-// 플레이어(유저)의 착수 처리
-function handleGoClick(r, c) {
-  if (!isBlackTurn || isAiThinking || goBoard[r][c] !== 0) return;
-
-  const result = tryPlaceStone(r, c, 1); // 흑돌(1) 착수 시도
-  if (result.success) {
-    goBoard = result.board;
-    capWhite += result.captured;
-    isBlackTurn = false;
-    updateGoUI();
-
-    // 0.5초 뒤 AI 차례 실행
-    isAiThinking = true;
-    setTimeout(makeAiMove, 500);
-  }
-}
-
-// 특정 위치에 돌을 놓았을 때의 결과를 계산하는 논리 함수
-function tryPlaceStone(r, c, color, targetBoard = goBoard) {
-  const opponentColor = color === 1 ? 2 : 1;
-  let nextBoard = targetBoard.map(row => [...row]);
-  nextBoard[r][c] = color;
-
-  let captured = 0;
-  let visited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
-  const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
-
-  // 상대 돌 포위 판정 및 제거
-  for (let i = 0; i < 4; i++) {
-    const nr = r + dirs[i][0];
-    const nc = c + dirs[i][1];
-    if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
-      if (nextBoard[nr][nc] === opponentColor && !visited[nr][nc]) {
-        let group = [];
-        let hasLiberty = checkGroupLiberty(nr, nc, opponentColor, nextBoard, visited, group);
-        if (!hasLiberty) {
-          captured += group.length;
-          group.forEach(([gr, gc]) => { nextBoard[gr][gc] = 0; });
-        }
-      }
-    }
-  }
-
-  // 자충수 체크
-  let selfVisited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
-  let selfGroup = [];
-  let selfHasLiberty = checkGroupLiberty(r, c, color, nextBoard, selfVisited, selfGroup);
-
-  if (!selfHasLiberty && captured === 0) {
-    return { success: false, board: targetBoard, captured: 0 };
-  }
-
-  return { success: true, board: nextBoard, captured: captured };
-}
-
-function checkGroupLiberty(r, c, color, boardState, visited, group) {
-  visited[r][c] = true;
-  group.push([r, c]);
-
-  let hasLiberty = false;
-  const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
-
-  for (let i = 0; i < 4; i++) {
-    const nr = r + dirs[i][0];
-    const nc = c + dirs[i][1];
-    if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
-      if (boardState[nr][nc] === 0) {
-        hasLiberty = true;
-      } else if (boardState[nr][nc] === color && !visited[nr][nc]) {
-        if (checkGroupLiberty(nr, nc, color, boardState, visited, group)) {
-          hasLiberty = true;
-        }
-      }
-    }
-  }
-  return hasLiberty;
-}
-
-/* ── 브레인 스포츠 AI 의사결정 시스템 ── */
-function makeAiMove() {
-  let bestMove = null;
-  let highestScore = -10000;
-
-  // 바둑판의 모든 전술적 좌표 전수조사
-  for (let r = 0; r < BOARD_SIZE; r++) {
-    for (let c = 0; c < BOARD_SIZE; c++) {
-      if (goBoard[r][c] !== 0) continue;
-
-      // AI(백돌: 2)가 여기 두었을 때 합법적인 수인지 예산 계산
-      const simulation = tryPlaceStone(r, c, 2);
-      if (!simulation.success) continue; // 자충수면 패스
-
-      let score = 0;
-
-      // 규칙 1: 유저의 돌을 많이 따낼 수 있는 자리면 최우선 순위 (공격 점수)
-      if (simulation.captured > 0) {
-        score += simulation.captured * 1000;
-      }
-
-      // 규칙 2: 적(유저)이 두면 내 돌이 무더기로 잡히는 급소 자리 방어 (수비 점수)
-      const opponentSim = tryPlaceStone(r, c, 1);
-      if (opponentSim.captured > 0) {
-        score += opponentSim.captured * 800; // 방어 가치 부여
-      }
-
-      // 규칙 3: 주변에 아군 돌(백돌)이나 적군 돌(흑돌)이 밀집한 전투 구역 중심 가중치
-      const neighborWeights = getNeighborWeights(r, c);
-      score += neighborWeights.white * 15; // 모양 키우기 연결
-      score += neighborWeights.black * 10; // 압박 및 차단
-
-      // 규칙 4: 초반 포석을 위해 중앙 및 화점 근처 선호 지형 점수
-      const distFromCenter = Math.abs(r - 6) + Math.abs(c - 6);
-      score += (24 - distFromCenter) * 2; 
-
-      // 규칙 5: 지나치게 구석진 1선 배제
-      if (r === 0 || r === BOARD_SIZE - 1 || c === 0 || c === BOARD_SIZE - 1) {
-        score -= 50;
-      }
-
-      // 약간의 무작위성 부여로 매 대국마다 다른 전략을 펼치도록 유도
-      score += Math.random() * 5;
-
-      if (score > highestScore) {
-        highestScore = score;
-        bestMove = { r, c, sim: simulation };
-      }
-    }
-  }
-
-  // 둘 곳이 남아있다면 착수 처리
-  if (bestMove) {
-    goBoard = bestMove.sim.board;
-    capBlack += bestMove.sim.captured;
-  } else {
-    // 더 이상 착수 가능한 곳이 없으면 패스 처리 (기권 및 계가 상태 유도)
-    alert("AI가 더 둘 곳이 없어 착수를 패스합니다.");
-  }
-
-  isBlackTurn = true;
-  isAiThinking = false;
-  updateGoUI();
-}
-
-
-function getNeighborWeights(r, c) {
-  let black = 0, white = 0;
-  const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
-  for (let i = 0; i < dirs.length; i++) {
-    const nr = r + dirs[i][0];
-    const nc = c + dirs[i][1];
-    if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
-      if (goBoard[nr][nc] === 1) black++;
-      else if (goBoard[nr][nc] === 2) white++;
-    }
-  }
-  return { black, white };
-}
-/* ── 체스 게임 코어 엔진 (AI 대국 모드) ── */
-const CHESS_SIZE = 8;
-let chessBoard = [];
-let selectedSquare = null;
-let possibleMoves = [];
-let isPlayerTurn = true;
-
-// 유니코드 체스 말 정의 (백: 유저, 흑: AI)
-const PIECES = {
-  'P': '♙', 'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', // 백 (Player)
-  'p': '♟', 'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚'  // 흑 (AI)
-};
-
-// 기물별 기본 전술 가치 점수표
-const PIECE_VALUES = {
-  'p': -10, 'n': -30, 'b': -30, 'r': -50, 'q': -90, 'k': -900,
-  'P': 10,  'N': 30,  'B': 30,  'R': 50,  'Q': 90,  'K': 900
-};
-
-function openChessGame() {
-  document.getElementById('chess-modal').style.display = 'flex';
-  resetChessGame();
-}
-
-function closeChessGame() {
-  document.getElementById('chess-modal').style.display = 'none';
-}
-
-function resetChessGame() {
-  // 초기 보드 배치 (대문자: 백진영, 소문자: 흑진영)
-  chessBoard = [
-    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
-    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
-    ['',  '',  '',  '',  '',  '',  '',  ''],
-    ['',  '',  '',  '',  '',  '',  '',  ''],
-    ['',  '',  '',  '',  '',  '',  '',  ''],
-    ['',  '',  '',  '',  '',  '',  '',  ''],
-    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
-    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
-  ];
-  selectedSquare = null;
-  possibleMoves = [];
-  isPlayerTurn = true;
-  updateChessUI();
-}
-
-function updateChessUI() {
-  const boardEl = document.getElementById('chess-board');
-  const statusEl = document.getElementById('chess-status');
-  boardEl.innerHTML = '';
-
-  statusEl.innerText = isPlayerTurn ? "당신의 차례 (백 ♔)" : "AI가 전략을 계산 중입니다...";
-
-  for (let r = 0; r < CHESS_SIZE; r++) {
-    for (let c = 0; c < CHESS_SIZE; c++) {
-      const square = document.createElement('div');
-      const isLight = (r + c) % 2 === 0;
-      square.className = `chess-square ${isLight ? 'light' : 'dark'}`;
-
-      // 선택 상태 및 이동 가이드 하이라이트
-      if (selectedSquare && selectedSquare.r === r && selectedSquare.c === c) {
-        square.classList.add('selected');
-      }
-      if (possibleMoves.some(m => m.r === r && m.c === c)) {
-        square.classList.add('suggested');
-        if (chessBoard[r][c] !== '') square.classList.add('has-piece');
-      }
-
-      // 말 렌더링
-      const piece = chessBoard[r][c];
-      if (piece) {
-        const pieceEl = document.createElement('div');
-        pieceEl.className = 'chess-piece';
-        pieceEl.innerText = PIECES[piece];
-        square.appendChild(pieceEl);
-      }
-
-      square.onclick = () => handleSquareClick(r, c);
-      boardEl.appendChild(square);
-    }
-  }
-}
-
-function handleSquareClick(r, c) {
-  if (!isPlayerTurn) return;
-
-  const piece = chessBoard[r][c];
-  const isMoveCandidate = possibleMoves.some(m => m.r === r && m.c === c);
-
-  if (isMoveCandidate && selectedSquare) {
-    // 말 이동 실행
-    movePiece(selectedSquare.r, selectedSquare.c, r, c);
-    selectedSquare = null;
-    possibleMoves = [];
-    isPlayerTurn = false;
-    updateChessUI();
-
-    // 유저가 움직인 뒤 0.6초 후 AI 시뮬레이션 가동
-    setTimeout(makeAiChessMove, 600);
-  } else if (piece && piece === piece.toUpperCase()) {
-    // 아군 기물(대문자)을 클릭 시 선택 및 경로 탐색
-    selectedSquare = { r, c };
-    possibleMoves = getValidMoves(r, c, chessBoard);
-    updateChessUI();
-  } else {
-    // 빈 곳 클릭 시 선택 해제
-    selectedSquare = null;
-    possibleMoves = [];
-    updateChessUI();
-  }
-}
-
-function movePiece(fromR, fromC, toR, toC) {
-  let piece = chessBoard[fromR][fromC];
+  const btn = document.getElementById('submit-btn');
+  const success = document.getElementById('form-success');
   
-  // 폰이 끝까지 전진하면 자동으로 퀸('Q' / 'q')으로 프로모션 승급
-  if (piece === 'P' && toR === 0) piece = 'Q';
-  if (piece === 'p' && toR === 7) piece = 'q';
+  btn.disabled = true;
+  const formData = new FormData(form);
+  const object = Object.fromEntries(formData);
+  const json = JSON.stringify(object);
 
-  chessBoard[toR][toC] = piece;
-  chessBoard[fromR][fromC] = '';
+  try {
+    const response = await fetch('https://api.web3forms.com/submit', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: json
+    });
+    if (response.status == 200) {
+      form.style.display = 'none';
+      success.style.display = 'block';
+    } else {
+      alert('Error submitting form.');
+      btn.disabled = false;
+    }
+  } catch(err) {
+    alert('Network error.');
+    btn.disabled = false;
+  }
 }
 
-// 각 기물별 정밀 이동 규칙 연산 엔진
-function getValidMoves(r, c, board) {
-  const moves = [];
-  const piece = board[r][c];
-  if (!piece) return moves;
-
-  const isWhite = piece === piece.toUpperCase();
-  const dir = isWhite ? -1 : 1;
-
-  // 1. 폰 (Pawn)
-  if (piece.toUpperCase() === 'P') {
-    if (r + dir >= 0 && r + dir < 8 && !board[r + dir][c]) {
-      moves.push({ r: r + dir, c });
-      // 처음 두 칸 전진 규칙
-      if ((isWhite && r === 6) || (!isWhite && r === 1)) {
-        if (!board[r + dir * 2][c]) moves.push({ r: r + dir * 2, c });
-      }
-    }
-    // 대각선 공격 판정
-    [-1, 1].forEach(dc => {
-      const nr = r + dir, nc = c + dc;
-      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-        const target = board[nr][nc];
-        if (target && (isWhite !== (target === target.toUpperCase()))) moves.push({ r: nr, c: nc });
-      }
-    });
-  }
-
-  // 2. 나이트 (Knight)
-  if (piece.toUpperCase() === 'N') {
-    const nMoves = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
-    nMoves.forEach(([dr, dc]) => {
-      const nr = r + dr, nc = c + dc;
-      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-        const target = board[nr][nc];
-        if (!target || isWhite !== (target === target.toUpperCase())) moves.push({ r: nr, c: nc });
-      }
-    });
-  }
-
-  // 3. 직선 기물들 (룩, 비숍, 퀸, 킹) 방향선 벡터 연산
-  let vectors = [];
-  if (piece.toUpperCase() === 'R' || piece.toUpperCase() === 'Q') vectors.push([-1,0],[1,0],[0,-1],[0,1]);
-  if (piece.toUpperCase() === 'B' || piece.toUpperCase() === 'Q') vectors.push([-1,-1],[-1,1],[1,-1],[1,1]);
-  if (piece.toUpperCase() === 'K') {
-    const kMoves = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
-    kMoves.forEach(([dr, dc]) => {
-      const nr = r + dr, nc = c + dc;
-      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-        const target = board[nr][nc];
-        if (!target || isWhite !== (target === target.toUpperCase())) moves.push({ r: nr, c: nc });
-      }
-    });
-  } else {
-    // 룩, 비숍, 퀸 장거리 전진 슬라이딩 계산
-    vectors.forEach(([dr, dc]) => {
-      let nr = r + dr, nc = c + dc;
-      while (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-        const target = board[nr][nc];
-        if (!target) {
-          moves.push({ r: nr, c: nc });
-        } else {
-          if (isWhite !== (target === target.toUpperCase())) moves.push({ r: nr, c: nc });
-          break; // 기물에 막힘
-        }
-        nr += dr; nc += dc;
-      }
-    });
-  }
-
-  return moves;
-}
-
-/* ── AI 의사결정 인공지능 알고리즘 (Black) ── */
-function makeAiChessMove() {
-  let allMoves = [];
-
-  // 1. 현재 AI가 둘 수 있는 모든 합법적인 경우의 수 수집
-  for (let r = 0; r < CHESS_SIZE; r++) {
-    for (let c = 0; c < CHESS_SIZE; c++) {
-      const piece = chessBoard[r][c];
-      if (piece && piece === piece.toLowerCase()) { // 흑돌(AI)인 경우
-        const validMoves = getValidMoves(r, c, chessBoard);
-        validMoves.forEach(m => {
-          allMoves.push({ from: { r, c }, to: m, piece });
-        });
-      }
-    }
-  }
-
-  if (allMoves.length === 0) {
-    alert("체크메이트 또는 스테일메이트! 게임이 종료되었습니다.");
-    resetChessGame();
-    return;
-  }
-
-  // 2. 전술 가치 점수 연산 (Minimax 가중치 연산)
-  let bestMove = null;
-  let minScore = 10000; // AI(음수 점수)는 점수를 가장 낮게 깎을수록 유리
-
-  allMoves.forEach(move => {
-    // 가상 대국 시뮬레이션
-    const targetPiece = chessBoard[move.to.r][move.to.c];
-    let score = 0;
-
-    // 점수 규칙 A: 적의 기물을 잡는 가치 우선 계산
-    if (targetPiece) {
-      score += PIECE_VALUES[targetPiece] * 10;
-    }
-
-    // 점수 규칙 B: 중앙 제어 및 진격 점수 가중치
-    score += (move.to.r - 3.5) * 0.5; 
-
-    // 약간의 예측 불가능성을 위한 무작위 전략 추가
-    score += Math.random() * 2;
-
-    if (score < minScore) {
-      minScore = score;
-      bestMove = move;
+// Scroll Reveal
+window.addEventListener('scroll', () => {
+  document.querySelectorAll('.reveal').forEach(el => {
+    if(el.getBoundingClientRect().top < window.innerHeight * 0.85) {
+      el.classList.add('visible');
     }
   });
-
-  // 3. 최선의 수 실행
-  if (bestMove) {
-    // 혹시 킹이 잡히는 조건 검사
-    if (chessBoard[bestMove.to.r][bestMove.to.c] === 'K') {
-      alert("👑 AI가 당신의 킹을 잡았습니다! AI 승리!");
-    }
-    movePiece(bestMove.from.r, bestMove.from.c, bestMove.to.r, bestMove.to.c);
-  }
-
-  isPlayerTurn = true;
-  updateChessUI();
-}
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, {threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+});
+window.dispatchEvent(new Event('scroll'));
 </script>
+
+<!-- 외부 분리형 게임 인공지능 엔진들 연동 -->
+<script src="js/connect6.js"></script>
+<script src="js/chess.js"></script>
 </body>
 </html>
