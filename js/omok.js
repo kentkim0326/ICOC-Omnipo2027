@@ -9,7 +9,7 @@
   const EMPTY = 0, BLACK = 1, WHITE = 2; // BLACK = 플레이어, WHITE = AI
   const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
-  let board, turn, gameOver, lastMoveEl, cellEls, awarded, moveCount;
+  let board, turn, gameOver, lastMoveEl, boardUI, awarded, moveCount;
 
   function inBounds(r, c) {
     return r >= 0 && r < SIZE && c >= 0 && c < SIZE;
@@ -90,11 +90,7 @@
   }
 
   function renderStone(r, c, player) {
-    const cell = cellEls[r][c];
-    cell.innerHTML = '';
-    const stone = document.createElement('div');
-    stone.className = 'stone ' + (player === BLACK ? 'black' : 'white') + ' last-move';
-    cell.appendChild(stone);
+    const stone = boardUI.placeStone(r, c, player === BLACK ? 'black' : 'white', 'last-move');
     if (lastMoveEl) lastMoveEl.classList.remove('last-move');
     lastMoveEl = stone;
   }
@@ -149,22 +145,9 @@
   }
 
   function buildBoardDOM(container) {
-    const grid = document.createElement('div');
-    grid.className = 'board-grid';
-    grid.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
-    cellEls = [];
-    for (let r = 0; r < SIZE; r++) {
-      const rowArr = [];
-      for (let c = 0; c < SIZE; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'board-cell';
-        cell.addEventListener('click', () => onCellClick(r, c));
-        grid.appendChild(cell);
-        rowArr.push(cell);
-      }
-      cellEls.push(rowArr);
-    }
-    container.appendChild(grid);
+    boardUI = global.BoardUI.createGoban(container, SIZE, {
+      onIntersectionClick: onCellClick
+    });
   }
 
   function reset() {
@@ -177,9 +160,7 @@
     setStatus('');
     setPointsMsg('당신은 흑, AI는 백입니다. 5개를 먼저 연결하세요.');
     setTurnUI();
-    if (cellEls) {
-      for (let r = 0; r < SIZE; r++) for (let c = 0; c < SIZE; c++) cellEls[r][c].innerHTML = '';
-    }
+    if (boardUI) boardUI.clearAll();
   }
 
   function start() {
