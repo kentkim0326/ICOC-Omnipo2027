@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brain Sports Omnipo 2027 — ICOC</title>
+<link rel="icon" type="image/png" href="assets/logo.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -40,10 +41,12 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 }
 .lang-bar .logo-mini {
   margin-right:auto;
+  display:flex; align-items:center; gap:8px;
   font-family:'Playfair Display',serif;
   font-size:15px; font-weight:700;
   color:var(--gold); letter-spacing:0.15em;
 }
+.lang-bar .logo-mini img { height:28px; width:auto; display:block; }
 .lang-btns { display:flex; gap:6px; }
 .lang-btn {
   padding:5px 14px;
@@ -377,11 +380,31 @@ footer a { color:var(--gold); text-decoration:none; }
 
 /* ── MOBILE ── */
 @media(max-width:640px){
-  .lang-bar { padding:10px 20px; }
+  .lang-bar {
+    flex-direction:column; align-items:stretch; gap:8px;
+    padding:10px 16px;
+  }
+  .lang-bar .logo-mini { margin-right:0; justify-content:center; font-size:13px; }
+  .lang-bar .logo-mini img { height:22px; }
+  .points-badge { margin-right:0; justify-content:center; font-size:11px; padding:4px 10px; }
+  .points-badge .cap-note { display:none; }
+  .lang-btns { justify-content:center; flex-wrap:wrap; }
+  .lang-btn { padding:4px 10px; font-size:10.5px; }
+
+  .hero { padding:200px 24px 72px; }
   .section-wrap { padding:72px 24px; }
-  .hero { padding:110px 24px 72px; }
   .stats-band { padding:56px 24px; }
+  .stats-grid { gap:24px; }
   .contact-wrap { padding:80px 24px; }
+
+  .sports-grid { grid-template-columns:1fr !important; }
+  .sport-card { padding:28px 22px; }
+  .sport-name { font-size:18px; }
+  .sport-name::after { display:block; width:fit-content; margin-left:0 !important; margin-top:8px; }
+}
+@media(max-width:380px){
+  .hero { padding:230px 16px 60px; }
+  .lang-btn { padding:3px 7px; font-size:9.5px; }
 }
 </style>
 </head>
@@ -389,7 +412,7 @@ footer a { color:var(--gold); text-decoration:none; }
 
 <!-- LANG BAR -->
 <nav class="lang-bar">
-  <span class="logo-mini">ICOC · OMNIPO</span>
+  <span class="logo-mini"><img src="assets/logo.png" alt="ICOC"> ICOC · OMNIPO</span>
   <span class="points-badge">
     <span class="coin">🪙</span>
     <span id="points-badge-num">0</span>P
@@ -554,77 +577,74 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-players" data-i18n="c13p">30M+ players (Korea & Japan)</div>
     </div>
 
-  </div>
-</div>
-
-<!-- ARCADE (캐주얼 미니게임 — ICOC 공식 종목과는 별개, 자유 연습/포인트 전용) -->
-<div class="full-divider"></div>
-<div class="section-wrap" id="arcade">
-  <div class="reveal">
-    <p class="section-label">Mini-Game Arcade</p>
-    <h2 class="section-title" data-i18n="ar_title">미니게임 아케이드</h2>
-    <p class="section-body" data-i18n="ar_body">위 13개는 ICOC 공인 정식 대회 종목입니다. 아래는 누구나 가볍게 즐길 수 있는 캐주얼 미니게임 모음으로, 정식 대회 종목은 아니지만 동일하게 AI와 대전하며 포인트를 모을 수 있습니다.</p>
-  </div>
-  <div class="sports-grid reveal">
-
-    <div class="sport-card coming-soon" data-game="connect4">
+    <div class="sport-card playable" data-game="connect4">
       <span class="sport-icon">🔴</span>
-      <div class="sport-name" data-i18n="a1n">커넥트4 (Connect 4)</div>
-      <div class="sport-desc" data-i18n="a1d">세로로 떨어뜨리는 돌로 가로·세로·대각선 4개를 먼저 연결하면 승리하는 클래식 전략 게임.</div>
+      <div class="sport-name" data-i18n="c14n">커넥트4 (Connect 4)</div>
+      <div class="sport-desc" data-i18n="c14d">세로로 떨어뜨리는 돌로 가로·세로·대각선 4개를 먼저 연결하면 승리하는 클래식 전략 게임. 미국 마인드스포츠 협회에서도 공식 경기로 다뤄지는 추상 전략 게임입니다.</div>
+      <div class="sport-players" data-i18n="c14p">전 세계 1억 명 이상</div>
     </div>
 
-    <div class="sport-card coming-soon" data-game="reversi">
+    <div class="sport-card playable" data-game="reversi">
       <span class="sport-icon">⚪</span>
-      <div class="sport-name" data-i18n="a2n">리버시 / 오델로 (Reversi)</div>
-      <div class="sport-desc" data-i18n="a2d">상대 돌을 뒤집어 자신의 색으로 만드는 게임. 세계오델로연맹(WOF) 주관 국제대회가 매년 열립니다.</div>
+      <div class="sport-name" data-i18n="c15n">리버시 / 오델로 (Reversi)</div>
+      <div class="sport-desc" data-i18n="c15d">상대 돌을 뒤집어 자신의 색으로 만드는 게임. 세계오델로연맹(WOF)이 1977년부터 매년 세계선수권을 개최합니다.</div>
+      <div class="sport-players" data-i18n="c15p">전 세계 4천만 명 이상</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="hex">
       <span class="sport-icon">⬡</span>
-      <div class="sport-name" data-i18n="a3n">헥스 (Hex)</div>
-      <div class="sport-desc" data-i18n="a3d">육각형 보드에서 자신의 색으로 양쪽 끝을 연결하면 승리하는 순수 추상 전략 게임.</div>
+      <div class="sport-name" data-i18n="c16n">헥스 (Hex)</div>
+      <div class="sport-desc" data-i18n="c16d">육각형 보드에서 자신의 색으로 양쪽 끝을 연결하면 승리하는 순수 추상 전략 게임. 수학자·AI 연구자들에게 사랑받는 게임이론의 고전입니다.</div>
+      <div class="sport-players" data-i18n="c16p">전 세계 마인드스포츠 동호인 커뮤니티</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="quoridor">
       <span class="sport-icon">🧱</span>
-      <div class="sport-name" data-i18n="a4n">쿼리도 (Quoridor)</div>
-      <div class="sport-desc" data-i18n="a4d">벽을 세워 상대의 길을 막으면서 자신은 먼저 반대편에 도착해야 하는 보드게임.</div>
+      <div class="sport-name" data-i18n="c17n">쿼리도 (Quoridor)</div>
+      <div class="sport-desc" data-i18n="c17d">벽을 세워 상대의 길을 막으면서 자신은 먼저 반대편에 도착해야 하는 보드게임. 멘사 선정 게임으로도 유명합니다.</div>
+      <div class="sport-players" data-i18n="c17p">전 세계 보드게임 동호인 다수</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="davinci">
       <span class="sport-icon">🔢</span>
-      <div class="sport-name" data-i18n="a5n">다빈치 코드 (Da Vinci Code)</div>
-      <div class="sport-desc" data-i18n="a5d">상대의 숫자 타일을 추리해 먼저 모두 맞히는 두뇌 추리 게임.</div>
+      <div class="sport-name" data-i18n="c18n">다빈치 코드 (Da Vinci Code)</div>
+      <div class="sport-desc" data-i18n="c18d">상대의 숫자 타일을 추리해 먼저 모두 맞히는 두뇌 추리 게임. 한국에서 특히 대중적인 인기를 누리고 있습니다.</div>
+      <div class="sport-players" data-i18n="c18p">한국 중심 수백만 명</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="rummikub">
       <span class="sport-icon">🀫</span>
-      <div class="sport-name" data-i18n="a6n">루미큐브 (Rummikub)</div>
-      <div class="sport-desc" data-i18n="a6d">숫자 타일로 조합을 만들어 손에 든 타일을 먼저 모두 내려놓는 게임.</div>
+      <div class="sport-name" data-i18n="c19n">루미큐브 (Rummikub)</div>
+      <div class="sport-desc" data-i18n="c19d">숫자 타일로 조합을 만들어 손에 든 타일을 먼저 모두 내려놓는 게임. 세계적으로 가장 많이 팔린 패밀리 게임 중 하나입니다.</div>
+      <div class="sport-players" data-i18n="c19p">전 세계 수천만 명</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="oldmaid">
       <span class="sport-icon">🃏</span>
-      <div class="sport-name" data-i18n="a7n">도둑잡기 (Old Maid)</div>
-      <div class="sport-desc" data-i18n="a7d">짝이 없는 카드 한 장을 들고 시작해, 짝을 맞춰 버리고 마지막까지 혼자 들고 있으면 지는 카드 게임.</div>
+      <div class="sport-name" data-i18n="c20n">도둑잡기 (Old Maid)</div>
+      <div class="sport-desc" data-i18n="c20d">짝이 없는 카드 한 장을 들고 시작해, 짝을 맞춰 버리고 마지막까지 혼자 들고 있으면 지는 카드 게임. 전 세계 스테디셀러 패밀리 카드게임입니다.</div>
+      <div class="sport-players" data-i18n="c20p">전 세계 대중적 카드 게임</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="onecard">
       <span class="sport-icon">🂠</span>
-      <div class="sport-name" data-i18n="a8n">원카드 (One Card)</div>
-      <div class="sport-desc" data-i18n="a8d">손에 든 카드를 가장 먼저 모두 내려놓는 사람이 승리하는 대중적인 카드 게임.</div>
+      <div class="sport-name" data-i18n="c21n">원카드 (One Card)</div>
+      <div class="sport-desc" data-i18n="c21d">손에 든 카드를 가장 먼저 모두 내려놓는 사람이 승리하는 대중적인 카드 게임. 한국·일본에서 특히 인기가 높습니다.</div>
+      <div class="sport-players" data-i18n="c21p">한·일 중심 수천만 명</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="blackjack">
       <span class="sport-icon">♠</span>
-      <div class="sport-name" data-i18n="a9n">블랙잭 (Blackjack)</div>
-      <div class="sport-desc" data-i18n="a9d">카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. 베팅 없이 AI와 점수로만 대전합니다.</div>
+      <div class="sport-name" data-i18n="c22n">블랙잭 (Blackjack)</div>
+      <div class="sport-desc" data-i18n="c22d">카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. ICOC에서는 베팅 없이 AI와 점수로만 대전합니다.</div>
+      <div class="sport-players" data-i18n="c22p">전 세계 가장 대중적인 카드 게임</div>
     </div>
 
     <div class="sport-card coming-soon" data-game="bowling">
       <span class="sport-icon">🎳</span>
-      <div class="sport-name" data-i18n="a10n">볼링 (Bowling)</div>
-      <div class="sport-desc" data-i18n="a10d">10프레임 동안 더 높은 점수를 내면 승리하는 캐주얼 스코어 게임.</div>
+      <div class="sport-name" data-i18n="c23n">볼링 (Bowling)</div>
+      <div class="sport-desc" data-i18n="c23d">10프레임 동안 더 높은 점수를 내면 승리하는 캐주얼 스코어 게임. 전 세계에서 가장 대중적인 생활 스포츠입니다.</div>
+      <div class="sport-players" data-i18n="c23p">전 세계 1억 명 이상 동호인</div>
     </div>
 
   </div>
@@ -792,8 +812,8 @@ const T = {
     hero_sub:"바둑·체스·장기·당구·브릿지·스크린골프<br>세계 최초 멀티종목 국제 브레인스포츠 대회",
     cta_reg:"참가 문의", cta_play:"지금 플레이하기",
     s1:"공식 종목", s2:"글로벌 플레이어", s3:"참가국 목표", s4:"서울 개최",
-    sp_title:"13개 공식 종목",
-    sp_body:'인류의 지성이 겨루는 열세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.',
+    sp_title:"23개 공식 종목",
+    sp_body:'인류의 지성이 겨루는 스물세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.',
     c1n:"바둑 (Go)", c1d:"수천 년의 역사를 가진 전략 보드게임. 13x13 보드에서 상대 돌을 더 많이 포획하면 승리합니다. 지금 바로 AI와 대전해보세요!", c1p:"전 세계 6천만 명",
     c2n:"체스 (Chess)", c2d:"170개국, 6억 명이 즐기는 세계 최대 마인드스포츠. 체크메이트로 승부를 가립니다. 지금 바로 AI와 대전해보세요!", c2p:"전 세계 6억 명",
     c3n:"장기 (Janggi)", c3d:"한국 고유의 전통 보드게임. 국내외 한인 커뮤니티와 연계하여 글로벌 저변 확대를 목표로 합니다.", c3p:"전 세계 1천만 명",
@@ -807,25 +827,24 @@ const T = {
     c11n:"쇼기 (Shogi)", c11d:"일본 고유의 전통 장기. 일본장기연맹(JSA) 산하 공식 국제 대회가 운영되며, 일본 참가자 유치의 핵심 종목입니다.", c11p:"전 세계 2천만 명 이상",
     c12n:"텍사스 홀덤 (Texas Hold'em)", c12d:"마인드스포츠 올림피아드(MSO) 공식 종목. 확률 계산·심리 분석·전략적 판단이 결합된 고도의 두뇌 스포츠입니다.", c12p:"전 세계 1억 명 이상",
     c13n:"하나후다 / 고스톱 (Hanafuda / Go-Stop)", c13d:"일본에서 기원해 한국에서 고스톱으로 발전한 화투 카드 게임. 한·일 양국의 공통 문화유산으로 K-컬처 연계에 최적화된 종목입니다.", c13p:"한국·일본 3천만 명 이상",
-    ar_title:"미니게임 아케이드", ar_body:"위 13개는 ICOC 공인 정식 대회 종목입니다. 아래는 누구나 가볍게 즐길 수 있는 캐주얼 미니게임 모음으로, 정식 대회 종목은 아니지만 동일하게 AI와 대전하며 포인트를 모을 수 있습니다.",
-    a1n:"커넥트4 (Connect 4)", a1d:"세로로 떨어뜨리는 돌로 가로·세로·대각선 4개를 먼저 연결하면 승리하는 클래식 전략 게임.",
-    a2n:"리버시 / 오델로 (Reversi)", a2d:"상대 돌을 뒤집어 자신의 색으로 만드는 게임. 세계오델로연맹(WOF) 주관 국제대회가 매년 열립니다.",
-    a3n:"헥스 (Hex)", a3d:"육각형 보드에서 자신의 색으로 양쪽 끝을 연결하면 승리하는 순수 추상 전략 게임.",
-    a4n:"쿼리도 (Quoridor)", a4d:"벽을 세워 상대의 길을 막으면서 자신은 먼저 반대편에 도착해야 하는 보드게임.",
-    a5n:"다빈치 코드 (Da Vinci Code)", a5d:"상대의 숫자 타일을 추리해 먼저 모두 맞히는 두뇌 추리 게임.",
-    a6n:"루미큐브 (Rummikub)", a6d:"숫자 타일로 조합을 만들어 손에 든 타일을 먼저 모두 내려놓는 게임.",
-    a7n:"도둑잡기 (Old Maid)", a7d:"짝이 없는 카드 한 장을 들고 시작해, 짝을 맞춰 버리고 마지막까지 혼자 들고 있으면 지는 카드 게임.",
-    a8n:"원카드 (One Card)", a8d:"손에 든 카드를 가장 먼저 모두 내려놓는 사람이 승리하는 대중적인 카드 게임.",
-    a9n:"블랙잭 (Blackjack)", a9d:"카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. 베팅 없이 AI와 점수로만 대전합니다.",
-    a10n:"볼링 (Bowling)", a10d:"10프레임 동안 더 높은 점수를 내면 승리하는 캐주얼 스코어 게임.",
+    c14n:"커넥트4 (Connect 4)", c14d:"세로로 떨어뜨리는 돌로 가로·세로·대각선 4개를 먼저 연결하면 승리하는 클래식 전략 게임. 미국 마인드스포츠 협회에서도 공식 경기로 다뤄지는 추상 전략 게임입니다.", c14p:"전 세계 1억 명 이상",
+    c15n:"리버시 / 오델로 (Reversi)", c15d:"상대 돌을 뒤집어 자신의 색으로 만드는 게임. 세계오델로연맹(WOF)이 1977년부터 매년 세계선수권을 개최합니다.", c15p:"전 세계 4천만 명 이상",
+    c16n:"헥스 (Hex)", c16d:"육각형 보드에서 자신의 색으로 양쪽 끝을 연결하면 승리하는 순수 추상 전략 게임. 수학자·AI 연구자들에게 사랑받는 게임이론의 고전입니다.", c16p:"전 세계 마인드스포츠 동호인 커뮤니티",
+    c17n:"쿼리도 (Quoridor)", c17d:"벽을 세워 상대의 길을 막으면서 자신은 먼저 반대편에 도착해야 하는 보드게임. 멘사 선정 게임으로도 유명합니다.", c17p:"전 세계 보드게임 동호인 다수",
+    c18n:"다빈치 코드 (Da Vinci Code)", c18d:"상대의 숫자 타일을 추리해 먼저 모두 맞히는 두뇌 추리 게임. 한국에서 특히 대중적인 인기를 누리고 있습니다.", c18p:"한국 중심 수백만 명",
+    c19n:"루미큐브 (Rummikub)", c19d:"숫자 타일로 조합을 만들어 손에 든 타일을 먼저 모두 내려놓는 게임. 세계적으로 가장 많이 팔린 패밀리 게임 중 하나입니다.", c19p:"전 세계 수천만 명",
+    c20n:"도둑잡기 (Old Maid)", c20d:"짝이 없는 카드 한 장을 들고 시작해, 짝을 맞춰 버리고 마지막까지 혼자 들고 있으면 지는 카드 게임. 전 세계 스테디셀러 패밀리 카드게임입니다.", c20p:"전 세계 대중적 카드 게임",
+    c21n:"원카드 (One Card)", c21d:"손에 든 카드를 가장 먼저 모두 내려놓는 사람이 승리하는 대중적인 카드 게임. 한국·일본에서 특히 인기가 높습니다.", c21p:"한·일 중심 수천만 명",
+    c22n:"블랙잭 (Blackjack)", c22d:"카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. ICOC에서는 베팅 없이 AI와 점수로만 대전합니다.", c22p:"전 세계 가장 대중적인 카드 게임",
+    c23n:"볼링 (Bowling)", c23d:"10프레임 동안 더 높은 점수를 내면 승리하는 캐주얼 스코어 게임. 전 세계에서 가장 대중적인 생활 스포츠입니다.", c23p:"전 세계 1억 명 이상 동호인",
     ab_title:"왜 Brain Sports Omnipo인가",
-    ab_quote:'"세계 최초.<br>13개 브레인스포츠를<br>하나의 무대에서."',
+    ab_quote:'"세계 최초.<br>23개 브레인스포츠를<br>하나의 무대에서."',
     ab_body:"바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 종목들을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.",
     org_l:"주관 기관", org_d:"문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)",
     op_l:"운영사", op_d:"대표 김형섭 (Kent Kim)<br>Harvard University, Economics<br>info@deother.me",
     rm_title:"대회 로드맵", rm_body:"서울에서 시작해 아시아로, 그리고 세계로. Brain Sports Omnipo를 향한 여정입니다.",
     t1d:"2026 · 준비기", t1t:"ICOC 공식 출범 및 스폰서 유치", t1b:"문체부 사단법인 완비 · 종목 네트워크 구성 · 종목별 국제 기구 협약 체결 · 스폰서십 확보",
-    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 13개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
+    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 23개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
     t3d:"2028", t3t:"아시아 위성 예선 확대", t3b:"30개국 · 아시아 3개 도시 위성 예선 · 전문 리그 신설 · 미디어 파트너십 확대",
     t4d:"2029~", t4t:"아시아 브레인스포츠 리그 창설", t4b:"시즌제 리그 운영 · 서울 파이널 정례화 · 글로벌 Brain Sports Omnipo로 성장",
     ct_title:"참가·스폰서 문의", ct_body:"대회 참가, 스폰서십, 종목별 파트너십 문의를 환영합니다.",
@@ -839,8 +858,8 @@ const T = {
     hero_sub:"Go · Chess · Janggi · Billiards · Bridge · Screen Golf & more<br>The World's First Multi-Discipline Brain Sports Championship",
     cta_reg:"Contact Us", cta_play:"Play Now",
     s1:"Official Sports", s2:"Global Players", s3:"Target Countries", s4:"Seoul 2027",
-    sp_title:"13 Official Sports",
-    sp_body:'Thirteen disciplines. One stage. Cards marked "▶ PLAY" can be played instantly against AI — no login required.',
+    sp_title:"23 Official Sports",
+    sp_body:'Twenty-three disciplines. One stage. Cards marked "▶ PLAY" can be played instantly against AI — no login required.',
     c1n:"Baduk / Go", c1d:"The ancient strategy game with millennia of history. Capture more enemy stones than AI on a 13x13 board. Play now!", c1p:"60M players worldwide",
     c2n:"Chess", c2d:"The world's largest mind sport with 600M players across 170 countries. Checkmate to win. Play now against AI!", c2p:"600M players worldwide",
     c3n:"Janggi (Korean Chess)", c3d:"Korea's traditional board game, connecting diaspora communities worldwide.", c3p:"10M players worldwide",
@@ -854,25 +873,24 @@ const T = {
     c11n:"Shogi", c11d:"Japan's traditional chess. Official international competitions run by the Japan Shogi Association — a key draw for Japanese participants.", c11p:"20M+ players worldwide",
     c12n:"Texas Hold'em", c12d:"An official Mind Sports Olympiad event. The world's most popular card game combining probability, psychology, and strategy.", c12p:"100M+ players worldwide",
     c13n:"Hanafuda / Go-Stop", c13d:"The flower card game that originated in Japan and evolved into Go-Stop in Korea — a shared cultural heritage ideal for K-Culture tie-ins.", c13p:"30M+ players (Korea & Japan)",
-    ar_title:"Mini-Game Arcade", ar_body:"The 13 sports above are ICOC-sanctioned official tournament events. Below is a casual mini-game collection anyone can enjoy — not official sports, but you can still play against AI and earn points the same way.",
-    a1n:"Connect 4", a1d:"Drop discs to connect four in a row — horizontally, vertically, or diagonally — before your opponent.",
-    a2n:"Reversi / Othello", a2d:"Flip your opponent's discs to your color. The World Othello Federation holds an annual world championship.",
-    a3n:"Hex", a3d:"A pure abstract strategy game: connect your two opposite sides of a hexagonal board first to win.",
-    a4n:"Quoridor", a4d:"Block your opponent's path with walls while racing to reach the opposite side first.",
-    a5n:"Da Vinci Code", a5d:"A deduction game — guess your opponent's hidden number tiles before they guess yours.",
-    a6n:"Rummikub", a6d:"Form number-tile combinations and be the first to lay down your entire hand.",
-    a7n:"Old Maid", a7d:"A classic card game of matching pairs — whoever is left holding the unmatched card loses.",
-    a8n:"One Card", a8d:"A popular shedding card game — be the first to play all the cards in your hand.",
-    a9n:"Blackjack", a9d:"Get as close to 21 as possible without going over. Played against AI for points only, no betting.",
-    a10n:"Bowling", a10d:"A casual scoring game across 10 frames — whoever scores higher wins.",
+    c14n:"Connect 4", c14d:"Drop discs to connect four in a row — horizontally, vertically, or diagonally — before your opponent.", c14p:"100M+ players worldwide",
+    c15n:"Reversi / Othello", c15d:"Flip your opponent's discs to your color. The World Othello Federation has held an annual world championship since 1977.", c15p:"40M+ players worldwide",
+    c16n:"Hex", c16d:"A pure abstract strategy game: connect your two opposite sides of a hexagonal board first to win. A classic in game theory loved by mathematicians and AI researchers.", c16p:"A devoted global mind-sports community",
+    c17n:"Quoridor", c17d:"Block your opponent's path with walls while racing to reach the opposite side first. A well-known Mensa Select game.", c17p:"A large global board-game following",
+    c18n:"Da Vinci Code", c18d:"A deduction game — guess your opponent's hidden number tiles before they guess yours. Especially popular in Korea.", c18p:"Millions of players, mainly in Korea",
+    c19n:"Rummikub", c19d:"Form number-tile combinations and be the first to lay down your entire hand. One of the best-selling family games worldwide.", c19p:"Tens of millions worldwide",
+    c20n:"Old Maid", c20d:"A classic card game of matching pairs — whoever is left holding the unmatched card loses. A worldwide family-game staple.", c20p:"A globally popular card game",
+    c21n:"One Card", c21d:"A popular shedding card game — be the first to play all the cards in your hand. Especially big in Korea and Japan.", c21p:"Tens of millions across Korea & Japan",
+    c22n:"Blackjack", c22d:"Get as close to 21 as possible without going over. Played against AI for points only — no betting at ICOC.", c22p:"The world's most popular card game",
+    c23n:"Bowling", c23d:"A casual scoring game across 10 frames — whoever scores higher wins. One of the world's most popular recreational sports.", c23p:"100M+ enthusiasts worldwide",
     ab_title:"Why Brain Sports Omnipo?",
-    ab_quote:'"World First.<br>13 Brain Sports.<br>One Stage."',
+    ab_quote:'"World First.<br>23 Brain Sports.<br>One Stage."',
     ab_body:"Go (IGF), Chess (FIDE), Billiards (UMB), Bridge (WBF) — each discipline has millions of international players and a governing body. Yet no event in history has unified them on a single platform. Brain Sports Omnipo 2027 changes that.",
     org_l:"Organizer", org_d:"Incorporated Association under<br>Ministry of Culture, Sports and Tourism (Korea)",
     op_l:"Operating Company", op_d:"CEO: Kent Kim (김형섭)<br>Harvard University, Economics<br>info@deother.me",
     rm_title:"Tournament Roadmap", rm_body:"Starting in Seoul, expanding across Asia, growing into the global Brain Sports Omnipo.",
     t1d:"2026 · Preparation", t1t:"ICOC Launch & Sponsorship", t1b:"Legal entity complete · Sport network · Federation agreements · Sponsor acquisition",
-    t2d:"2027 · Seoul", t2t:"1st Brain Sports Omnipo 2027", t2b:"Seoul · 15+ countries · 200+ international players · 13 disciplines · K-Culture opening ceremony · Live streaming",
+    t2d:"2027 · Seoul", t2t:"1st Brain Sports Omnipo 2027", t2b:"Seoul · 15+ countries · 200+ international players · 23 disciplines · K-Culture opening ceremony · Live streaming",
     t3d:"2028", t3t:"Asia Satellite Qualifiers", t3b:"30+ countries · Satellite qualifiers in 3 Asian cities · Dedicated leagues · Media partnerships",
     t4d:"2029~", t4t:"Asia Brain Sports League", t4b:"Season-format league · Seoul Finals as permanent venue · Growing into global Brain Sports Omnipo",
     ct_title:"Get in Touch", ct_body:"We welcome inquiries about participation, sponsorship, and partnerships.",
@@ -886,8 +904,8 @@ const T = {
     hero_sub:"围棋·国际象棋·将棋·台球·桥牌·模拟高尔夫等<br>世界首届多项目国际脑力运动锦标赛",
     cta_reg:"联系我们", cta_play:"立即游玩",
     s1:"正式项目", s2:"全球选手", s3:"目标参赛国", s4:"首尔 2027",
-    sp_title:"十三大官方项目",
-    sp_body:'十三个项目，一个舞台。标有"▶ PLAY"的卡片可立即与AI对战，无需登录。',
+    sp_title:"二十三大官方项目",
+    sp_body:'二十三个项目，一个舞台。标有"▶ PLAY"的卡片可立即与AI对战，无需登录。',
     c1n:"围棋", c1d:"拥有数千年历史的战略棋盘游戏。在13x13棋盘上俘获更多对方棋子即可获胜，现在就可以挑战AI！", c1p:"全球6000万玩家",
     c2n:"国际象棋", c2d:"覆盖170个国家、拥有6亿玩家的世界最大脑力运动。将死对方即获胜，现在就可以挑战AI！", c2p:"全球6亿玩家",
     c3n:"韩国将棋", c3d:"韩国传统棋盘游戏，致力于扩大全球影响力。", c3p:"全球1000万玩家",
@@ -901,25 +919,24 @@ const T = {
     c11n:"将棋", c11d:"日本独有的传统棋类游戏，是吸引日本参赛者的核心项目。", c11p:"全球2000万以上玩家",
     c12n:"德州扑克", c12d:"智力运动奥林匹克（MSO）官方项目，融合概率计算、心理分析与战略判断。", c12p:"全球1亿以上玩家",
     c13n:"花牌 / 高斯托普", c13d:"源自日本、在韩国发展为高斯托普的花牌游戏，是韩日共同文化遗产。", c13p:"韩国·日本3000万以上玩家",
-    ar_title:"迷你游戏游乐场", ar_body:"以上13项是ICOC认证的正式比赛项目。以下是任何人都可以轻松游玩的休闲迷你游戏合集，虽非正式比赛项目，但同样可以与AI对战并获得积分。",
-    a1n:"四子棋 (Connect 4)", a1d:"将棋子垂直落下，率先连成横、竖或斜方向四子者获胜的经典策略游戏。",
-    a2n:"黑白棋 / 奥赛罗 (Reversi)", a2d:"翻转对方棋子使其变为己方颜色的游戏。世界奥赛罗联盟（WOF）每年举办国际锦标赛。",
-    a3n:"六贯棋 (Hex)", a3d:"在六边形棋盘上率先连接己方两端者获胜的纯抽象策略游戏。",
-    a4n:"夸里多棋 (Quoridor)", a4d:"用墙壁阻挡对手路径，同时争取自己先到达对面的棋盘游戏。",
-    a5n:"达芬奇密码 (Da Vinci Code)", a5d:"推理猜出对方数字牌的智力推理游戏。",
-    a6n:"拉密 (Rummikub)", a6d:"用数字牌组成组合，率先出完手牌者获胜。",
-    a7n:"抽乌龟 (Old Maid)", a7d:"配对丢弃手牌，最后单独持有无配对牌者落败的纸牌游戏。",
-    a8n:"原卡 (One Card)", a8d:"率先出完手牌者获胜的大众纸牌游戏。",
-    a9n:"21点 (Blackjack)", a9d:"牌面总和尽量接近21点又不超过的纸牌游戏。仅与AI比分，不涉及投注。",
-    a10n:"保龄球 (Bowling)", a10d:"十局中得分更高者获胜的休闲计分游戏。",
+    c14n:"四子棋 (Connect 4)", c14d:"将棋子垂直落下，率先连成横、竖或斜方向四子者获胜的经典策略游戏。在美国智力运动协会也被列为正式比赛项目。", c14p:"全球1亿以上玩家",
+    c15n:"黑白棋 / 奥赛罗 (Reversi)", c15d:"翻转对方棋子使其变为己方颜色的游戏。世界奥赛罗联盟（WOF）自1977年起每年举办世界锦标赛。", c15p:"全球4000万以上玩家",
+    c16n:"六贯棋 (Hex)", c16d:"在六边形棋盘上率先连接己方两端者获胜的纯抽象策略游戏，深受数学家与AI研究者喜爱的博弈论经典。", c16p:"全球智力运动爱好者社区",
+    c17n:"夸里多棋 (Quoridor)", c17d:"用墙壁阻挡对手路径，同时争取自己先到达对面的棋盘游戏，曾获Mensa Select推荐。", c17p:"全球众多桌游爱好者",
+    c18n:"达芬奇密码 (Da Vinci Code)", c18d:"推理猜出对方数字牌的智力推理游戏，在韩国尤其受欢迎。", c18p:"以韩国为中心的数百万玩家",
+    c19n:"拉密 (Rummikub)", c19d:"用数字牌组成组合，率先出完手牌者获胜，是全球最畲销的家庭游戏之一。", c19p:"全球数千万玩家",
+    c20n:"抽乌龟 (Old Maid)", c20d:"配对丢弃手牌，最后单独持有无配对牌者落败的纸牌游戏，全球家庭常备游戏。", c20p:"全球大众纸牌游戏",
+    c21n:"原卡 (One Card)", c21d:"率先出完手牌者获胜的大众纸牌游戏，在韩国与日本尤其流行。", c21p:"韩日数千万玩家",
+    c22n:"21点 (Blackjack)", c22d:"牌面总和尽量接近21点又不超过的纸牌游戏。ICOC仅与AI比分，不涉及投注。", c22p:"全球最受欢迎的纸牌游戏",
+    c23n:"保龄球 (Bowling)", c23d:"十局中得分更高者获胜的休闲计分游戏，是全球最普及的休闲运动之一。", c23p:"全球1亿以上爱好者",
     ab_title:"为什么是Brain Sports全能波？",
-    ab_quote:'"世界首创。<br>13大脑力运动。<br>同台竞技。"',
+    ab_quote:'"世界首创。<br>23大脑力运动。<br>同台竞技。"',
     ab_body:"围棋(IGF)、国际象棋(FIDE)、台球(UMB)、桥牌(WBF)——将这些项目整合于同一平台的国际赛事，迄今为止在全球尚属空白。Brain Sports全能波2027将填补这一历史空白。",
     org_l:"主办机构", org_d:"韩国文化体育观光部认可社团法人",
     op_l:"运营公司", op_d:"CEO：金炯燮 (Kent Kim)<br>哈佛大学经济学<br>info@deother.me",
     rm_title:"赛事路线图", rm_body:"从首尔出发，走向亚洲，迈向世界。",
     t1d:"2026年·准备期", t1t:"ICOC正式启动及赞助商招募", t1b:"社团法人完备 · 项目网络构建 · 国际机构协议签订 · 赞助商招募",
-    t2d:"2027年·首尔", t2t:"首届Brain Sports全能波2027", t2b:"首尔举办 · 15个以上国家 · 200名以上国际选手 · 13大项目同时进行",
+    t2d:"2027年·首尔", t2t:"首届Brain Sports全能波2027", t2b:"首尔举办 · 15个以上国家 · 200名以上国际选手 · 23大项目同时进行",
     t3d:"2028年", t3t:"亚洲卫星预选赛扩大", t3b:"30个以上国家 · 亚洲3个城市卫星预选赛 · 媒体合作扩大",
     t4d:"2029年~", t4t:"亚洲脑力运动联赛成立", t4b:"赛季制联赛运营 · 首尔决赛常态化",
     ct_title:"联系我们", ct_body:"欢迎就参赛、赞助及合作事宜进行咨询。",
@@ -933,8 +950,8 @@ const T = {
     hero_sub:"囲碁·チェス·チャンギ·ビリヤード·ブリッジ·スクリーンゴルフ他<br>世界初・複数種目国際ブレインスポーツ選手権",
     cta_reg:"お問い合わせ", cta_play:"今すぐプレイ",
     s1:"公式種目", s2:"グローバル競技人口", s3:"参加国目標", s4:"ソウル 2027",
-    sp_title:"13の公式種目",
-    sp_body:'13種目、1つのステージ。「▶ PLAY」表示のカードはログイン不要でAIと即対戦できます。',
+    sp_title:"23の公式種目",
+    sp_body:'23種目、1つのステージ。「▶ PLAY」表示のカードはログイン不要でAIと即対戦できます。',
     c1n:"囲碁", c1d:"数千年の歴史を持つ戦略ボードゲーム。13x13の盤面で相手の石をより多く取れば勝利。今すぐAIと対戦！", c1p:"世界6000万人",
     c2n:"チェス", c2d:"170カ国・6億人が楽しむ世界最大のマインドスポーツ。チェックメイトで勝負が決まります。今すぐAIと対戦！", c2p:"世界6億人",
     c3n:"チャンギ", c3d:"韓国固有の伝統ボードゲーム。グローバルな普及を目指します。", c3p:"世界1000万人",
@@ -948,25 +965,24 @@ const T = {
     c11n:"将棋", c11d:"日本固有の伝統ボードゲーム。日本将棋連盟公認の国際大会が運営されています。", c11p:"世界2000万人以上",
     c12n:"テキサスホールデム", c12d:"マインドスポーツオリンピアード公式種目。世界で最も人気のあるカードゲーム。", c12p:"世界1億人以上",
     c13n:"花札 / ゴーストップ", c13d:"日本発祥で韓国でゴーストップとして発展した花札カードゲーム。韓日共通の文化遺産。", c13p:"韓国・日本3000万人以上",
-    ar_title:"ミニゲームアーケード", ar_body:"上記13種目はICOC公認の正式大会種目です。以下は誰でも気軽に楽しめるカジュアルなミニゲーム集で、正式種目ではありませんが同様にAIと対戦してポイントを獲得できます。",
-    a1n:"コネクト4 (Connect 4)", a1d:"縦に駒を落として、縦・横・斜めいずれかで先に4つ並べると勝利するクラシックな戦略ゲーム。",
-    a2n:"リバーシ / オセロ (Reversi)", a2d:"相手の駒を裏返して自分の色にするゲーム。世界オセロ連盟（WOF）が毎年世界選手権を開催。",
-    a3n:"ヘックス (Hex)", a3d:"六角形のボードで自分側の両端を先に繋げると勝利する純粋な抽象戦略ゲーム。",
-    a4n:"コリドール (Quoridor)", a4d:"壁を立てて相手の道を塞ぎながら、自分は先に対岸へ到達することを目指すボードゲーム。",
-    a5n:"ダ・ヴィンチコード (Da Vinci Code)", a5d:"相手の数字タイルを推理して先に全て当てる推理ゲーム。",
-    a6n:"ラミィキューブ (Rummikub)", a6d:"数字タイルで組み合わせを作り、手持ちのタイルを先に全て出し切るゲーム。",
-    a7n:"ババ抜き (Old Maid)", a7d:"ペアを揃えて捨てていき、最後まで一人で持っていると負けになるカードゲーム。",
-    a8n:"ワンカード (One Card)", a8d:"手持ちのカードを先に全て出し切った人が勝つ大衆的なカードゲーム。",
-    a9n:"ブラックジャック (Blackjack)", a9d:"カードの合計が21を超えない範囲で最も近づけるカードゲーム。賭けなしでAIとスコアのみ対戦。",
-    a10n:"ボウリング (Bowling)", a10d:"10フレームでより高い得点を出した方が勝つカジュアルなスコアゲーム。",
+    c14n:"コネクト4 (Connect 4)", c14d:"縦に駒を落として、縦・横・斜めいずれかで先に4つ並べると勝利するクラシックな戦略ゲーム。米国マインドスポーツ協会でも公式競技として扱われています。", c14p:"世界1億人以上",
+    c15n:"リバーシ / オセロ (Reversi)", c15d:"相手の駒を裏返して自分の色にするゲーム。世界オセロ連盟（WOF）が1977年から毎年世界選手権を開催。", c15p:"世界4000万人以上",
+    c16n:"ヘックス (Hex)", c16d:"六角形のボードで自分側の両端を先に繋げると勝利する純粋な抽象戦略ゲーム。数学者やAI研究者に愛されるゲーム理論の古典。", c16p:"世界のマインドスポーツ愛好家コミュニティ",
+    c17n:"コリドール (Quoridor)", c17d:"壁を立てて相手の道を塞ぎながら、自分は先に対岸へ到達することを目指すボードゲーム。Mensa Select受賞作。", c17p:"世界中の多くのボードゲーム愛好家",
+    c18n:"ダ・ヴィンチコード (Da Vinci Code)", c18d:"相手の数字タイルを推理して先に全て当てる推理ゲーム。韓国で特に人気。", c18p:"韓国中心に数百万人",
+    c19n:"ラミィキューブ (Rummikub)", c19d:"数字タイルで組み合わせを作り、手持ちのタイルを先に全て出し切るゲーム。世界的ベストセラーファミリーゲーム。", c19p:"世界数千万人",
+    c20n:"ババ抜き (Old Maid)", c20d:"ペアを揃えて捨てていき、最後まで一人で持っていると負けになるカードゲーム。世界中の定番ファミリーゲーム。", c20p:"世界的に大衆的なカードゲーム",
+    c21n:"ワンカード (One Card)", c21d:"手持ちのカードを先に全て出し切った人が勝つ大衆的なカードゲーム。韓国・日本で特に人気。", c21p:"韓日中心に数千万人",
+    c22n:"ブラックジャック (Blackjack)", c22d:"カードの合計が21を超えない範囲で最も近づけるカードゲーム。ICOCでは賭けなしでAIとスコアのみ対戦。", c22p:"世界で最も人気なカードゲーム",
+    c23n:"ボウリング (Bowling)", c23d:"10フレームでより高い得点を出した方が勝つカジュアルなスコアゲーム。世界で最も大衆的なレジャースポーツ。", c23p:"世界1億人以上の愛好家",
     ab_title:"なぜBrain Sports Omnipoなのか",
-    ab_quote:'"世界初。<br>13のブレインスポーツを<br>ひとつの舞台で。"',
+    ab_quote:'"世界初。<br>23のブレインスポーツを<br>ひとつの舞台で。"',
     ab_body:"囲碁(IGF)、チェス(FIDE)、ビリヤード(UMB)、ブリッジ(WBF) — これら種目を一つのプラットフォームで統合運営する国際大会は、世界に前例がありません。Brain Sports Omnipo 2027がその歴史を刻みます。",
     org_l:"主催機関", org_d:"文化体育観光部認可社団法人<br>Ministry of Culture, Sports and Tourism (Korea)",
     op_l:"運営会社", op_d:"代表：キム・ヒョンソプ (Kent Kim)<br>ハーバード大学 経済学部<br>info@deother.me",
     rm_title:"大会ロードマップ", rm_body:"ソウルから始まり、アジアへ、そして世界へ。",
     t1d:"2026年·準備期", t1t:"ICOC正式発足とスポンサー獲得", t1b:"法人設立完了 · 種目ネットワーク構築 · 国際機関との協定締結 · スポンサー確保",
-    t2d:"2027年·ソウル", t2t:"第1回 Brain Sports Omnipo 2027", t2b:"ソウル開催 · 15カ国以上 · 海外参加者200名+ · 13種目同時開催",
+    t2d:"2027年·ソウル", t2t:"第1回 Brain Sports Omnipo 2027", t2b:"ソウル開催 · 15カ国以上 · 海外参加者200名+ · 23種目同時開催",
     t3d:"2028年", t3t:"アジア衛星予選の拡大", t3b:"30カ国以上 · アジア3都市で衛星予選 · メディアパートナーシップ拡大",
     t4d:"2029年~", t4t:"アジアブレインスポーツリーグ創設", t4b:"シーズン制リーグ運営 · ソウルファイナルの定例化",
     ct_title:"お問い合わせ", ct_body:"参加、スポンサーシップ、パートナーシップのお問い合わせを歓迎します。",
@@ -1039,6 +1055,8 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 <script src="js/omok.js"></script>
 <script src="js/go.js"></script>
 <script src="js/chess.js"></script>
+<script src="js/connect4.js"></script>
+<script src="js/reversi.js"></script>
 
 </body>
 </html>
