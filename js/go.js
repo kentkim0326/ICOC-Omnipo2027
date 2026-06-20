@@ -9,7 +9,7 @@
   const EMPTY = 0, BLACK = 1, WHITE = 2; // BLACK = 플레이어, WHITE = AI
   const NB = [[-1, 0], [1, 0], [0, -1], [0, 1]];
 
-  let board, turn, gameOver, passCount, cellEls, lastMoveEl, awarded;
+  let board, turn, gameOver, passCount, boardUI, lastMoveEl, awarded;
   let capturedByBlack, capturedByWhite;
   let koPoint, koColor; // 패(Ko) 상태: koColor는 koPoint에 둘 수 없는 색
 
@@ -106,14 +106,11 @@
   }
 
   function renderBoard() {
+    boardUI.clearAll();
     for (let r = 0; r < SIZE; r++) {
       for (let c = 0; c < SIZE; c++) {
-        const cell = cellEls[r][c];
-        cell.innerHTML = '';
         if (board[r][c] !== EMPTY) {
-          const stone = document.createElement('div');
-          stone.className = 'stone ' + (board[r][c] === BLACK ? 'black' : 'white');
-          cell.appendChild(stone);
+          boardUI.placeStone(r, c, board[r][c] === BLACK ? 'black' : 'white');
         }
       }
     }
@@ -121,7 +118,7 @@
 
   function markLastMove(r, c) {
     if (lastMoveEl) lastMoveEl.classList.remove('last-move');
-    const stoneEl = cellEls[r][c].querySelector('.stone');
+    const stoneEl = boardUI.cellEls[r][c].querySelector('.stone');
     if (stoneEl) { stoneEl.classList.add('last-move'); lastMoveEl = stoneEl; }
   }
 
@@ -256,22 +253,10 @@
   }
 
   function buildBoardDOM(container) {
-    const grid = document.createElement('div');
-    grid.className = 'board-grid';
-    grid.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
-    cellEls = [];
-    for (let r = 0; r < SIZE; r++) {
-      const rowArr = [];
-      for (let c = 0; c < SIZE; c++) {
-        const cell = document.createElement('div');
-        cell.className = 'board-cell';
-        cell.addEventListener('click', () => onCellClick(r, c));
-        grid.appendChild(cell);
-        rowArr.push(cell);
-      }
-      cellEls.push(rowArr);
-    }
-    container.appendChild(grid);
+    boardUI = global.BoardUI.createGoban(container, SIZE, {
+      onIntersectionClick: onCellClick,
+      starPoints: [[3, 3], [3, 9], [9, 3], [9, 9], [6, 6]]
+    });
   }
 
   function reset() {
@@ -287,7 +272,7 @@
     setStatus('');
     setPointsMsg('당신은 흑, AI는 백입니다. 상대 돌을 더 많이 포획하면 승리합니다.');
     setTurnUI();
-    if (cellEls) renderBoard();
+    if (boardUI) renderBoard();
   }
 
   function start() {
