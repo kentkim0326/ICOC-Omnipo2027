@@ -10,8 +10,13 @@
       title: '오목 (Omok)',
       icon: '⬤',
       init: () => global.OmokGame && global.OmokGame.start()
+    },
+    go: {
+      title: '바둑 (Go)',
+      icon: '⚫',
+      init: () => global.GoGame && global.GoGame.start()
     }
-    // 추후 추가: go, chess, shogi, janggi, ...
+    // 추후 추가: chess, shogi, janggi, ...
   };
 
   function openGame(key) {
