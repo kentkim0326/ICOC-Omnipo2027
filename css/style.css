@@ -1,0 +1,176 @@
+/* ── GO GAME & CHESS MODAL (통합 스타일) ── */
+.go-modal-overlay, .chess-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.8);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+  padding: 10px; backdrop-filter: blur(8px);
+}
+.go-modal-content, .chess-modal-content {
+  background: #f4ebd0; color: #0B1F3A; padding: 20px 15px;
+  border-radius: 12px; max-width: 440px; width: 100%;
+  position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  text-align: center; box-sizing: border-box;
+}
+.go-modal-close {
+  position: absolute; top: 16px; right: 20px;
+  background: none; border: none; font-size: 22px;
+  color: #0B1F3A; cursor: pointer; font-weight: bold;
+}
+.go-modal-title {
+  font-family: 'Playfair Display', serif; font-size: 20px;
+  font-weight: 700; margin-bottom: 15px; letter-spacing: 0.05em;
+}
+.go-scoreboard {
+  display: flex; justify-content: space-between; gap: 10px; margin-bottom: 16px;
+  font-size: 12px; font-weight: bold;
+}
+.go-turn-box {
+  padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(11,31,58,0.2);
+  color: rgba(11,31,58,0.5); width: 50%;
+}
+.go-turn-box.active { background: #0B1F3A; color: #f4ebd0; border-color: #0B1F3A; }
+
+/* 육목 격자판 */
+.go-board-grid {
+  display: grid; grid-template-columns: repeat(13, 1fr);
+  background: #e3c16f; padding: 6px; border: 1px solid #896328; border-radius: 3px;
+  aspect-ratio: 1 / 1; width: 100%; box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+.go-cell { position: relative; aspect-ratio: 1 / 1; cursor: pointer; }
+.go-cell::before { content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(137,99,40,0.5); }
+.go-cell::after { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(137,99,40,0.5); }
+.go-star::before {
+  content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px;
+  background: #5c3e14; border-radius: 50%; transform: translate(-50%, -50%); z-index: 5;
+}
+.go-stone { position: absolute; inset: 8%; border-radius: 50%; z-index: 10; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
+.go-stone.black { background: linear-gradient(135deg, #444, #111); }
+.go-stone.white { background: linear-gradient(135deg, #fff, #e2e2e2); border: 1px solid #ccc; }
+.go-cell.hover-black:not(.has-stone):hover { background: rgba(0, 0, 0, 0.15); border-radius: 50%; }
+
+/* 체스판 (모바일 터치 최적화) */
+.chess-board {
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  border: 3px solid #0B1F3A; border-radius: 6px; aspect-ratio: 1 / 1;
+  width: 100%; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  background-color: #b58863; touch-action: manipulation;
+}
+.chess-square {
+  position: relative; aspect-ratio: 1 / 1; display: flex;
+  align-items: center; justify-content: center; cursor: pointer;
+  user-select: none; -webkit-user-select: none; box-sizing: border-box;
+}
+.chess-square.light { background-color: #f0d9b5; }
+.chess-square.dark { background-color: #b58863; }
+.chess-square.selected { background-color: #baca44 !important; }
+.chess-square.suggested::after {
+  content: ''; position: absolute; width: 30%; height: 30%;
+  background: rgba(0, 0, 0, 0.25); border-radius: 50%; z-index: 2; pointer-events: none;
+}
+.chess-square.suggested.has-piece::after {
+  width: 85%; height: 85%; border: 4px solid rgba(239, 68, 68, 0.6); background: none; border-radius: 50%;
+}
+.chess-piece { font-size: 38px; z-index: 10; pointer-events: none; line-height: 1; }
+
+.go-reset-btn {
+  margin-top: 15px; padding: 8px 20px; background: #0B1F3A; color: #f4ebd0;
+  border: none; border-radius: 4px; font-size: 12px; font-weight: bold; cursor: pointer;
+}
+
+@media (max-width: 450px) {
+  .chess-piece { font-size: 8.5vw; }
+  .chess-modal-content, .go-modal-content { padding: 15px 10px; }
+}
+/* ========================================== */
+/* 🔥 게임 모달 팝업 레이아웃 강제 활성화 스타일 */
+/* ========================================== */
+.modal {
+    display: none; /* 기본은 숨김 */
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    background-color: rgba(0, 0, 0, 0.8) !important; /* 배경 어둡게 */
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 99999 !important; /* 최상단에 노출 */
+}
+
+/* 모달이 열렸을 때 자바스크립트가 display: flex를 주면 반응하도록 설정 */
+#go-modal, #chess-modal {
+    box-sizing: border-box;
+}
+
+/* 바둑판 셀 스타일 정의 */
+.go-board-cell {
+    background: #e4a853;
+    border: 1px solid #000;
+    aspect-ratio: 1/1;
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.go-stone {
+    width: 90%;
+    height: 90%;
+    border-radius: 50%;
+    box-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+.go-black { background: #000; }
+.go-white { background: #fff; }
+#chess-grid {
+    display: grid !important;
+    grid-template-columns: repeat(8, 1fr) !important;
+    grid-template-rows: repeat(8, 1fr) !important;
+    width: 100% !important;
+    max-width: 450px !important; /* 크기 고정 */
+    aspect-ratio: 1 / 1 !important; /* 1:1 정사각형 강제 */
+    margin: 0 auto !important;
+    border: 4px solid #333 !important;
+    box-sizing: border-box !important;
+}
+
+#chess-grid div {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 2.5rem !important;
+    cursor: pointer;
+}
+
+.modal.show { display: flex !important; }
+
+/* 모달창을 보이게 하는 클래스 추가 */
+.modal.active {
+    display: flex !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+  .go-board-cell {
+    width: 100%;
+    height: 100%;
+    border: 0.5px solid #8B6914; /* 바둑판 선 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+  }
+  .go-stone {
+    width: 85%;
+    height: 85%;
+    border-radius: 50%;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+  }
+  .go-black { background-color: #000; }
+  .go-white { background-color: #fff; }

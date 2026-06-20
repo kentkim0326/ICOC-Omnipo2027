@@ -1,70 +1,61 @@
 /**
- * Brain Sports Omnipo 2027 — Traditional Go (바둑) AI Engine
- * ----------------------------------------------------
- * 규칙: 순수 전통 바둑 규칙. 흑과 백이 번갈아가며 '1개씩' 돌을 놓습니다.
- * 상대방 돌의 숨길(활로)을 완전히 둘러싸면 상대방 돌을 따냅니다.
+ * Brain Sports Omnipo 2027 — Advanced Go Engine
  */
-
 const GO_SIZE = 13;
-let goBoardState = []; // 0: 빈칸, 1: 흑(유저), 2: 백(AI)
+let goBoardState = []; 
 let isUserTurn = true;
 let userCaptured = 0;
 let aiCaptured = 0;
 let isGoGameActive = false;
 
-// 바둑 모달 열기
 function openGoGame() {
     const modal = document.getElementById('go-modal');
     if (modal) {
         modal.style.display = 'flex';
-        // 모달 타이틀을 "Mini Baduk (13x13)"으로 변경
         const title = modal.querySelector('.go-modal-title');
         if (title) title.innerText = "Mini Baduk (13x13)";
         resetGoGame();
     }
 }
 
-// 바둑 초기화
 function resetGoGame() {
     goBoardState = Array(GO_SIZE).fill(null).map(() => Array(GO_SIZE).fill(0));
     isUserTurn = true;
     userCaptured = 0;
     aiCaptured = 0;
     isGoGameActive = true;
-    
     renderGoBoard();
     updateGoStatus();
 }
 
-// 바둑판 화면 그리기
+// 기존 renderGoBoard 함수를 아래와 같이 보강
 function renderGoBoard() {
-    const boardEl = document.getElementById('go-board-grid');
-    if (!boardEl) return;
+    const boardEl = document.getElementById('go-grid'); // HTML ID와 정확히 일치해야 함!
+    if (!boardEl) {
+        console.error("ID가 'go-grid'인 태그를 찾을 수 없습니다. index.html을 확인하세요.");
+        return;
+    }
     boardEl.innerHTML = '';
+    // renderGoBoard 함수 내 boardEl.innerHTML = ''; 바로 아래에 추가
+boardEl.style.display = 'grid';
+boardEl.style.gridTemplateColumns = 'repeat(13, 1fr)'; // 13x13 바둑판
+boardEl.style.width = '100%';
+boardEl.style.aspectRatio = '1/1';
+boardEl.style.backgroundColor = '#C9A84C'; // 바둑판 색상
 
     for (let r = 0; r < GO_SIZE; r++) {
         for (let c = 0; c < GO_SIZE; c++) {
             const cell = document.createElement('div');
-            cell.className = 'go-cell';
+            // CSS 클래스 적용 (style.css에 .go-board-cell이 정의되어 있어야 합니다)
+            cell.className = 'go-board-cell'; 
+            cell.style.cursor = 'pointer';
+            cell.style.border = '1px solid #997030'; // 눈에 보이게 테두리 추가
             
-            // 화점 표시 (3, 6, 9 라인)
-            if ([3, 6, 9].includes(r) && [3, 6, 9].includes(c)) {
-                cell.classList.add('go-star');
-            }
-            if (isUserTurn && isGoGameActive) {
-                cell.classList.add('hover-black');
-            }
-
+            // 돌 배치
             if (goBoardState[r][c] === 1) {
-                cell.classList.add('has-stone');
-                const stone = document.createElement('div');
-                stone.className = 'go-stone black';
-                cell.appendChild(stone);
+                cell.innerHTML = '<div class="go-stone go-black" style="width:80%; height:80%; border-radius:50%; background:#000; margin:auto;"></div>';
             } else if (goBoardState[r][c] === 2) {
-                cell.classList.add('has-stone');
-                const stone = document.createElement('div');
-                stone.className = 'go-stone white';
-                cell.appendChild(stone);
+                cell.innerHTML = '<div class="go-stone go-white" style="width:80%; height:80%; border-radius:50%; background:#fff; margin:auto;"></div>';
             }
 
             cell.onclick = () => handleGoBoardClick(r, c);
@@ -73,43 +64,34 @@ function renderGoBoard() {
     }
 }
 
-// 플레이어 바둑 착수
 function handleGoBoardClick(r, c) {
     if (!isGoGameActive || !isUserTurn || goBoardState[r][c] !== 0) return;
 
-    // 1. 착수 시뮬레이션
     let tempBoard = goBoardState.map(row => [...row]);
     tempBoard[r][c] = 1;
 
-    // 2. 따낼 수 있는 상대 돌이 있는지 검사 및 획득
     let capturedCount = captureStones(tempBoard, 2);
-    
-    // 3. 자살수 금지 규칙 체크
     if (getLiberties(tempBoard, r, c, 1).size === 0 && capturedCount === 0) {
-        alert("자살수는 둘 수 없습니다! (활로가 없는 자리에 착수 불가)");
+        alert("자살수는 둘 수 없습니다!");
         return;
     }
 
-    // 착수 확정
     goBoardState = tempBoard;
     userCaptured += capturedCount;
-    
     isUserTurn = false;
     renderGoBoard();
     updateGoStatus();
 
-    // 0.6초 후 AI 응수
-    setTimeout(makeGoAiMove, 600);
+    setTimeout(makeGoAiMove, 500);
 }
 
-// AI 바둑 엔진 (가장 활로가 많거나 상대 돌을 공격하는 위치 탐색)
+// 🔥 고성능 바둑 AI 응수 로직
 function makeGoAiMove() {
     if (!isGoGameActive) return;
 
     let bestMove = null;
-    let maxWeight = -1;
+    let maxWeight = -999999;
 
-    // 전제 판을 스캔하며 최적의 자리 찾기
     for (let r = 0; r < GO_SIZE; r++) {
         for (let c = 0; c < GO_SIZE; c++) {
             if (goBoardState[r][c] !== 0) continue;
@@ -117,32 +99,40 @@ function makeGoAiMove() {
             let tempBoard = goBoardState.map(row => [...row]);
             tempBoard[r][c] = 2;
 
-            // 자살수 제외
             let aiCapturedCount = captureStones(tempBoard, 1);
-            if (getLiberties(tempBoard, r, c, 2).size === 0 && aiCapturedCount === 0) {
-                continue;
-            }
+            let aiLiberties = getLiberties(tempBoard, r, c, 2).size;
 
-            // 가중치 계산 (상대 돌을 따낼 수 있다면 최우선 가치 부여)
-            let weight = aiCapturedCount * 50;
+            // 자살수 필터링
+            if (aiLiberties === 0 && aiCapturedCount === 0) continue;
+
+            // 전술적 가중치 결합 계산
+            let weight = aiCapturedCount * 10000; // 1순위: 상대방 돌 따내기
             
-            // 내 돌의 활로 수 보장 및 적 주변 제어 가중치
-            weight += getLiberties(tempBoard, r, c, 2).size * 2;
-            weight += (GO_SIZE - Math.abs(r - 6) - Math.abs(c - 6)) * 0.1; // 중앙 선호
+            // 2순위: 내 활로가 위험하면(단수 상태 등) 긴급 대피 가중치
+            if (aiLiberties === 1) weight -= 5000;
+            else weight += aiLiberties * 100;
+
+            // 3순위: 상대방 모양 방해 및 협공 (근접전 우대)
+            let enemyNear = countNearStones(r, c, 1);
+            let allyNear = countNearStones(r, c, 2);
+            weight += enemyNear * 300; 
+            weight += allyNear * 150;
+
+            // 4순위: 중앙 가중치 적용
+            weight += (GO_SIZE - Math.abs(r - 6) - Math.abs(c - 6)) * 10;
 
             if (weight > maxWeight) {
                 maxWeight = weight;
-                bestMove = { r, c, captured: aiCapturedCount };
+                bestMove = { r, c };
             }
         }
     }
 
     if (bestMove) {
         goBoardState[bestMove.r][bestMove.c] = 2;
-        let finalCapture = captureStones(goBoardState, 1); // 실제 판에서 플레이어 돌 제거
-        aiCaptured += finalCapture;
+        aiCaptured += captureStones(goBoardState, 1);
     } else {
-        alert("AI가 패스(Pass)했습니다. 대국이 종료되었습니다.");
+        alert("AI가 더 이상 둘 곳이 없어 패스합니다.");
         isGoGameActive = false;
         return;
     }
@@ -152,7 +142,18 @@ function makeGoAiMove() {
     updateGoStatus();
 }
 
-// 활로(Liberties) 계산 및 포위 여부 판정 알고리즘
+function countNearStones(r, c, color) {
+    let count = 0;
+    const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+    dirs.forEach(([dr, dc]) => {
+        let nr = r + dr, nc = c + dc;
+        if (nr >= 0 && nr < GO_SIZE && nc >= 0 && nc < GO_SIZE && goBoardState[nr][nc] === color) {
+            count++;
+        }
+    });
+    return count;
+}
+
 function getLiberties(boardState, startR, startC, color) {
     let visited = new Set();
     let liberties = new Set();
@@ -162,7 +163,6 @@ function getLiberties(boardState, startR, startC, color) {
     while (queue.length > 0) {
         let { r, c } = queue.shift();
         const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
-
         for (let [dr, dc] of dirs) {
             let nr = r + dr, nc = c + dc;
             if (nr >= 0 && nr < GO_SIZE && nc >= 0 && nc < GO_SIZE) {
@@ -178,7 +178,6 @@ function getLiberties(boardState, startR, startC, color) {
     return liberties;
 }
 
-// 돌 따내기 메커니즘
 function captureStones(boardState, opponentColor) {
     let totalCaptured = 0;
     let checked = new Set();
@@ -186,10 +185,7 @@ function captureStones(boardState, opponentColor) {
     for (let r = 0; r < GO_SIZE; r++) {
         for (let c = 0; c < GO_SIZE; c++) {
             if (boardState[r][c] === opponentColor && !checked.has(`${r},${c}`)) {
-                // 특정 돌 무리의 활로를 측정
                 let libertySet = getLiberties(boardState, r, c, opponentColor);
-                
-                // 활로 무리가 하나도 없다면(숨길이 막혔다면) 돌을 모두 제거(따냄)
                 if (libertySet.size === 0) {
                     let queue = [{ r, c }];
                     let toRemove = [{ r, c }];
@@ -209,14 +205,11 @@ function captureStones(boardState, opponentColor) {
                             }
                         }
                     }
-
                     toRemove.forEach(stone => {
                         boardState[stone.r][stone.c] = 0;
                         totalCaptured++;
                     });
                 }
-                
-                // 스캔 완료 기록 추가
                 checked.add(`${r},${c}`);
             }
         }
@@ -224,22 +217,20 @@ function captureStones(boardState, opponentColor) {
     return totalCaptured;
 }
 
-// 상단 인터페이스 글자 상태 동기화
 function updateGoStatus() {
     const turnBlack = document.getElementById('turn-black');
     const turnWhite = document.getElementById('turn-white');
-
     if (!turnBlack || !turnWhite) return;
 
     if (isUserTurn) {
-      turnBlack.className = 'go-turn-box active';
-      turnBlack.innerText = `⚫ 당신의 차례 (흑)`;
-      turnWhite.className = 'go-turn-box';
-      turnWhite.innerText = `AI 대기 중`;
+        turnBlack.className = 'go-turn-box active';
+        turnBlack.innerText = `⚫ 당신 (흑) [따낸 돌: ${userCaptured}]`;
+        turnWhite.className = 'go-turn-box';
+        turnWhite.innerText = `AI 대기 중 [따낸 돌: ${aiCaptured}]`;
     } else {
-      turnBlack.className = 'go-turn-box';
-      turnBlack.innerText = `당신 대기 중`;
-      turnWhite.className = 'go-turn-box active';
-      turnWhite.innerText = `⚪ AI 대국 연산 중...`;
+        turnBlack.className = 'go-turn-box';
+        turnBlack.innerText = `당신 대기 중 [따낸 돌: ${userCaptured}]`;
+        turnWhite.className = 'go-turn-box active';
+        turnWhite.innerText = `⚪ AI 계산 중... [따낸 돌: ${aiCaptured}]`;
     }
 }

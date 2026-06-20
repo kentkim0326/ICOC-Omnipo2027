@@ -678,36 +678,6 @@ footer a { color:var(--gold); text-decoration:none; }
   <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인</p>
 </footer>
 
-<!-- ── GO GAME MODAL (육목 대국 전용) ── -->
-<div id="go-modal" class="go-modal-overlay" style="display: none;">
-  <div class="go-modal-content">
-    <button class="go-modal-close" onclick="closeGoGame()">×</button>
-    <h2 class="go-modal-title">Connect 6 (육목 대국)</h2>
-    
-    <div class="go-scoreboard">
-      <div id="turn-black" class="go-turn-box active">⚫ 당신의 차례 (흑)</div>
-      <div id="turn-white" class="go-turn-box"> White AI 대기 중</div>
-    </div>
-
-    <div id="go-board-grid" class="go-board-grid"></div>
-    <button class="go-reset-btn" onclick="resetGoGame()">게임 리셋 / Reset</button>
-  </div>
-</div>
-
-<!-- ── CHESS MODAL (체스 대국 전용) ── -->
-<div id="chess-modal" class="chess-modal-overlay" style="display: none;">
-  <div class="chess-modal-content">
-    <button class="go-modal-close" onclick="closeChessGame()">×</button>
-    <h2 class="go-modal-title" style="margin-bottom: 8px; font-size: 20px;">Chess vs AI</h2>
-    
-    <div id="chess-status" style="font-size: 13px; font-weight: bold; margin-bottom: 12px; color: #0B1F3A;">
-      당신의 차례 (백 ♔)
-    </div>
-
-    <div id="chess-board" class="chess-board"></div>
-    <button class="go-reset-btn" style="margin-top: 15px; padding: 8px 20px;" onclick="resetChessGame()">게임 리셋 / Reset</button>
-  </div>
-</div>
 
 <!-- ── 다국어 및 스크립트 엔진 공통 시스템 ── -->
 <script>
@@ -827,13 +797,64 @@ window.addEventListener('scroll', () => {
 window.dispatchEvent(new Event('scroll'));
 </script>
 
-<!-- 외부 분리형 게임 인공지능 엔진들 연동 -->
+<div id="go-modal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); align-items: center; z-index: 2000;">
+  <div style="background: #2c3e50; padding: 20px; border-radius: 12px; max-width: 500px; width: 90%; text-align: center; margin: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+      <h3 style="color: white; margin: 0;">Mini Baduk</h3>
+      <div id="go-grid" ...></div>
+  <div id="turn-black" class="go-turn-box">⚫ 당신 (흑)</div>
+  <div id="turn-white" class="go-turn-box">⚪ AI (백)</div>
+      <div id="go-board-grid" style="display: grid; grid-template-columns: repeat(13, 1fr); gap: 1px; background: #dcbc83; padding: 10px; border-radius: 8px; aspect-ratio: 1/1; width: 100%; box-sizing: border-box;">
+    </div>
+      <button onclick="closeGoGame()" style="background: #e74c3c; color: white; border: none; padding: 5px 10px; cursor: pointer;">닫기</button>
+    </div>
+    <div id="go-grid" style="display: grid; grid-template-columns: repeat(19, 1fr); gap: 1px; background: #C9A84C; aspect-ratio: 1/1;"></div>
+  </div>
+</div>
 
+<div id="chess-modal" class="modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000;">
+    <div class="chess-modal-content" style="background: #2c3e50; padding: 20px; border-radius: 12px; margin: 50px auto; max-width: 460px; width: 90%;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="color: white; margin: 0;">Chess vs AI</h3>
+            <button onclick="closeChessGame()">닫기</button>
+        </div>
+        <div id="chess-status-bar" style="color: #fff; margin-bottom: 10px;">당신의 차례</div>
+        <div id="chess-grid" style="display: grid; grid-template-columns: repeat(8, 1fr); background: #769656; border: 2px solid #333; aspect-ratio: 1/1;"></div>
+    </div>
+</div>
 <script src="js/chess.js"></script>
-  <script src="js/go.js"></script>
-  <script src="js/connect6.js"></script>
-</body>
-</html>
-</body>
+<script src="js/go.js"></script>
+<script src="js/connect6.js"></script>
+
+<script>
+  // 모달 제어 함수 (이름이 중복되지 않게 정의)
+  function openGoGame() {
+      const modal = document.getElementById('go-modal');
+      if (modal) modal.style.display = 'flex';
+  }
+
+  function closeGoGame() {
+      const modal = document.getElementById('go-modal');
+      if (modal) modal.style.display = 'none';
+  }
+
+  function openChessGame() {
+      const modal = document.getElementById('chess-modal');
+      if (modal) {
+          modal.style.display = 'flex';
+          // js/chess.js에 정의된 함수가 로드되었는지 확인
+          if (typeof resetChessGame === 'function') {
+              resetChessGame();
+          } else {
+              console.error("chess.js 파일이 정상적으로 로드되지 않았습니다.");
+          }
+      }
+  }
+
+  function closeChessGame() {
+      const modal = document.getElementById('chess-modal');
+      if (modal) modal.style.display = 'none';
+  }
+</script>
 </body>
 </html>
