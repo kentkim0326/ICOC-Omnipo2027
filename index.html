@@ -459,6 +459,46 @@ footer a { color:var(--gold); text-decoration:none; }
 }
 .go-reset-btn:hover { background: #173863; }
 
+/* ── CHESS GAME MODAL ── */
+.chess-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(8px);
+}
+.chess-modal-content {
+  background: #f4ebd0; color: #0B1F3A; padding: 25px;
+  border-radius: 12px; max-width: 460px; width: 100%;
+  position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.chess-board {
+  display: grid; grid-template-columns: repeat(8, 1fr);
+  border: 4px solid #0B1F3A; border-radius: 6px;
+  aspect-ratio: 1 / 1; width: 100%; overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+.chess-square {
+  position: relative; aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none;
+}
+/* 체스판 체크무늬 색상 */
+.chess-square.light { background-color: #f0d9b5; }
+.chess-square.dark { background-color: #b58863; }
+/* 선택 및 이동 가능 경로 하이라이트 */
+.chess-square.selected { background-color: #baca44 !important; }
+.chess-square.suggested::after {
+  content: ''; position: absolute; width: 24%; height: 24%;
+  background: rgba(0, 0, 0, 0.2); border-radius: 50%;
+}
+.chess-square.suggested.has-piece::after {
+  width: 80%; height: 80%; border: 4px solid rgba(255, 0, 0, 0.3); background: none;
+}
+.chess-piece {
+  font-size: 36px; z-index: 10; transition: transform 0.1s ease;
+}
+@media (max-width: 400px) { .chess-piece { font-size: 28px; } }
+
 /* ── MOBILE ── */
 @media(max-width:640px){
   .lang-bar { padding:10px 20px; }
@@ -549,6 +589,7 @@ footer a { color:var(--gold); text-decoration:none; }
     </div>
     <div class="sport-card">
       <span class="sport-icon">♟</span>
+      <div class="card" onclick="openChessGame()">♔ 체스 대국 (AI)</div>
       <div class="sport-name" data-i18n="c2n">체스 (Chess)</div>
       <div class="sport-desc" data-i18n="c2d">170개국, 6억 명이 즐기는 세계 최대 마인드스포츠. FIDE 공인 국제 대회 형식으로 진행합니다.</div>
       <div class="sport-players" data-i18n="c2p">600M players worldwide</div>
@@ -781,6 +822,21 @@ footer a { color:var(--gold); text-decoration:none; }
   </div>
 </div>
 
+<div id="chess-modal" class="chess-modal-overlay" style="display: none;">
+  <div class="chess-modal-content">
+    <button class="go-modal-close" onclick="closeChessGame()">×</button>
+    <h2 class="go-modal-title" style="margin-bottom: 10px;">Chess vs AI</h2>
+    
+    <div id="chess-status" style="font-size: 13px; font-weight: bold; margin-bottom: 15px; color: #0B1F3A;">
+      당신의 차례 (백돌 ♔) 입니다.
+    </div>
+
+    <div id="chess-board" class="chess-board"></div>
+
+    <button class="go-reset-btn" onclick="resetChessGame()">게임 리셋 / Reset</button>
+  </div>
+</div>
+
 <script>
 const T = {
   ko:{
@@ -974,6 +1030,7 @@ function setLang(lang) {
   document.body.className = lang === 'ko' ? '' : `lang-${lang}`;
   document.documentElement.lang = lang;
 }
+
 
 /* ── 바둑 게임 코어 엔진 (AI 대국 모드) ── */
 const BOARD_SIZE = 13;
@@ -1199,6 +1256,7 @@ function makeAiMove() {
   updateGoUI();
 }
 
+
 function getNeighborWeights(r, c) {
   let black = 0, white = 0;
   const dirs = [[-1,0],[1,0],[0,-1],[0,1],[-1,-1],[-1,1],[1,-1],[1,1]];
@@ -1211,6 +1269,263 @@ function getNeighborWeights(r, c) {
     }
   }
   return { black, white };
+}
+/* ── 체스 게임 코어 엔진 (AI 대국 모드) ── */
+const CHESS_SIZE = 8;
+let chessBoard = [];
+let selectedSquare = null;
+let possibleMoves = [];
+let isPlayerTurn = true;
+
+// 유니코드 체스 말 정의 (백: 유저, 흑: AI)
+const PIECES = {
+  'P': '♙', 'R': '♖', 'N': '♘', 'B': '♗', 'Q': '♕', 'K': '♔', // 백 (Player)
+  'p': '♟', 'r': '♜', 'n': '♞', 'b': '♝', 'q': '♛', 'k': '♚'  // 흑 (AI)
+};
+
+// 기물별 기본 전술 가치 점수표
+const PIECE_VALUES = {
+  'p': -10, 'n': -30, 'b': -30, 'r': -50, 'q': -90, 'k': -900,
+  'P': 10,  'N': 30,  'B': 30,  'R': 50,  'Q': 90,  'K': 900
+};
+
+function openChessGame() {
+  document.getElementById('chess-modal').style.display = 'flex';
+  resetChessGame();
+}
+
+function closeChessGame() {
+  document.getElementById('chess-modal').style.display = 'none';
+}
+
+function resetChessGame() {
+  // 초기 보드 배치 (대문자: 백진영, 소문자: 흑진영)
+  chessBoard = [
+    ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r'],
+    ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+    ['',  '',  '',  '',  '',  '',  '',  ''],
+    ['',  '',  '',  '',  '',  '',  '',  ''],
+    ['',  '',  '',  '',  '',  '',  '',  ''],
+    ['',  '',  '',  '',  '',  '',  '',  ''],
+    ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+    ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R']
+  ];
+  selectedSquare = null;
+  possibleMoves = [];
+  isPlayerTurn = true;
+  updateChessUI();
+}
+
+function updateChessUI() {
+  const boardEl = document.getElementById('chess-board');
+  const statusEl = document.getElementById('chess-status');
+  boardEl.innerHTML = '';
+
+  statusEl.innerText = isPlayerTurn ? "당신의 차례 (백 ♔)" : "AI가 전략을 계산 중입니다...";
+
+  for (let r = 0; r < CHESS_SIZE; r++) {
+    for (let c = 0; c < CHESS_SIZE; c++) {
+      const square = document.createElement('div');
+      const isLight = (r + c) % 2 === 0;
+      square.className = `chess-square ${isLight ? 'light' : 'dark'}`;
+
+      // 선택 상태 및 이동 가이드 하이라이트
+      if (selectedSquare && selectedSquare.r === r && selectedSquare.c === c) {
+        square.classList.add('selected');
+      }
+      if (possibleMoves.some(m => m.r === r && m.c === c)) {
+        square.classList.add('suggested');
+        if (chessBoard[r][c] !== '') square.classList.add('has-piece');
+      }
+
+      // 말 렌더링
+      const piece = chessBoard[r][c];
+      if (piece) {
+        const pieceEl = document.createElement('div');
+        pieceEl.className = 'chess-piece';
+        pieceEl.innerText = PIECES[piece];
+        square.appendChild(pieceEl);
+      }
+
+      square.onclick = () => handleSquareClick(r, c);
+      boardEl.appendChild(square);
+    }
+  }
+}
+
+function handleSquareClick(r, c) {
+  if (!isPlayerTurn) return;
+
+  const piece = chessBoard[r][c];
+  const isMoveCandidate = possibleMoves.some(m => m.r === r && m.c === c);
+
+  if (isMoveCandidate && selectedSquare) {
+    // 말 이동 실행
+    movePiece(selectedSquare.r, selectedSquare.c, r, c);
+    selectedSquare = null;
+    possibleMoves = [];
+    isPlayerTurn = false;
+    updateChessUI();
+
+    // 유저가 움직인 뒤 0.6초 후 AI 시뮬레이션 가동
+    setTimeout(makeAiChessMove, 600);
+  } else if (piece && piece === piece.toUpperCase()) {
+    // 아군 기물(대문자)을 클릭 시 선택 및 경로 탐색
+    selectedSquare = { r, c };
+    possibleMoves = getValidMoves(r, c, chessBoard);
+    updateChessUI();
+  } else {
+    // 빈 곳 클릭 시 선택 해제
+    selectedSquare = null;
+    possibleMoves = [];
+    updateChessUI();
+  }
+}
+
+function movePiece(fromR, fromC, toR, toC) {
+  let piece = chessBoard[fromR][fromC];
+  
+  // 폰이 끝까지 전진하면 자동으로 퀸('Q' / 'q')으로 프로모션 승급
+  if (piece === 'P' && toR === 0) piece = 'Q';
+  if (piece === 'p' && toR === 7) piece = 'q';
+
+  chessBoard[toR][toC] = piece;
+  chessBoard[fromR][fromC] = '';
+}
+
+// 각 기물별 정밀 이동 규칙 연산 엔진
+function getValidMoves(r, c, board) {
+  const moves = [];
+  const piece = board[r][c];
+  if (!piece) return moves;
+
+  const isWhite = piece === piece.toUpperCase();
+  const dir = isWhite ? -1 : 1;
+
+  // 1. 폰 (Pawn)
+  if (piece.toUpperCase() === 'P') {
+    if (r + dir >= 0 && r + dir < 8 && !board[r + dir][c]) {
+      moves.push({ r: r + dir, c });
+      // 처음 두 칸 전진 규칙
+      if ((isWhite && r === 6) || (!isWhite && r === 1)) {
+        if (!board[r + dir * 2][c]) moves.push({ r: r + dir * 2, c });
+      }
+    }
+    // 대각선 공격 판정
+    [-1, 1].forEach(dc => {
+      const nr = r + dir, nc = c + dc;
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+        const target = board[nr][nc];
+        if (target && (isWhite !== (target === target.toUpperCase()))) moves.push({ r: nr, c: nc });
+      }
+    });
+  }
+
+  // 2. 나이트 (Knight)
+  if (piece.toUpperCase() === 'N') {
+    const nMoves = [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]];
+    nMoves.forEach(([dr, dc]) => {
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+        const target = board[nr][nc];
+        if (!target || isWhite !== (target === target.toUpperCase())) moves.push({ r: nr, c: nc });
+      }
+    });
+  }
+
+  // 3. 직선 기물들 (룩, 비숍, 퀸, 킹) 방향선 벡터 연산
+  let vectors = [];
+  if (piece.toUpperCase() === 'R' || piece.toUpperCase() === 'Q') vectors.push([-1,0],[1,0],[0,-1],[0,1]);
+  if (piece.toUpperCase() === 'B' || piece.toUpperCase() === 'Q') vectors.push([-1,-1],[-1,1],[1,-1],[1,1]);
+  if (piece.toUpperCase() === 'K') {
+    const kMoves = [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]];
+    kMoves.forEach(([dr, dc]) => {
+      const nr = r + dr, nc = c + dc;
+      if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+        const target = board[nr][nc];
+        if (!target || isWhite !== (target === target.toUpperCase())) moves.push({ r: nr, c: nc });
+      }
+    });
+  } else {
+    // 룩, 비숍, 퀸 장거리 전진 슬라이딩 계산
+    vectors.forEach(([dr, dc]) => {
+      let nr = r + dr, nc = c + dc;
+      while (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+        const target = board[nr][nc];
+        if (!target) {
+          moves.push({ r: nr, c: nc });
+        } else {
+          if (isWhite !== (target === target.toUpperCase())) moves.push({ r: nr, c: nc });
+          break; // 기물에 막힘
+        }
+        nr += dr; nc += dc;
+      }
+    });
+  }
+
+  return moves;
+}
+
+/* ── AI 의사결정 인공지능 알고리즘 (Black) ── */
+function makeAiChessMove() {
+  let allMoves = [];
+
+  // 1. 현재 AI가 둘 수 있는 모든 합법적인 경우의 수 수집
+  for (let r = 0; r < CHESS_SIZE; r++) {
+    for (let c = 0; c < CHESS_SIZE; c++) {
+      const piece = chessBoard[r][c];
+      if (piece && piece === piece.toLowerCase()) { // 흑돌(AI)인 경우
+        const validMoves = getValidMoves(r, c, chessBoard);
+        validMoves.forEach(m => {
+          allMoves.push({ from: { r, c }, to: m, piece });
+        });
+      }
+    }
+  }
+
+  if (allMoves.length === 0) {
+    alert("체크메이트 또는 스테일메이트! 게임이 종료되었습니다.");
+    resetChessGame();
+    return;
+  }
+
+  // 2. 전술 가치 점수 연산 (Minimax 가중치 연산)
+  let bestMove = null;
+  let minScore = 10000; // AI(음수 점수)는 점수를 가장 낮게 깎을수록 유리
+
+  allMoves.forEach(move => {
+    // 가상 대국 시뮬레이션
+    const targetPiece = chessBoard[move.to.r][move.to.c];
+    let score = 0;
+
+    // 점수 규칙 A: 적의 기물을 잡는 가치 우선 계산
+    if (targetPiece) {
+      score += PIECE_VALUES[targetPiece] * 10;
+    }
+
+    // 점수 규칙 B: 중앙 제어 및 진격 점수 가중치
+    score += (move.to.r - 3.5) * 0.5; 
+
+    // 약간의 예측 불가능성을 위한 무작위 전략 추가
+    score += Math.random() * 2;
+
+    if (score < minScore) {
+      minScore = score;
+      bestMove = move;
+    }
+  });
+
+  // 3. 최선의 수 실행
+  if (bestMove) {
+    // 혹시 킹이 잡히는 조건 검사
+    if (chessBoard[bestMove.to.r][bestMove.to.c] === 'K') {
+      alert("👑 AI가 당신의 킹을 잡았습니다! AI 승리!");
+    }
+    movePiece(bestMove.from.r, bestMove.from.c, bestMove.to.r, bestMove.to.c);
+  }
+
+  isPlayerTurn = true;
+  updateChessUI();
 }
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
