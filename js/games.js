@@ -20,8 +20,18 @@
       title: '체스 (Chess)',
       icon: '♟',
       init: () => global.ChessGame && global.ChessGame.start()
+    },
+    connect4: {
+      title: '커넥트4 (Connect 4)',
+      icon: '🔴',
+      init: () => global.Connect4Game && global.Connect4Game.start()
+    },
+    reversi: {
+      title: '리버시 (Reversi)',
+      icon: '⚪',
+      init: () => global.ReversiGame && global.ReversiGame.start()
     }
-    // 추후 추가: shogi, janggi, ...
+    // 추후 추가: shogi, janggi, hex, quoridor, ...
   };
 
   function openGame(key) {
