@@ -15,8 +15,13 @@
       title: '바둑 (Go)',
       icon: '⚫',
       init: () => global.GoGame && global.GoGame.start()
+    },
+    chess: {
+      title: '체스 (Chess)',
+      icon: '♟',
+      init: () => global.ChessGame && global.ChessGame.start()
     }
-    // 추후 추가: chess, shogi, janggi, ...
+    // 추후 추가: shogi, janggi, ...
   };
 
   function openGame(key) {
