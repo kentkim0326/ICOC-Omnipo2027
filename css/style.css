@@ -104,7 +104,7 @@
   margin-bottom:10px; letter-spacing:0.03em;
 }
 
-/* ── Board generic grid ── */
+/* ── Board generic grid (칸 안에 말을 놓는 게임: 체스/체커 등) ── */
 .board-grid {
   display:grid; margin:0 auto;
   background:#dcbc83;
@@ -122,6 +122,34 @@
 .board-cell:hover::before {
   content:''; position:absolute; inset:8%;
   border-radius:50%; background:rgba(255,255,255,0.18);
+}
+
+/* ── Goban (줄의 교차점에 돌을 놓는 게임: 바둑/오목 등) ── */
+.goban {
+  position:relative; margin:0 auto;
+  background:#dcbc83;
+  border:3px solid #8a6a3b;
+  border-radius:4px;
+  aspect-ratio:1/1; width:100%; max-width:460px;
+  box-shadow:inset 0 0 30px rgba(0,0,0,0.25);
+}
+.goban-inner { position:absolute; inset:6.5%; }
+.grid-line { position:absolute; background:rgba(0,0,0,0.45); }
+.grid-line-h { left:0; right:0; height:1px; }
+.grid-line-v { top:0; bottom:0; width:1px; }
+.star-point {
+  position:absolute; width:5px; height:5px; border-radius:50%;
+  background:rgba(0,0,0,0.55); transform:translate(-50%,-50%);
+  pointer-events:none;
+}
+.intersection {
+  position:absolute; transform:translate(-50%,-50%);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+}
+.intersection:hover:empty::before {
+  content:''; width:78%; height:78%; border-radius:50%;
+  background:rgba(255,255,255,0.2);
 }
 .stone {
   width:84%; height:84%; border-radius:50%;
