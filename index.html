@@ -379,6 +379,83 @@ footer a { color:var(--gold); text-decoration:none; }
 .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
 .reveal.visible { opacity:1; transform:none; }
 
+/* ── GO GAME MODAL ── */
+.go-modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+  z-index: 2000; display: flex; align-items: center; justify-content: center;
+  padding: 20px; backdrop-filter: blur(8px);
+}
+.go-modal-content {
+  background: #f4ebd0; color: #0B1F3A; padding: 30px;
+  border-radius: 12px; max-width: 480px; width: 100%; /* 👈 w-content 지우고 정리 */
+  position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.go-modal-close {
+  position: absolute; top: 16px; right: 20px;
+  background: none; border: none; font-size: 22px;
+  color: #0B1F3A; cursor: pointer; font-weight: bold;
+}
+.go-modal-title {
+  font-family: 'Playfair Display', serif; font-size: 22px;
+  font-weight: 700; margin-bottom: 20px; letter-spacing: 0.05em;
+}
+.go-scoreboard {
+  display: flex; justify-content: space-between; gap: 10px; margin-bottom: 16px;
+  font-size: 12px; font-weight: bold;
+}
+.go-turn-box {
+  padding: 6px 12px; border-radius: 4px; border: 1px solid rgba(11,31,58,0.2);
+  color: rgba(11,31,58,0.5); width: 50%;
+}
+.go-turn-box.active {
+  background: #0B1F3A; color: #f4ebd0; border-color: #0B1F3A;
+}
+#turn-white.active {
+  background: #ffffff; color: #0B1F3A; border-color: #ccc;
+}
+.go-board-grid {
+  display: grid; grid-template-columns: repeat(13, 1fr);
+  background: #e3c16f; padding: 4px; /* 👈 p-content: 4px; 지우기 */
+  border: 1px solid #896328; border-radius: 3px;
+  aspect-ratio: 1 / 1; width: 100%; box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+}
+.go-cell {
+  position: relative; aspect-ratio: 1 / 1; cursor: pointer;
+}
+/* 바둑판 십자선 그리기 */
+.go-cell::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(137,99,40,0.45);
+}
+.go-cell::after {
+  content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: rgba(137,99,40,0.45);
+}
+/* 화점 (3, 6, 9번 교차점) */
+.go-star::main-center {
+  content: ''; position: absolute; top: 50%; left: 50%; width: 6px; height: 6px;
+  background: #5c3e14; border-radius: 50%; transform: translate(-50%, -50%); z-index: 5;
+}
+.go-stone {
+  position: absolute; inset: 6%; border-radius: 50%; z-index: 10;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+}
+.go-stone.black { background: linear-gradient(135deg, #444, #111); }
+.go-stone.white { background: linear-gradient(135deg, #fff, #e2e2e2); border: 1px solid #ccc; }
+
+/* 호버 시 미리보기 효과 */
+.go-cell:not(.has-stone):hover::overflow {
+  content: ''; position: absolute; inset: 10%; border-radius: 50%; z-index: 8; opacity: 0.3;
+}
+.go-cell.hover-black:not(.has-stone):hover::overflow { background: black; }
+.go-cell.hover-white:not(.has-stone):hover::overflow { background: white; border: 1px solid #aaa; }
+
+.go-reset-btn {
+  margin-top: 20px; padding: 10px 24px; background: #0B1F3A; color: #f4ebd0;
+  border: none; border-radius: 4px; font-size: 12px; font-weight: bold;
+  letter-spacing: 0.05em; cursor: pointer; transition: background 0.2s;
+}
+.go-reset-btn:hover { background: #173863; }
+
 /* ── MOBILE ── */
 @media(max-width:640px){
   .lang-bar { padding:10px 20px; }
@@ -461,7 +538,7 @@ footer a { color:var(--gold); text-decoration:none; }
     <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 열세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다.</p>
   </div>
   <div class="sports-grid reveal">
-    <div class="sport-card">
+    <div class="sport-card" onclick="openGoGame()" style="cursor: pointer;">
       <span class="sport-icon">⚫</span>
       <div class="sport-name" data-i18n="c1n">바둑 (Go)</div>
       <div class="sport-desc" data-i18n="c1d">수천 년의 역사를 가진 전략 보드게임. 한국은 세계 최강 선수 배출국으로 글로벌 바둑 문화의 중심입니다.</div>
@@ -681,6 +758,21 @@ footer a { color:var(--gold); text-decoration:none; }
   <span class="footer-logo">OMNIPO · 2027</span>
   <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인</p>
 </footer>
+<div id="go-modal" class="go-modal-overlay" style="display: none;">
+  <div class="go-modal-content">
+    <button class="go-modal-close" onclick="closeGoGame()">✕</button>
+    <h3 class="go-modal-title">Mini Baduk (13x13)</h3>
+    
+    <div class="go-scoreboard">
+      <div id="turn-black" class="go-turn-box active">⚫ 흑 차례 (따낸 백돌: <span id="cap-white">0</span>)</div>
+      <div id="turn-white" class="go-turn-box"> White Turn (Captured Black: <span id="cap-black">0</span>)</div>
+    </div>
+
+    <div id="go-board-grid" class="go-board-grid"></div>
+
+    <button class="go-reset-btn" onclick="resetGoGame()">게임 리셋 / Reset</button>
+  </div>
+</div>
 
 <script>
 const T = {
@@ -876,6 +968,157 @@ function setLang(lang) {
   document.documentElement.lang = lang;
 }
 
+/* ── 바둑 게임 코어 엔진 엔진 ── */
+const BOARD_SIZE = 13;
+let goBoard = [];
+let isBlackTurn = true;
+let capBlack = 0;
+let capWhite = 0;
+
+// 바둑판 초기화 함수
+function initGoData() {
+  goBoard = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(0));
+}
+
+function openGoGame() {
+  document.getElementById('go-modal').style.display = 'flex';
+  resetGoGame();
+}
+
+function closeGoGame() {
+  document.getElementById('go-modal').style.display = 'none';
+}
+
+function resetGoGame() {
+  initGoData();
+  isBlackTurn = true;
+  capBlack = 0;
+  capWhite = 0;
+  updateGoUI();
+}
+
+// 화면을 다시 그려주는 가상 DOM 렌더러 기능
+function updateGoUI() {
+  const grid = document.getElementById('go-board-grid');
+  grid.innerHTML = '';
+
+  document.getElementById('cap-black').innerText = capBlack;
+  document.getElementById('cap-white').innerText = capWhite;
+
+  if (isBlackTurn) {
+    document.getElementById('turn-black').classList.add('active');
+    document.getElementById('turn-white').classList.remove('active');
+  } else {
+    document.getElementById('turn-white').classList.add('active');
+    document.getElementById('turn-black').classList.remove('active');
+  }
+
+  const stars = [3, 6, 9];
+
+  for (let r = 0; r < BOARD_SIZE; r++) {
+    for (let c = 0; c < BOARD_SIZE; c++) {
+      const cell = document.createElement('div');
+      cell.className = 'go-cell';
+      
+      // 화점 자리에 시각적 점 표기용 클래스 부여
+      if (stars.includes(r) && stars.includes(c)) {
+        cell.classList.add('go-star');
+      }
+
+      // 현재 턴에 맞는 호버 가이드 부여
+      cell.classList.add(isBlackTurn ? 'hover-black' : 'hover-white');
+
+      const stoneState = goBoard[r][c];
+      if (stoneState !== 0) {
+        cell.classList.add('has-stone');
+        const stone = document.createElement('div');
+        stone.className = `go-stone ${stoneState === 1 ? 'black' : 'white'}`;
+        cell.appendChild(stone);
+      }
+
+      cell.onclick = () => handleGoClick(r, c);
+      grid.appendChild(cell);
+    }
+  }
+}
+
+function handleGoClick(r, c) {
+  if (goBoard[r][c] !== 0) return;
+
+  const currentStone = isBlackTurn ? 1 : 2;
+  const opponentStone = isBlackTurn ? 2 : 1;
+
+  // 1. 가상 가안 임시 배치
+  let nextBoard = goBoard.map(row => [...row]);
+  nextBoard[r][c] = currentStone;
+
+  // 2. 사석(둘러싸여 활로가 막힌 상대 돌) 판정 및 제거
+  let stonesCaptured = 0;
+  let visited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
+  const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+
+  for (let i = 0; i < 4; i++) {
+    const nr = r + dirs[i][0];
+    const nc = c + dirs[i][1];
+
+    if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
+      if (nextBoard[nr][nc] === opponentStone && !visited[nr][nc]) {
+        let group = [];
+        let hasLiberty = checkGroupLiberty(nr, nc, opponentStone, nextBoard, visited, group);
+        
+        if (!hasLiberty) {
+          stonesCaptured += group.length;
+          group.forEach(([gr, gc]) => {
+            nextBoard[gr][gc] = 0;
+          });
+        }
+      }
+    }
+  }
+
+  // 3. 자충수 필터링 (내 돌이 살길이 없고, 상대를 잡아내지도 못하는 곳)
+  let selfVisited = Array(BOARD_SIZE).fill(null).map(() => Array(BOARD_SIZE).fill(false));
+  let selfGroup = [];
+  let selfHasLiberty = checkGroupLiberty(r, c, currentStone, nextBoard, selfVisited, selfGroup);
+
+  if (!selfHasLiberty && stonesCaptured === 0) {
+    alert("자충수(Suicide Move)이므로 착수할 수 없습니다.");
+    return;
+  }
+
+  // 데이터 최종 세이브 및 차례 전환
+  goBoard = nextBoard;
+  if (isBlackTurn) capWhite += stonesCaptured;
+  else capBlack += stonesCaptured;
+
+  isBlackTurn = !isBlackTurn;
+  updateGoUI();
+}
+
+// 활로 검출 재귀 탐색 알고리즘
+function checkGroupLiberty(r, c, color, boardState, visited, group) {
+  visited[r][c] = true;
+  group.push([r, c]);
+
+  let hasLiberty = false;
+  const dirs = [[-1,0],[1,0],[0,-1],[0,1]];
+
+  for (let i = 0; i < 4; i++) {
+    const nr = r + dirs[i][0];
+    const nc = c + dirs[i][1];
+
+    if (nr >= 0 && nr < BOARD_SIZE && nc >= 0 && nc < BOARD_SIZE) {
+      if (boardState[nr][nc] === 0) {
+        hasLiberty = true;
+      } else if (boardState[nr][nc] === color && !visited[nr][nc]) {
+        if (checkGroupLiberty(nr, nc, color, boardState, visited, group)) {
+          hasLiberty = true;
+        }
+      }
+    }
+  }
+  return hasLiberty;
+}
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
 }, {threshold:0.1});
