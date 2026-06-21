@@ -40,6 +40,16 @@
       title: '쿼리도 (Quoridor)',
       icon: '🧱',
       init: () => global.QuoridorGame && global.QuoridorGame.start()
+    },
+    checkers: {
+      title: '체커 (Checkers)',
+      icon: '⚪',
+      init: () => global.CheckersGame && global.CheckersGame.start()
+    },
+    blackjack: {
+      title: '블랙잭 (Blackjack)',
+      icon: '♠',
+      init: () => global.BlackjackGame && global.BlackjackGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
