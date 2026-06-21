@@ -95,8 +95,13 @@
       title: '장기 (Janggi)',
       icon: '♟️',
       init: () => global.JanggiGame && global.JanggiGame.start()
+    },
+    shogi: {
+      title: '쇼기 (Shogi)',
+      icon: '🎴',
+      init: () => global.ShogiGame && global.ShogiGame.start()
     }
-    // 추후 추가: shogi, ...
+    // 추후 추가: ...
   };
 
   function openGame(key) {
