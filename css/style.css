@@ -255,6 +255,26 @@
   background:repeating-linear-gradient(45deg, var(--gold) 0 6px, #8a6a3b 6px 12px);
   border:2px solid var(--gold);
 }
+
+/* ── Old Maid ── */
+.om-card { width:46px; height:66px; font-size:14px; }
+.om-card .bj-suit { font-size:13px; }
+.om-joker { color:var(--gold); font-size:10px; }
+.om-pickable { cursor:pointer; transition:transform 0.15s; }
+.om-pickable:hover { transform:translateY(-6px); }
+
+/* ── Bowling ── */
+.bw-scoreboard { margin-bottom:16px; }
+.bw-scoreboard-label { font-size:12px; color:rgba(245,240,232,0.55); margin:10px 0 4px; letter-spacing:0.05em; }
+.bw-frames-row { display:flex; gap:3px; overflow-x:auto; }
+.bw-frame-cell {
+  flex:1 0 auto; min-width:34px;
+  border:1px solid var(--border); border-radius:3px;
+  text-align:center; padding:4px 2px;
+}
+.bw-frame-cell.bw-frame-active { border-color:var(--gold); background:rgba(201,168,76,0.12); }
+.bw-frame-num { font-size:9px; color:rgba(245,240,232,0.4); }
+.bw-frame-rolls { font-size:12px; font-weight:700; color:var(--gold); min-height:16px; }
 .stone {
   position:relative;
   width:84%; height:84%; border-radius:50%;
