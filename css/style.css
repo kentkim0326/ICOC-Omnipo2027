@@ -229,7 +229,34 @@
   border:1px solid var(--border); background:transparent; color:var(--cream); cursor:pointer;
 }
 .qd-mode-btn.active { background:var(--gold); border-color:var(--gold); color:var(--navy); font-weight:700; }
+
+/* ── Checkers ── */
+.checker-king {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  font-size:55%; color:var(--gold); pointer-events:none;
+}
+
+/* ── Blackjack ── */
+.bj-table { margin-bottom:18px; }
+.bj-hand-area { margin-bottom:18px; text-align:center; }
+.bj-hand-label { font-size:13px; color:rgba(245,240,232,0.65); margin-bottom:8px; letter-spacing:0.05em; }
+.bj-total { color:var(--gold); font-weight:700; margin-left:6px; }
+.bj-cards { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; min-height:84px; }
+.bj-card {
+  width:56px; height:80px; border-radius:6px; background:#fdfaf3;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  font-weight:700; font-size:20px; color:#1a1a1a;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  animation:stonePop 0.2s ease;
+}
+.bj-card.bj-red { color:#c0392b; }
+.bj-suit { font-size:16px; }
+.bj-card-back {
+  background:repeating-linear-gradient(45deg, var(--gold) 0 6px, #8a6a3b 6px 12px);
+  border:2px solid var(--gold);
+}
 .stone {
+  position:relative;
   width:84%; height:84%; border-radius:50%;
   box-shadow:0 2px 4px rgba(0,0,0,0.4);
   pointer-events:none;
