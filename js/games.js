@@ -30,8 +30,18 @@
       title: '리버시 (Reversi)',
       icon: '⚪',
       init: () => global.ReversiGame && global.ReversiGame.start()
+    },
+    hex: {
+      title: '헥스 (Hex)',
+      icon: '⬡',
+      init: () => global.HexGame && global.HexGame.start()
+    },
+    quoridor: {
+      title: '쿼리도 (Quoridor)',
+      icon: '🧱',
+      init: () => global.QuoridorGame && global.QuoridorGame.start()
     }
-    // 추후 추가: shogi, janggi, hex, quoridor, ...
+    // 추후 추가: shogi, janggi, ...
   };
 
   function openGame(key) {
