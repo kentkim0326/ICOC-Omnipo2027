@@ -494,6 +494,16 @@
 .rk-tile.om-pickable:hover { transform:translateY(-6px); }
 .rk-tile-selected { outline:3px solid var(--gold); transform:translateY(-6px); }
 
+/* ── Billiards (당구) ── */
+.bl-canvas-wrap {
+  width:100%; min-height:280px; border-radius:8px; overflow:hidden;
+  background:#0d0d09; margin-bottom:12px; touch-action:none;
+  display:flex; align-items:center; justify-content:center;
+}
+.bl-canvas-wrap canvas { display:block; touch-action:none; max-width:100%; }
+.bl-loading { color:rgba(245,240,232,0.5); font-size:13px; }
+.bl-turn-info { font-size:13px; color:var(--gold); text-align:center; margin-bottom:10px; min-height:18px; }
+
 @media(max-width:480px){
   .game-modal { padding:10px; }
   .game-modal-box { padding:14px; }
