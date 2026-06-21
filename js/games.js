@@ -50,6 +50,16 @@
       title: '블랙잭 (Blackjack)',
       icon: '♠',
       init: () => global.BlackjackGame && global.BlackjackGame.start()
+    },
+    oldmaid: {
+      title: '도둑잡기 (Old Maid)',
+      icon: '🃏',
+      init: () => global.OldMaidGame && global.OldMaidGame.start()
+    },
+    bowling: {
+      title: '볼링 (Bowling)',
+      icon: '🎳',
+      init: () => global.BowlingGame && global.BowlingGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
