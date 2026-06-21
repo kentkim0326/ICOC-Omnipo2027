@@ -74,9 +74,29 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   content:'';
   position:absolute; inset:0;
   pointer-events:none;
+  z-index:-1;
   background:
     radial-gradient(ellipse 80% 60% at 50% 40%, rgba(201,168,76,0.09) 0%, transparent 70%),
     radial-gradient(ellipse 40% 40% at 20% 80%, rgba(201,168,76,0.05) 0%, transparent 60%);
+}
+.hero-bg-pic {
+  position:absolute; inset:0; z-index:-3;
+  display:block; overflow:hidden;
+}
+.hero-bg-img {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center 18%;
+}
+.hero-bg-overlay {
+  position:absolute; inset:0; z-index:-2;
+  pointer-events:none;
+  background:linear-gradient(
+    to bottom,
+    rgba(5,12,24,0.78) 0%,
+    rgba(7,17,32,0.72) 45%,
+    rgba(11,31,58,0.88) 100%
+  );
 }
 
 .omnipo-badge {
@@ -428,6 +448,11 @@ footer a { color:var(--gold); text-decoration:none; }
 
 <!-- HERO -->
 <header class="hero">
+  <picture class="hero-bg-pic">
+    <source media="(max-width: 700px)" srcset="assets/hero-bg-mobile.jpg">
+    <img src="assets/hero-bg.jpg" alt="" class="hero-bg-img">
+  </picture>
+  <div class="hero-bg-overlay"></div>
   <div class="omnipo-badge">
     <div class="omnipo-ring">
       <div class="omnipo-ring-inner">
