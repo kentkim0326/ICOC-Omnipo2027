@@ -75,6 +75,11 @@
       title: '백개먼 (Backgammon)',
       icon: '⚀',
       init: () => global.BackgammonGame && global.BackgammonGame.start()
+    },
+    gostop: {
+      title: '고스톱 (Go-Stop)',
+      icon: '🎴',
+      init: () => global.GoStopGame && global.GoStopGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
