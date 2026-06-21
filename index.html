@@ -483,11 +483,11 @@ footer a { color:var(--gold); text-decoration:none; }
 <div class="stats-band">
   <div class="stats-grid">
     <div class="reveal">
-      <div class="stat-num">13</div>
+      <div class="stat-num">23</div>
       <div class="stat-label" data-i18n="s1">공식 종목</div>
     </div>
     <div class="reveal">
-      <div class="stat-num">300M+</div>
+      <div class="stat-num">500M+</div>
       <div class="stat-label" data-i18n="s2">글로벌 플레이어</div>
     </div>
     <div class="reveal">
@@ -506,8 +506,8 @@ footer a { color:var(--gold); text-decoration:none; }
 <div class="section-wrap" id="sports">
   <div class="reveal">
     <p class="section-label">13 Official Sports</p>
-    <h2 class="section-title" data-i18n="sp_title">13개 공식 종목</h2>
-    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 열세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.</p>
+    <h2 class="section-title" data-i18n="sp_title">23개 공식 종목</h2>
+    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 스물세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.</p>
   </div>
   <div class="sports-grid reveal">
 
@@ -684,7 +684,7 @@ footer a { color:var(--gold); text-decoration:none; }
   </div>
   <div class="about-grid">
     <div class="reveal">
-      <blockquote class="about-quote" data-i18n="ab_quote">"세계 최초.<br>13개 브레인스포츠를<br>하나의 무대에서."</blockquote>
+      <blockquote class="about-quote" data-i18n="ab_quote">"세계 최초.<br>23개 브레인스포츠를<br>하나의 무대에서."</blockquote>
       <p style="font-size:14px;color:rgba(245,240,232,0.62);line-height:1.95;" data-i18n="ab_body">
         바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 종목들을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.
       </p>
@@ -721,7 +721,7 @@ footer a { color:var(--gold); text-decoration:none; }
     <div class="timeline-item">
       <div class="timeline-date" data-i18n="t2d">2027 · 서울</div>
       <div class="timeline-title" data-i18n="t2t">제1회 Brain Sports Omnipo 2027</div>
-      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 15개국 · 해외 참가자 200명+ · 13개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
+      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 15개국 · 해외 참가자 200명+ · 23개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
     </div>
     <div class="timeline-item">
       <div class="timeline-date" data-i18n="t3d">2028</div>
@@ -1069,6 +1069,9 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
 // ── 게임 카드 클릭 바인딩 ──
+// 페이지 로드시 T 객체 기준으로 자동 동기화 (하드코딩된 기본 텍스트와 T 객체가 어긋나는 것을 방지)
+setLang('ko');
+
 document.querySelectorAll('.sport-card[data-game]').forEach(card => {
   card.addEventListener('click', () => ICOC_GAMES.openGame(card.getAttribute('data-game')));
 });
