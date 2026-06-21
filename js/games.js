@@ -90,8 +90,13 @@
       title: '당구 (8-ball Pool)',
       icon: '🎱',
       init: () => global.BilliardsGame && global.BilliardsGame.start()
+    },
+    janggi: {
+      title: '장기 (Janggi)',
+      icon: '♟️',
+      init: () => global.JanggiGame && global.JanggiGame.start()
     }
-    // 추후 추가: shogi, janggi, ...
+    // 추후 추가: shogi, ...
   };
 
   function openGame(key) {
