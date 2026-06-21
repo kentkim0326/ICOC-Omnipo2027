@@ -60,6 +60,16 @@
       title: '볼링 (Bowling)',
       icon: '🎳',
       init: () => global.BowlingGame && global.BowlingGame.start()
+    },
+    davinci: {
+      title: '다빈치 코드 (Da Vinci Code)',
+      icon: '🔢',
+      init: () => global.DaVinciGame && global.DaVinciGame.start()
+    },
+    onecard: {
+      title: '원카드 (One Card)',
+      icon: '🂠',
+      init: () => global.OneCardGame && global.OneCardGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
