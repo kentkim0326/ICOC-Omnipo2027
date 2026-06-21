@@ -470,6 +470,30 @@
 }
 .icoc-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
 
+/* ── Rummikub ── */
+.rk-table { display:flex; flex-wrap:wrap; gap:10px; min-height:50px; }
+.rk-group {
+  display:flex; gap:3px; padding:5px; border-radius:6px;
+  background:rgba(0,0,0,0.15); border:1px solid var(--border);
+}
+.rk-group-targetable { border-color:var(--gold); cursor:pointer; background:rgba(201,168,76,0.12); }
+.rk-table-empty { font-size:12px; color:rgba(245,240,232,0.4); padding:10px; }
+.rk-tile {
+  width:34px; height:46px; border-radius:4px;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:16px; background:#f5f0e8;
+  box-shadow:0 2px 4px rgba(0,0,0,0.35);
+  flex-shrink:0; animation:stonePop 0.18s ease;
+}
+.rk-tile-red { color:#c0392b; }
+.rk-tile-blue { color:#2563eb; }
+.rk-tile-black { color:#1a1a1a; }
+.rk-tile-yellow { color:#c9921a; }
+.rk-tile-joker { color:var(--gold); background:#2a2a2a; }
+.rk-tile.om-pickable { cursor:pointer; transition:transform 0.15s; }
+.rk-tile.om-pickable:hover { transform:translateY(-6px); }
+.rk-tile-selected { outline:3px solid var(--gold); transform:translateY(-6px); }
+
 @media(max-width:480px){
   .game-modal { padding:10px; }
   .game-modal-box { padding:14px; }
