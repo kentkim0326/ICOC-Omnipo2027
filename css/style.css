@@ -275,6 +275,40 @@
 .bw-frame-cell.bw-frame-active { border-color:var(--gold); background:rgba(201,168,76,0.12); }
 .bw-frame-num { font-size:9px; color:rgba(245,240,232,0.4); }
 .bw-frame-rolls { font-size:12px; font-weight:700; color:var(--gold); min-height:16px; }
+
+/* ── Da Vinci Code ── */
+.dv-tile-row { display:flex; justify-content:center; gap:8px; flex-wrap:wrap; min-height:64px; }
+.dv-tile {
+  width:48px; height:64px; border-radius:6px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; font-weight:700;
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+  animation:stonePop 0.2s ease;
+}
+.dv-tile-black { background:#1a1a1a; color:#f5f0e8; border:1px solid #444; }
+.dv-tile-white { background:#f5f0e8; color:#1a1a1a; border:1px solid #ccc; }
+.dv-tile-back {
+  background:repeating-linear-gradient(45deg, var(--gold) 0 6px, #8a6a3b 6px 12px);
+  border:2px solid var(--gold); color:var(--navy); font-size:18px;
+}
+.dv-pickable { cursor:pointer; transition:transform 0.15s; }
+.dv-pickable:hover { transform:translateY(-6px); }
+.dv-picker {
+  display:grid; grid-template-columns:repeat(12, 1fr); gap:4px;
+  margin:12px 0; padding:10px; border:1px solid var(--border); border-radius:6px;
+}
+.dv-picker-btn {
+  aspect-ratio:1/1; border-radius:4px; font-size:12px; font-weight:700; cursor:pointer;
+  border:1px solid var(--border);
+}
+.dv-picker-black { background:#1a1a1a; color:#f5f0e8; }
+.dv-picker-white { background:#f5f0e8; color:#1a1a1a; }
+.dv-picker-disabled { opacity:0.18; cursor:not-allowed; }
+
+/* ── One Card ── */
+.oc-card { width:50px; height:72px; font-size:16px; }
+.oc-card .bj-suit { font-size:14px; }
+.oc-card-disabled { opacity:0.4; }
 .stone {
   position:relative;
   width:84%; height:84%; border-radius:50%;
