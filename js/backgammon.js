@@ -101,7 +101,7 @@
   function applyMove(b, barObj, offObj, owner, move) {
     if (move.type === 'enter') {
       const dest = b[move.to];
-      if (dest && dest.owner !== owner) { bar[opp(owner)] = (bar[opp(owner)] || 0) + 1; b[move.to] = { owner, count: 1 }; }
+      if (dest && dest.owner !== owner) { barObj[opp(owner)] = (barObj[opp(owner)] || 0) + 1; b[move.to] = { owner, count: 1 }; }
       else if (dest) dest.count++;
       else b[move.to] = { owner, count: 1 };
       barObj[owner]--;
