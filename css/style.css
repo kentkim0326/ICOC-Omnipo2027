@@ -445,6 +445,29 @@
 }
 @keyframes stonePop { from{ transform:scale(0.3); opacity:0; } to{ transform:scale(1); opacity:1; } }
 
+.grid-diag-line { height:1px; transform-origin:0 0; }
+
+/* ── 장기 기물 ── */
+.stone.jg-piece {
+  display:flex; align-items:center; justify-content:center;
+  font-weight:700; font-size:clamp(11px,3.4vw,17px);
+  border:1.5px solid rgba(0,0,0,0.35);
+}
+.stone.jg-red { background:radial-gradient(circle at 32% 30%, #fdebe0, #d6452f 85%); color:#5a0e00; }
+.stone.jg-blue { background:radial-gradient(circle at 32% 30%, #e3f1ff, #2461b0 85%); color:#04204a; }
+.intersection.jg-selected::before {
+  content:''; position:absolute; inset:2%; border-radius:50%;
+  border:2px solid var(--gold); pointer-events:none;
+}
+.intersection.jg-legal::after {
+  content:''; position:absolute; width:26%; height:26%; border-radius:50%;
+  background:rgba(212,175,55,0.55); pointer-events:none;
+}
+.intersection.jg-legal-capture::after {
+  content:''; position:absolute; inset:6%; border-radius:50%;
+  border:2.5px solid rgba(212,55,55,0.75); background:transparent; pointer-events:none;
+}
+
 /* ── Generic action buttons inside modal ── */
 .game-actions {
   display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap;
