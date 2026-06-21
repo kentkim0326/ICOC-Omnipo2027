@@ -8,7 +8,8 @@
 
 (function (global) {
   const MONTH_KR = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"];
-  const SPR_CW = 60, SPR_CH = 90; // 표시 카드 크기(px)
+  const SPR_CW = 64, SPR_CH = 96; // 표시 카드 크기(px) - 손패/바닥
+  const SPR_CW_SMALL = 42, SPR_CH_SMALL = 63; // 획득 패(작게 표시)
 
   // sprite: hwatu-cards.webp 내 (col,row) 위치, 8열x6행. 실제 이미지로 검증된 정확한 매핑.
   const RAW_CARDS = [
@@ -66,6 +67,34 @@
   const PLAYER = 'player', AI = 'ai';
 
   let G; // 전체 게임 상태
+  let soundCtx = null;
+
+  // ── 사운드 (Web Audio API로 직접 합성, 별도 음원 파일 불필요) ──
+  function playTone(freqs, durMs, type, gainPeak) {
+    try {
+      if (!soundCtx) soundCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (soundCtx.state === 'suspended') soundCtx.resume();
+      const ctx = soundCtx;
+      const now = ctx.currentTime;
+      freqs.forEach((f, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type || 'sine';
+        osc.frequency.setValueAtTime(f, now + i * 0.085);
+        gain.gain.setValueAtTime(0.0001, now + i * 0.085);
+        gain.gain.linearRampToValueAtTime(gainPeak || 0.16, now + i * 0.085 + 0.015);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + i * 0.085 + durMs / 1000);
+        osc.connect(gain); gain.connect(ctx.destination);
+        osc.start(now + i * 0.085);
+        osc.stop(now + i * 0.085 + durMs / 1000 + 0.02);
+      });
+    } catch (e) { /* 오디오 미지원 환경에서는 조용히 무시 */ }
+  }
+  function sfxSelect() { playTone([920], 70, 'sine', 0.1); }
+  function sfxCapture() { playTone([523, 659, 784, 1047], 110, 'triangle', 0.16); } // 신나는 상승 아르페지오
+  function sfxSweep() { playTone([523, 659, 784, 1047, 1318], 130, 'triangle', 0.18); } // 3장 쓸기, 더 화려하게
+  function sfxMiss() { playTone([320, 230], 200, 'sawtooth', 0.1); } // 못 먹음, 실망
+  function sfxDoubleMiss() { playTone([240, 190, 140], 320, 'sawtooth', 0.13); } // 똥(쌍으로 못 먹음), 더 실망
 
   function shuffle(arr) {
     const a = arr.slice();
@@ -161,7 +190,7 @@
     return {
       deck, field, playerHand, aiHand,
       playerCap: [], aiCap: [],
-      phase: 'player_select', goCount: 0, selected: null,
+      phase: 'player_select', goCount: 0, selected: null, turnMissCount: 0,
       lastWinner: null, gameOver: false, awarded: false,
     };
   }
@@ -171,16 +200,17 @@
   function setLog(msg) { const el = document.getElementById('gs-log'); if (el && msg) el.textContent = msg; }
   function setPointsMsg(msg) { const el = document.getElementById('gs-points-msg'); if (el) el.textContent = msg || ''; }
 
-  function spriteStyle(card) {
-    const sheetW = SPR_CW * 8, sheetH = SPR_CH * 6;
-    return `background-image:url('assets/hwatu-cards.webp');background-size:${sheetW}px ${sheetH}px;background-position:-${card.col * SPR_CW}px -${card.row * SPR_CH}px;`;
+  function spriteStyle(card, small) {
+    const cw = small ? SPR_CW_SMALL : SPR_CW, ch = small ? SPR_CH_SMALL : SPR_CH;
+    const sheetW = cw * 8, sheetH = ch * 6;
+    return `background-image:url('assets/hwatu-cards.webp');background-size:${sheetW}px ${sheetH}px;background-position:-${card.col * cw}px -${card.row * ch}px;`;
   }
 
   function cardEl(card, opts) {
     opts = opts || {};
     const el = document.createElement('div');
-    el.className = 'gs-card' + (opts.clickable ? ' om-pickable' : '') + (opts.selected ? ' gs-card-selected' : '');
-    el.setAttribute('style', spriteStyle(card));
+    el.className = 'gs-card' + (opts.small ? ' gs-card-small' : '') + (opts.clickable ? ' om-pickable' : '') + (opts.selected ? ' gs-card-selected' : '');
+    el.setAttribute('style', spriteStyle(card, opts.small));
     if (opts.onClick) el.addEventListener('click', opts.onClick);
     return el;
   }
@@ -192,12 +222,20 @@
     const a = cap.filter(c => c.t === 'animal').length;
     const r = cap.filter(c => c.t === 'ribbon').length;
     const p = cap.filter(c => c.t === 'junk' || c.t === 'junk2').reduce((s, c) => s + c.junkPts, 0);
-    const parts = [];
-    if (g > 0) parts.push(`광 ${g}`);
-    if (a > 0) parts.push(`열 ${a}`);
-    if (r > 0) parts.push(`띠 ${r}`);
-    if (p > 0) parts.push(`피 ${p}`);
-    el.textContent = parts.length ? parts.join(' · ') : '없음';
+    const defs = [['gwang', '광', g], ['animal', '열', a], ['ribbon', '띠', r], ['junk', '피', p]];
+    defs.forEach(([cls, label, n]) => {
+      if (n <= 0) return;
+      const pill = document.createElement('span');
+      pill.className = 'gs-badge gs-badge-' + cls;
+      pill.textContent = `${label} ${n}`;
+      el.appendChild(pill);
+    });
+  }
+
+  function renderCapCards(containerId, cap) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = '';
+    cap.forEach(c => el.appendChild(cardEl(c, { small: true })));
   }
 
   function render() {
@@ -210,14 +248,19 @@
         onClick: clickable ? () => onSelectCard(c) : null
       }));
     });
+    document.getElementById('gs-hand-count').textContent = G.playerHand.length;
 
     const fieldEl = document.getElementById('gs-field');
     fieldEl.innerHTML = '';
     G.field.forEach(c => fieldEl.appendChild(cardEl(c)));
 
-    document.getElementById('gs-deck-count').textContent = `남은 패 ${G.deck.length}장`;
-    renderCapBadges('gs-player-cap', G.playerCap);
-    renderCapBadges('gs-ai-cap', G.aiCap);
+    document.getElementById('gs-deck-count').textContent = G.deck.length;
+    renderCapBadges('gs-ai-cap-badges', G.aiCap);
+    renderCapBadges('gs-player-cap-badges', G.playerCap);
+    renderCapCards('gs-ai-cap-cards', G.aiCap);
+    renderCapCards('gs-player-cap-cards', G.playerCap);
+    document.getElementById('gs-ai-count').textContent = G.aiCap.length;
+    document.getElementById('gs-player-count').textContent = G.playerCap.length;
     document.getElementById('gs-player-score').textContent = `${calcScore(G.playerCap)}점`;
     document.getElementById('gs-ai-score').textContent = `${calcScore(G.aiCap)}점`;
 
@@ -231,13 +274,44 @@
       const items = getBreakdown(G.playerCap);
       document.getElementById('gs-gostop-text').textContent = `${calcScore(G.playerCap)}점 달성! (${items.join(', ')}) ${G.goCount > 0 ? `고 ${G.goCount}회 ` : ''}고? 스톱?`;
     }
+
+    const confirmBox = document.getElementById('gs-confirm-box');
+    if (G.selected !== null && G.phase === 'player_select') {
+      const card = G.playerHand.find(c => c.id === G.selected);
+      const willMatch = card ? G.field.filter(c => c.m === card.m).length : 0;
+      confirmBox.style.display = 'flex';
+      confirmBox.innerHTML = `
+        <div class="gs-confirm-text">${card ? MONTH_KR[card.m - 1] : ''} 카드를 내시겠습니까?${willMatch > 0 ? ' (바닥에서 따올 수 있습니다!)' : ''}</div>
+        <div class="gs-confirm-btns">
+          <button class="game-btn primary" id="gs-confirm-play-btn">내기</button>
+          <button class="game-btn ghost" id="gs-cancel-play-btn">취소</button>
+        </div>
+      `;
+      document.getElementById('gs-confirm-play-btn').addEventListener('click', onConfirmPlay);
+      document.getElementById('gs-cancel-play-btn').addEventListener('click', onCancelSelect);
+    } else {
+      confirmBox.style.display = 'none';
+      confirmBox.innerHTML = '';
+    }
   }
 
   function onSelectCard(card) {
     if (G.phase !== 'player_select' || G.gameOver) return;
-    G.selected = G.selected === card.id ? null : card.id;
+    const wasSelected = G.selected === card.id;
+    G.selected = wasSelected ? null : card.id;
+    if (!wasSelected) sfxSelect();
     render();
-    if (G.selected !== null) setTimeout(() => confirmPlay(card), 250);
+  }
+
+  function onCancelSelect() {
+    G.selected = null;
+    render();
+  }
+
+  function onConfirmPlay() {
+    const card = G.playerHand.find(c => c.id === G.selected);
+    if (!card) return;
+    confirmPlay(card);
   }
 
   function confirmPlay(card) {
@@ -245,9 +319,12 @@
     const same = G.field.filter(c => c.m === card.m);
     const { field, cap, matched } = matchCards(card, G.field, G.playerCap);
     G.playerHand = newHand; G.field = field; G.playerCap = cap; G.selected = null;
-    setLog(same.length === 0 ? `${MONTH_KR[card.m - 1]} 버림` : same.length >= 2 ? `✨ ${MONTH_KR[card.m - 1]} 3장 쓸기!` : `${MONTH_KR[card.m - 1]} 매칭!`);
+    G.turnMissCount = matched.length === 0 ? 1 : 0;
+    if (matched.length >= 3) { sfxSweep(); setLog(`✨ ${MONTH_KR[card.m - 1]} 3장 쓸기!`); }
+    else if (matched.length === 2) { sfxCapture(); setLog(`${MONTH_KR[card.m - 1]} 매칭!`); }
+    else { setLog(`${MONTH_KR[card.m - 1]} 버림`); }
     render();
-    setTimeout(playerDrawPhase, 500);
+    setTimeout(playerDrawPhase, matched.length === 0 ? 350 : 550);
   }
 
   function playerDrawPhase() {
@@ -255,7 +332,13 @@
     const drawn = G.deck.shift();
     const { field, cap, matched } = matchCards(drawn, G.field, G.playerCap);
     G.field = field; G.playerCap = cap;
-    setLog(matched.length === 0 ? `뒤집기: ${MONTH_KR[drawn.m - 1]} → 바닥` : matched.length >= 3 ? `✨ 뒤집기: ${MONTH_KR[drawn.m - 1]} 3장 쓸기!` : `뒤집기: ${MONTH_KR[drawn.m - 1]} 매칭!`);
+
+    if (matched.length === 0) {
+      G.turnMissCount = (G.turnMissCount || 0) + 1;
+      if (G.turnMissCount >= 2) { sfxDoubleMiss(); setLog(`💩 똥! 뒤집기: ${MONTH_KR[drawn.m - 1]} → 바닥 (이번 턴 두 번 다 못 먹었습니다)`); }
+      else { sfxMiss(); setLog(`뒤집기: ${MONTH_KR[drawn.m - 1]} → 바닥`); }
+    } else if (matched.length >= 3) { sfxSweep(); setLog(`✨ 뒤집기: ${MONTH_KR[drawn.m - 1]} 3장 쓸기!`); }
+    else { sfxCapture(); setLog(`뒤집기: ${MONTH_KR[drawn.m - 1]} 매칭!`); }
 
     const sc = calcScore(G.playerCap);
     const handEmpty = G.playerHand.length === 0;
@@ -355,17 +438,46 @@
     const body = document.getElementById('game-modal-body');
     body.innerHTML = `
       <div class="game-status-bar">
-        <span id="gs-turn-a" class="game-turn-pill">🤖 AI · <span id="gs-ai-score"></span></span>
-        <span id="gs-turn-p" class="game-turn-pill">😊 당신 · <span id="gs-player-score"></span></span>
+        <span id="gs-turn-a" class="game-turn-pill">🤖 AI</span>
+        <span id="gs-turn-p" class="game-turn-pill">😊 당신</span>
       </div>
-      <div class="gs-cap-row">
-        <div class="gs-cap-box">AI 획득: <span id="gs-ai-cap"></span></div>
-        <div class="gs-cap-box">내 획득: <span id="gs-player-cap"></span></div>
+
+      <div class="gs-panel">
+        <div class="gs-panel-header">
+          <span class="gs-panel-title">📦 AI 획득</span>
+          <span class="gs-panel-meta"><span id="gs-ai-score">0점</span> · <span id="gs-ai-count">0</span>장</span>
+        </div>
+        <div id="gs-ai-cap-badges" class="gs-badge-row"></div>
+        <div id="gs-ai-cap-cards" class="gs-card-row"></div>
       </div>
-      <div class="bj-hand-label">바닥 패 · <span id="gs-deck-count"></span></div>
-      <div id="gs-field" class="gs-field-row"></div>
-      <div class="bj-hand-label">내 손패</div>
-      <div id="gs-hand" class="gs-hand-row"></div>
+
+      <div class="gs-panel">
+        <div class="gs-panel-header">
+          <span class="gs-panel-title">🀫 바닥</span>
+          <span class="gs-panel-meta">덱 <span id="gs-deck-count">0</span>장</span>
+        </div>
+        <div id="gs-field" class="gs-card-row"></div>
+        <div id="gs-log" class="gs-log"></div>
+      </div>
+
+      <div class="gs-panel">
+        <div class="gs-panel-header">
+          <span class="gs-panel-title">📦 내 획득</span>
+          <span class="gs-panel-meta"><span id="gs-player-score">0점</span> · <span id="gs-player-count">0</span>장</span>
+        </div>
+        <div id="gs-player-cap-badges" class="gs-badge-row"></div>
+        <div id="gs-player-cap-cards" class="gs-card-row"></div>
+      </div>
+
+      <div class="gs-panel">
+        <div class="gs-panel-header">
+          <span class="gs-panel-title">😊 내 손패</span>
+          <span class="gs-panel-meta"><span id="gs-hand-count">0</span>장</span>
+        </div>
+        <div id="gs-hand" class="gs-card-row"></div>
+      </div>
+
+      <div id="gs-confirm-box" class="gs-confirm-box" style="display:none;"></div>
       <div id="gs-gostop-box" class="gs-gostop-box" style="display:none;">
         <div id="gs-gostop-text" class="gs-gostop-text"></div>
         <div class="gs-gostop-btns">
@@ -373,7 +485,7 @@
           <button class="game-btn ghost" id="gs-stop-btn">스톱!</button>
         </div>
       </div>
-      <div id="gs-log" class="gs-log"></div>
+
       <div id="gs-result" class="game-result-msg"></div>
       <div id="gs-points-msg" class="game-points-earned"></div>
       <div class="game-actions">
