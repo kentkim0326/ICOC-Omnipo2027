@@ -80,6 +80,11 @@
       title: '고스톱 (Go-Stop)',
       icon: '🎴',
       init: () => global.GoStopGame && global.GoStopGame.start()
+    },
+    rummikub: {
+      title: '루미큐브 (Rummikub)',
+      icon: '🀫',
+      init: () => global.RummikubGame && global.RummikubGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
