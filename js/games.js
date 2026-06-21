@@ -70,6 +70,11 @@
       title: '원카드 (One Card)',
       icon: '🂠',
       init: () => global.OneCardGame && global.OneCardGame.start()
+    },
+    backgammon: {
+      title: '백개먼 (Backgammon)',
+      icon: '⚀',
+      init: () => global.BackgammonGame && global.BackgammonGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
