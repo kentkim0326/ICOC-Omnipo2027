@@ -85,6 +85,11 @@
       title: '루미큐브 (Rummikub)',
       icon: '🀫',
       init: () => global.RummikubGame && global.RummikubGame.start()
+    },
+    billiards: {
+      title: '당구 (8-ball Pool)',
+      icon: '🎱',
+      init: () => global.BilliardsGame && global.BilliardsGame.start()
     }
     // 추후 추가: shogi, janggi, ...
   };
