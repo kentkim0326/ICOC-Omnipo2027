@@ -309,6 +309,40 @@
 .oc-card { width:50px; height:72px; font-size:16px; }
 .oc-card .bj-suit { font-size:14px; }
 .oc-card-disabled { opacity:0.4; }
+
+/* ── Backgammon ── */
+.bg-dice { display:flex; justify-content:center; gap:8px; margin-bottom:14px; min-height:34px; }
+.bg-die {
+  width:32px; height:32px; border-radius:6px; background:var(--gold); color:var(--navy);
+  display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.4);
+}
+.bg-die-used { opacity:0.25; }
+.bg-board { background:#5a3a22; border:3px solid #3a2414; border-radius:4px; padding:10px 6px; }
+.bg-row { display:flex; gap:2px; }
+.bg-point {
+  flex:1; min-height:90px; display:flex; flex-direction:column;
+  align-items:center; justify-content:flex-start; padding-top:4px;
+  background:rgba(0,0,0,0.12); cursor:pointer; position:relative;
+}
+.bg-row-top .bg-point, #bg-row-top .bg-point { border-bottom: 2px solid rgba(0,0,0,0.3); }
+.bg-point:nth-child(odd) { background:rgba(255,255,255,0.04); }
+.bg-point-selected { outline:2px solid var(--gold); }
+.bg-point-hint::after {
+  content:''; position:absolute; bottom:6px; width:10px; height:10px; border-radius:50%;
+  background:rgba(201,168,76,0.7);
+}
+.bg-stack { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.bg-checker { width:22px; height:22px; border-radius:50%; box-shadow:0 2px 3px rgba(0,0,0,0.4); }
+.bg-checker-p { background:radial-gradient(circle at 32% 30%, #fff, #ccc 78%); }
+.bg-checker-a { background:radial-gradient(circle at 32% 30%, #555, #050505 78%); }
+.bg-checker-count { font-size:10px; color:var(--gold); font-weight:700; }
+.bg-bar-row { display:flex; justify-content:center; align-items:center; gap:14px; padding:8px 0; }
+.bg-bar-pill {
+  font-size:11px; padding:5px 12px; border-radius:3px; border:1px solid var(--border);
+  cursor:pointer; color:var(--cream);
+}
+.bg-off-pill { font-size:11px; color:rgba(245,240,232,0.6); margin-right:8px; }
 .stone {
   position:relative;
   width:84%; height:84%; border-radius:50%;
