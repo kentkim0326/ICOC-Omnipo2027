@@ -346,27 +346,48 @@
 .bg-bar-pill:hover { border-color:var(--gold); color:var(--gold); }
 
 /* ── Go-Stop (화투) ── */
+.gs-panel {
+  border:1px solid var(--border); border-radius:8px;
+  padding:12px; margin-bottom:12px;
+  background:rgba(0,0,0,0.18);
+}
+.gs-panel-header {
+  display:flex; justify-content:space-between; align-items:baseline;
+  margin-bottom:10px;
+}
+.gs-panel-title { font-size:13px; font-weight:700; color:var(--cream); letter-spacing:0.03em; }
+.gs-panel-meta { font-size:12px; color:var(--gold); font-weight:700; }
+.gs-badge-row { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px; min-height:22px; }
+.gs-badge {
+  font-size:11px; font-weight:700; padding:3px 9px; border-radius:20px;
+  color:var(--navy);
+}
+.gs-badge-gwang { background:var(--gold); }
+.gs-badge-animal { background:#7fb88a; }
+.gs-badge-ribbon { background:#d98a8a; }
+.gs-badge-junk { background:#9aa3ad; }
+.gs-card-row {
+  display:flex; gap:6px; flex-wrap:wrap;
+  min-height:50px;
+}
 .gs-card {
-  width:60px; height:90px; border-radius:5px;
+  width:64px; height:96px; border-radius:5px;
   box-shadow:0 3px 7px rgba(0,0,0,0.4);
   background-repeat:no-repeat;
   animation:stonePop 0.2s ease;
   flex-shrink:0;
 }
+.gs-card-small { width:42px; height:63px; }
 .gs-card.om-pickable { cursor:pointer; transition:transform 0.15s; }
 .gs-card.om-pickable:hover { transform:translateY(-8px); }
 .gs-card-selected { outline:3px solid var(--gold); transform:translateY(-8px); }
-.gs-hand-row, .gs-field-row {
-  display:flex; gap:6px; flex-wrap:wrap; justify-content:center;
-  min-height:96px; margin-bottom:14px; padding:8px;
-  background:rgba(0,0,0,0.15); border-radius:6px;
+.gs-confirm-box {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  border:1px solid var(--gold); border-radius:6px; padding:14px; margin-bottom:14px;
+  background:rgba(201,168,76,0.1);
 }
-.gs-cap-row { display:flex; gap:10px; margin-bottom:12px; }
-.gs-cap-box {
-  flex:1; font-size:11px; color:rgba(245,240,232,0.6);
-  border:1px solid var(--border); border-radius:4px; padding:6px 10px;
-}
-.gs-cap-box span { color:var(--gold); font-weight:700; }
+.gs-confirm-text { font-size:13px; text-align:center; color:var(--cream); }
+.gs-confirm-btns { display:flex; gap:10px; }
 .gs-gostop-box {
   flex-direction:column; align-items:center; gap:10px;
   border:1px solid var(--gold); border-radius:6px; padding:14px; margin-bottom:14px;
@@ -374,7 +395,7 @@
 }
 .gs-gostop-text { font-size:13px; text-align:center; color:var(--cream); }
 .gs-gostop-btns { display:flex; gap:10px; }
-.gs-log { font-size:12px; color:rgba(245,240,232,0.55); text-align:center; margin-bottom:8px; min-height:16px; }
+.gs-log { font-size:12px; color:rgba(245,240,232,0.55); text-align:center; margin-top:8px; min-height:16px; }
 
 /* ── Backgammon ── */
 .bg-dice { display:flex; justify-content:center; gap:8px; margin-bottom:14px; min-height:34px; }
