@@ -393,6 +393,18 @@ footer a { color:var(--gold); text-decoration:none; }
   color:var(--gold); letter-spacing:0.2em;
   margin-bottom:10px; display:block;
 }
+.footer-social {
+  display:flex; justify-content:center; gap:18px;
+  margin-bottom:16px;
+}
+.footer-social a {
+  width:36px; height:36px; border-radius:50%;
+  border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color 0.2s, background 0.2s;
+}
+.footer-social a:hover { border-color:var(--gold); background:rgba(201,168,76,0.1); }
+.footer-social svg { width:16px; height:16px; fill:var(--gold); }
 
 /* ── SCROLL REVEAL ── */
 .reveal { opacity:0; transform:translateY(28px); transition:opacity 0.75s ease, transform 0.75s ease; }
@@ -695,11 +707,6 @@ footer a { color:var(--gold); text-decoration:none; }
         <div class="info-box-title">ICOC 국제브레인스포츠협회</div>
         <div class="info-box-sub" data-i18n="org_d">문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)</div>
       </div>
-      <div class="info-box">
-        <div class="info-box-label" data-i18n="op_l">운영사</div>
-        <div class="info-box-title">디아더 (Deather)</div>
-        <div class="info-box-sub" data-i18n="op_d">대표 김형섭 (Kent Kim)<br>Harvard University, Economics<br>info@deother.me</div>
-      </div>
     </div>
   </div>
 </div>
@@ -812,6 +819,14 @@ footer a { color:var(--gold); text-decoration:none; }
 <!-- FOOTER -->
 <footer>
   <span class="footer-logo">OMNIPO · 2027</span>
+  <div class="footer-social">
+    <a href="https://www.facebook.com/ICOC2019" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.51 17.52 2 12 2S2 6.51 2 12.06c0 5 3.66 9.13 8.44 9.94v-7.03H7.9v-2.91h2.54V9.84c0-2.5 1.49-3.89 3.78-3.89 1.1 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.78-1.63 1.56v1.89h2.78l-.44 2.91h-2.34V22c4.78-.81 8.44-4.94 8.44-9.94z"/></svg>
+    </a>
+    <a href="https://www.youtube.com/@icoc8891" target="_blank" rel="noopener" aria-label="YouTube">
+      <svg viewBox="0 0 24 24"><path d="M23.5 6.5s-.23-1.64-.94-2.36c-.9-.95-1.9-.95-2.36-1.01C16.9 2.8 12 2.8 12 2.8h-.01s-4.9 0-8.2.33c-.46.06-1.46.06-2.36 1.01C.73 4.86.5 6.5.5 6.5S.25 8.42.25 10.35v1.3c0 1.93.25 3.85.25 3.85s.23 1.64.94 2.36c.9.95 2.08.92 2.6 1.02 1.9.18 8.2.31 8.2.31s4.9-.01 8.2-.34c.46-.06 1.46-.06 2.36-1.01.71-.72.94-2.36.94-2.36s.25-1.92.25-3.85v-1.3c0-1.93-.25-3.85-.25-3.85zM9.7 14.8V8.4l6.1 3.2-6.1 3.2z"/></svg>
+    </a>
+  </div>
   <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인</p>
 </footer>
 
@@ -866,7 +881,6 @@ const T = {
     ab_quote:'"세계 최초.<br>23개 브레인스포츠를<br>하나의 무대에서."',
     ab_body:"바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 종목들을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.",
     org_l:"주관 기관", org_d:"문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)",
-    op_l:"운영사", op_d:"대표 김형섭 (Kent Kim)<br>Harvard University, Economics<br>info@deother.me",
     rm_title:"대회 로드맵", rm_body:"서울에서 시작해 아시아로, 그리고 세계로. Brain Sports Omnipo를 향한 여정입니다.",
     t1d:"2026 · 준비기", t1t:"ICOC 공식 출범 및 스폰서 유치", t1b:"문체부 사단법인 완비 · 종목 네트워크 구성 · 종목별 국제 기구 협약 체결 · 스폰서십 확보",
     t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 23개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
@@ -912,7 +926,6 @@ const T = {
     ab_quote:'"World First.<br>23 Brain Sports.<br>One Stage."',
     ab_body:"Go (IGF), Chess (FIDE), Billiards (UMB), Bridge (WBF) — each discipline has millions of international players and a governing body. Yet no event in history has unified them on a single platform. Brain Sports Omnipo 2027 changes that.",
     org_l:"Organizer", org_d:"Incorporated Association under<br>Ministry of Culture, Sports and Tourism (Korea)",
-    op_l:"Operating Company", op_d:"CEO: Kent Kim (김형섭)<br>Harvard University, Economics<br>info@deother.me",
     rm_title:"Tournament Roadmap", rm_body:"Starting in Seoul, expanding across Asia, growing into the global Brain Sports Omnipo.",
     t1d:"2026 · Preparation", t1t:"ICOC Launch & Sponsorship", t1b:"Legal entity complete · Sport network · Federation agreements · Sponsor acquisition",
     t2d:"2027 · Seoul", t2t:"1st Brain Sports Omnipo 2027", t2b:"Seoul · 15+ countries · 200+ international players · 23 disciplines · K-Culture opening ceremony · Live streaming",
@@ -958,7 +971,6 @@ const T = {
     ab_quote:'"世界首创。<br>23大脑力运动。<br>同台竞技。"',
     ab_body:"围棋(IGF)、国际象棋(FIDE)、台球(UMB)、桥牌(WBF)——将这些项目整合于同一平台的国际赛事，迄今为止在全球尚属空白。Brain Sports全能波2027将填补这一历史空白。",
     org_l:"主办机构", org_d:"韩国文化体育观光部认可社团法人",
-    op_l:"运营公司", op_d:"CEO：金炯燮 (Kent Kim)<br>哈佛大学经济学<br>info@deother.me",
     rm_title:"赛事路线图", rm_body:"从首尔出发，走向亚洲，迈向世界。",
     t1d:"2026年·准备期", t1t:"ICOC正式启动及赞助商招募", t1b:"社团法人完备 · 项目网络构建 · 国际机构协议签订 · 赞助商招募",
     t2d:"2027年·首尔", t2t:"首届Brain Sports全能波2027", t2b:"首尔举办 · 15个以上国家 · 200名以上国际选手 · 23大项目同时进行",
@@ -1004,7 +1016,6 @@ const T = {
     ab_quote:'"世界初。<br>23のブレインスポーツを<br>ひとつの舞台で。"',
     ab_body:"囲碁(IGF)、チェス(FIDE)、ビリヤード(UMB)、ブリッジ(WBF) — これら種目を一つのプラットフォームで統合運営する国際大会は、世界に前例がありません。Brain Sports Omnipo 2027がその歴史を刻みます。",
     org_l:"主催機関", org_d:"文化体育観光部認可社団法人<br>Ministry of Culture, Sports and Tourism (Korea)",
-    op_l:"運営会社", op_d:"代表：キム・ヒョンソプ (Kent Kim)<br>ハーバード大学 経済学部<br>info@deother.me",
     rm_title:"大会ロードマップ", rm_body:"ソウルから始まり、アジアへ、そして世界へ。",
     t1d:"2026年·準備期", t1t:"ICOC正式発足とスポンサー獲得", t1b:"法人設立完了 · 種目ネットワーク構築 · 国際機関との協定締結 · スポンサー確保",
     t2d:"2027年·ソウル", t2t:"第1回 Brain Sports Omnipo 2027", t2b:"ソウル開催 · 15カ国以上 · 海外参加者200名+ · 23種目同時開催",
