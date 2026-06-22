@@ -105,6 +105,11 @@
       title: '마작 솔리테어 (Mahjong)',
       icon: '🀄',
       init: () => global.MahjongGame && global.MahjongGame.start()
+    },
+    holdem: {
+      title: '텍사스 홀덤 (Hold\'em)',
+      icon: '♠',
+      init: () => global.HoldemGame && global.HoldemGame.start()
     }
     // 추후 추가: ...
   };
