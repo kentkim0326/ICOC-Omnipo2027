@@ -110,14 +110,17 @@
   background:#dcbc83;
   border:3px solid #8a6a3b;
   border-radius:4px;
-  aspect-ratio:1/1; width:100%; max-width:460px;
+  width:100%; max-width:460px;
+  overflow:hidden;
   box-shadow:inset 0 0 30px rgba(0,0,0,0.25);
 }
 .board-cell {
   position:relative;
+  aspect-ratio:1/1;
   border:1px solid rgba(0,0,0,0.28);
   display:flex; align-items:center; justify-content:center;
   cursor:pointer;
+  overflow:hidden;
 }
 .board-cell:hover::before {
   content:''; position:absolute; inset:8%;
