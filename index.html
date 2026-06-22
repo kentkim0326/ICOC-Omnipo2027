@@ -267,6 +267,41 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   gap:1px; background:var(--border);
   border:1px solid var(--border); margin-top:56px;
 }
+/* ── Adult Division ── */
+.adult-section-header {
+  margin-top:72px; padding-top:52px;
+  border-top:1px solid var(--border);
+}
+.adult-label {
+  font-size:11px; letter-spacing:0.28em;
+  color:#c07a3a; text-transform:uppercase;
+  font-family:'Playfair Display',serif; margin-bottom:12px;
+}
+.adult-title {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(24px,3.5vw,42px);
+  font-weight:700; line-height:1.15; margin-bottom:14px;
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+}
+.adult-badge-18 {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:32px; height:32px; border-radius:50%;
+  border:2px solid #c07a3a; color:#c07a3a;
+  font-size:10px; font-weight:900; flex-shrink:0;
+}
+.adult-notice {
+  font-size:13px; color:rgba(245,240,232,0.5);
+  line-height:1.8; margin-bottom:0; max-width:600px;
+}
+.adult-notice strong { color:#c07a3a; font-weight:600; }
+.sports-grid.adult-grid {
+  border-color:rgba(192,122,58,0.3);
+  background:rgba(192,122,58,0.08);
+}
+.sports-grid.adult-grid .sport-card { background:rgba(8,14,28,0.9); }
+.sports-grid.adult-grid .sport-card::before { background:#c07a3a; }
+.sports-grid.adult-grid .sport-card:hover { background:rgba(192,122,58,0.07); }
+.sports-grid.adult-grid .sport-players { color:#c07a3a; }
 .sport-card {
   background:var(--navy); padding:40px 36px;
   transition:background 0.3s; position:relative; overflow:hidden;
@@ -539,13 +574,13 @@ footer a { color:var(--gold); text-decoration:none; }
 <!-- SPORTS -->
 <div class="section-wrap" id="sports">
   <div class="reveal">
-    <p class="section-label">13 Official Sports</p>
+    <p class="section-label">Official Brain Sports · Open Division</p>
     <h2 class="section-title" data-i18n="sp_title">23개 공식 종목</h2>
     <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 스물세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.</p>
   </div>
   <div class="sports-grid reveal">
 
-    <div class="sport-card playable" data-game="go">
+        <div class="sport-card playable" data-game="go">
       <span class="sport-icon">⚫</span>
       <div class="sport-name" data-i18n="c1n">바둑 (Go)</div>
       <div class="sport-desc" data-i18n="c1d">수천 년의 역사를 가진 전략 보드게임. 13x13 보드에서 상대 돌을 더 많이 포획하면 승리합니다. 지금 바로 AI와 대전해보세요!</div>
@@ -587,13 +622,6 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-players" data-i18n="c6p">5M+ players & growing</div>
     </div>
 
-    <div class="sport-card playable" data-game="mahjong">
-      <span class="sport-icon">🀇</span>
-      <div class="sport-name" data-i18n="c7n">마작 (Mahjong)</div>
-      <div class="sport-desc" data-i18n="c7d">중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 리치마작·광동마작 등 다양한 룰로 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.</div>
-      <div class="sport-players" data-i18n="c7p">600M+ players worldwide</div>
-    </div>
-
     <div class="sport-card playable" data-game="omok">
       <span class="sport-icon">⬤</span>
       <div class="sport-name" data-i18n="c8n">오목 (Omok / Gomoku)</div>
@@ -620,20 +648,6 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-name" data-i18n="c11n">쇼기 (Shogi)</div>
       <div class="sport-desc" data-i18n="c11d">일본 고유의 전통 장기. 일본장기연맹(JSA) 산하 공식 국제 대회가 운영되며, 일본 참가자 유치의 핵심 종목입니다.</div>
       <div class="sport-players" data-i18n="c11p">20M+ players worldwide</div>
-    </div>
-
-    <div class="sport-card playable" data-game="holdem">
-      <span class="sport-icon">♠</span>
-      <div class="sport-name" data-i18n="c12n">텍사스 홀덤 (Texas Hold'em)</div>
-      <div class="sport-desc" data-i18n="c12d">마인드스포츠 올림피아드(MSO) 공식 종목. 확률 계산·심리 분석·전략적 판단이 결합된 고도의 두뇌 스포츠로 전 세계에서 가장 인기 있는 카드 게임입니다.</div>
-      <div class="sport-players" data-i18n="c12p">100M+ players worldwide</div>
-    </div>
-
-    <div class="sport-card playable" data-game="gostop">
-      <span class="sport-icon">🌸</span>
-      <div class="sport-name" data-i18n="c13n">하나후다 / 고스톱 (Hanafuda / Go-Stop)</div>
-      <div class="sport-desc" data-i18n="c13d">일본에서 기원해 한국에서 고스톱으로 발전한 화투 카드 게임. 한·일 양국의 공통 문화유산으로 동아시아 참가자 유치와 K-컬처 연계에 최적화된 종목입니다.</div>
-      <div class="sport-players" data-i18n="c13p">30M+ players (Korea & Japan)</div>
     </div>
 
     <div class="sport-card playable" data-game="connect4">
@@ -692,18 +706,53 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-players" data-i18n="c21p">한·일 중심 수천만 명</div>
     </div>
 
-    <div class="sport-card playable" data-game="blackjack">
-      <span class="sport-icon">♠</span>
-      <div class="sport-name" data-i18n="c22n">블랙잭 (Blackjack)</div>
-      <div class="sport-desc" data-i18n="c22d">카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. ICOC에서는 베팅 없이 AI와 점수로만 대전합니다.</div>
-      <div class="sport-players" data-i18n="c22p">전 세계 가장 대중적인 카드 게임</div>
-    </div>
-
     <div class="sport-card playable" data-game="bowling">
       <span class="sport-icon">🎳</span>
       <div class="sport-name" data-i18n="c23n">볼링 (Bowling)</div>
       <div class="sport-desc" data-i18n="c23d">10프레임 동안 더 높은 점수를 내면 승리하는 캐주얼 스코어 게임. 전 세계에서 가장 대중적인 생활 스포츠입니다.</div>
       <div class="sport-players" data-i18n="c23p">전 세계 1억 명 이상 동호인</div>
+    </div>
+
+  </div>
+  <div class="adult-section-header reveal">
+    <p class="adult-label">Adult Division · 18+ · 성인부 공식 종목</p>
+    <h2 class="adult-title">
+      성인부 종목 <span class="adult-badge-18">18+</span>
+    </h2>
+    <p class="adult-notice">
+      <strong>베팅 없음 · 포인트 경쟁 전용.</strong>
+      아래 4개 종목은 ICOC 성인부(Adult Division) 공식 종목입니다.
+      실제 도박·금전 거래 요소는 없으며, 전략·확률·심리 추론 능력을 겨루는 마인드스포츠로만 운영됩니다.
+    </p>
+  </div>
+  <div class="sports-grid adult-grid reveal">
+
+        <div class="sport-card playable" data-game="mahjong">
+      <span class="sport-icon">🀇</span>
+      <div class="sport-name" data-i18n="c7n">마작 (Mahjong)</div>
+      <div class="sport-desc" data-i18n="c7d">중국에서 시작해 동아시아 전역으로 확산된 전략 타일 게임. 리치마작·광동마작 등 다양한 룰로 전 세계 수억 명이 즐기는 대표적 두뇌 스포츠입니다.</div>
+      <div class="sport-players" data-i18n="c7p">600M+ players worldwide</div>
+    </div>
+
+        <div class="sport-card playable" data-game="holdem">
+      <span class="sport-icon">♠</span>
+      <div class="sport-name" data-i18n="c12n">텍사스 홀덤 (Texas Hold'em)</div>
+      <div class="sport-desc" data-i18n="c12d">마인드스포츠 올림피아드(MSO) 공식 종목. 확률 계산·심리 분석·전략적 판단이 결합된 고도의 두뇌 스포츠로 전 세계에서 가장 인기 있는 카드 게임입니다.</div>
+      <div class="sport-players" data-i18n="c12p">100M+ players worldwide</div>
+    </div>
+
+        <div class="sport-card playable" data-game="gostop">
+      <span class="sport-icon">🌸</span>
+      <div class="sport-name" data-i18n="c13n">하나후다 / 고스톱 (Hanafuda / Go-Stop)</div>
+      <div class="sport-desc" data-i18n="c13d">일본에서 기원해 한국에서 고스톱으로 발전한 화투 카드 게임. 한·일 양국의 공통 문화유산으로 동아시아 참가자 유치와 K-컬처 연계에 최적화된 종목입니다.</div>
+      <div class="sport-players" data-i18n="c13p">30M+ players (Korea & Japan)</div>
+    </div>
+
+        <div class="sport-card playable" data-game="blackjack">
+      <span class="sport-icon">♠</span>
+      <div class="sport-name" data-i18n="c22n">블랙잭 (Blackjack)</div>
+      <div class="sport-desc" data-i18n="c22d">카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. ICOC에서는 베팅 없이 AI와 점수로만 대전합니다.</div>
+      <div class="sport-players" data-i18n="c22p">전 세계 가장 대중적인 카드 게임</div>
     </div>
 
   </div>
