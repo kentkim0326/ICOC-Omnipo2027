@@ -818,3 +818,117 @@
 .sg-under { color:#4ddf4d; font-weight:700; }
 .sg-even  { color:var(--gold); }
 .sg-over  { color:#df6060; }
+
+/* ── Bridge ── */
+.br-topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 0 8px; gap:8px; flex-wrap:wrap;
+  font-size:13px; font-weight:600; color:var(--gold);
+}
+.br-rule-hint { font-size:10px; color:rgba(245,240,232,0.4); font-weight:400; }
+.br-content { padding:4px 0; }
+.br-info-box {
+  font-size:12px; color:rgba(245,240,232,0.7);
+  background:rgba(201,168,76,0.07);
+  border:1px solid rgba(201,168,76,0.2);
+  padding:8px 12px; border-radius:4px; margin-bottom:10px;
+}
+.br-declare-hands { margin-bottom:10px; }
+.br-handrow-label, .br-label {
+  font-size:10px; letter-spacing:0.12em; color:rgba(245,240,232,0.4);
+  margin-bottom:4px; margin-top:6px; text-transform:uppercase;
+}
+.br-handrow {
+  display:flex; flex-wrap:nowrap; overflow-x:auto;
+  padding-bottom:4px; gap:1px;
+  scrollbar-width:thin;
+}
+.br-trump-row {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-top:10px;
+}
+.br-trump-lbl { font-size:11px; color:rgba(245,240,232,0.5); }
+.br-tb {
+  padding:5px 12px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.04);
+  color:var(--cream); border-radius:3px;
+  cursor:pointer; font-size:14px; transition:all 0.2s;
+}
+.br-tb:hover { background:rgba(201,168,76,0.15); border-color:var(--gold); color:var(--gold); }
+
+/* Score row */
+.br-score {
+  display:flex; gap:10px; flex-wrap:wrap;
+  font-size:11px; color:rgba(245,240,232,0.55);
+  margin-bottom:6px; padding:5px 8px;
+  background:rgba(255,255,255,0.03); border-radius:3px;
+}
+.br-score b { color:var(--cream); }
+
+/* Middle area (trick + side hands) */
+.br-middle {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  margin:6px 0;
+}
+.br-side { display:flex; flex-direction:column; align-items:center; gap:3px; min-width:50px; }
+.br-opp-hand {
+  display:flex; flex-direction:row; flex-wrap:nowrap; justify-content:center;
+}
+.br-opp-hand .br-card { width:14px; height:22px; min-width:14px; flex-shrink:0; border-radius:2px; }
+
+/* Trick grid (3×3) */
+.br-trick-grid {
+  display:grid; grid-template-columns:42px 50px 42px;
+  grid-template-rows:48px 52px 48px;
+  gap:2px; background:rgba(0,0,0,0.2);
+  border-radius:6px; padding:4px;
+  flex-shrink:0;
+}
+.br-trick-slot {
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; color:rgba(255,255,255,0.2); border-radius:3px;
+}
+.br-tc-center {
+  display:flex; align-items:center; justify-content:center;
+  font-size:9px; color:rgba(201,168,76,0.6);
+}
+.br-tc {
+  width:40px !important; height:54px !important;
+  font-size:11px !important;
+}
+
+/* Bridge cards (smaller than holdem) */
+.br-card {
+  width:32px; height:46px; flex-shrink:0;
+  background:#fffef8;
+  border:1px solid #bbb; border-radius:3px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:1px;
+  box-shadow:0 1px 3px rgba(0,0,0,0.3);
+  font-weight:700; cursor:default;
+  transition:transform 0.1s, box-shadow 0.1s;
+}
+.br-cr { font-size:11px; line-height:1; }
+.br-cs { font-size:13px; line-height:1; }
+.br-card.br-red { color:#cc1122; }
+.br-card.br-back {
+  background:linear-gradient(135deg,#1a3580 20%,#2a4db0 80%);
+  border-color:rgba(201,168,76,0.4);
+}
+.br-card.br-pick {
+  cursor:pointer;
+  border-color:#c9a84c;
+}
+.br-card.br-pick:hover {
+  transform:translateY(-5px);
+  box-shadow:0 4px 10px rgba(0,0,0,0.4);
+  z-index:10; position:relative;
+}
+
+.br-msg-line {
+  text-align:center; font-size:13px; color:var(--gold);
+  font-family:'Playfair Display',serif;
+  min-height:20px; padding:6px 0 4px;
+}
+.br-actions { display:flex; gap:8px; justify-content:center; padding:4px 0; }
