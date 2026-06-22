@@ -731,3 +731,90 @@
 .hd-raise { background:rgba(201,168,76,0.15); border-color:var(--gold); color:var(--gold); }
 .hd-wait  { font-size:12px; color:rgba(245,240,232,0.45); padding:8px; }
 .hd-x     { margin-top:4px; width:100%; }
+
+/* ── Screen Golf ── */
+.sg-topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 0 6px; gap:8px; flex-wrap:wrap;
+}
+.sg-hole-lbl { font-weight:700; color:var(--gold); font-size:13px; }
+.sg-wind-lbl { font-size:12px; color:rgba(245,240,232,0.6); }
+.sg-cvs-wrap {
+  background:#0a1a08;
+  border-radius:6px; overflow:hidden;
+  border:1px solid rgba(255,255,255,0.08);
+  line-height:0;
+}
+.sg-cvs-wrap canvas { display:block; width:100%; }
+.sg-msg-line {
+  font-family:'Playfair Display',serif;
+  text-align:center; min-height:20px;
+  font-size:14px; color:var(--gold); padding:6px 0 2px;
+}
+.sg-dist-line { font-size:11px; color:rgba(245,240,232,0.5); text-align:center; margin-bottom:8px; }
+
+/* Controls */
+.sg-ctrl-area { padding:4px 0 6px; }
+.sg-clubs { display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
+.sg-cb {
+  flex:1; min-width:60px;
+  padding:5px 8px; font-size:11px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid var(--border);
+  border-radius:4px; color:rgba(245,240,232,0.6);
+  cursor:pointer; transition:all 0.2s;
+}
+.sg-cb:hover { border-color:var(--gold); color:var(--cream); }
+.sg-cb.sg-cb-on {
+  background:rgba(201,168,76,0.15);
+  border-color:var(--gold); color:var(--gold); font-weight:700;
+}
+.sg-aim-row {
+  display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.sg-ab {
+  width:32px; height:32px; font-size:14px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--border); border-radius:4px;
+  color:var(--cream); cursor:pointer;
+}
+.sg-ab:hover { background:rgba(201,168,76,0.12); border-color:var(--gold); }
+.sg-angv { font-size:13px; font-weight:700; color:var(--gold); min-width:36px; text-align:center; }
+.sg-swing { padding:7px 20px !important; font-size:13px !important; }
+
+/* Power meter */
+.sg-pm-area { display:flex; align-items:flex-end; gap:16px; }
+.sg-pm-bar {
+  width:28px; height:110px; position:relative;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--border); border-radius:4px;
+  overflow:hidden; flex-shrink:0;
+  display:flex; align-items:flex-end;
+}
+.sg-pm-fill {
+  width:100%; height:0%;
+  transition:none;
+  border-radius:2px;
+}
+.sg-pm-lbl {
+  position:absolute; bottom:3px; width:100%;
+  text-align:center; font-size:8px;
+  color:rgba(255,255,255,0.5); letter-spacing:0.05em;
+}
+.sg-flying { font-size:13px; color:rgba(245,240,232,0.5); padding:12px 0; text-align:center; }
+
+/* Scorecard */
+.sg-card {
+  width:100%; border-collapse:collapse;
+  margin-top:10px; font-size:12px;
+}
+.sg-card th, .sg-card td {
+  padding:5px 8px; text-align:center;
+  border-bottom:1px solid var(--border);
+  color:rgba(245,240,232,0.65);
+}
+.sg-card th { color:var(--gold); font-size:10px; letter-spacing:0.1em; }
+.sg-card td:first-child { text-align:left; font-size:10px; letter-spacing:0.1em; color:rgba(245,240,232,0.4); }
+.sg-under { color:#4ddf4d; font-weight:700; }
+.sg-even  { color:var(--gold); }
+.sg-over  { color:#df6060; }
