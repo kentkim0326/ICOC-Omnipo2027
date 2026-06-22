@@ -34,11 +34,14 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 .lang-bar {
   position:fixed; top:0; left:0; right:0; z-index:1000;
   display:flex; justify-content:flex-end; align-items:center;
-  padding:12px 40px;
-  background:rgba(11,31,58,0.93);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
+  padding:10px 32px;
+  background:rgba(11,31,58,0.82);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(201,168,76,0.18);
+  transition:background 0.3s;
 }
+.lang-bar:hover { background:rgba(11,31,58,0.94); }
 .lang-bar .logo-mini {
   margin-right:auto;
   display:flex; align-items:center; gap:8px;
@@ -55,6 +58,7 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   font-size:12px; letter-spacing:0.08em;
   cursor:pointer; border-radius:2px;
   transition:all 0.25s; font-family:inherit;
+  white-space:nowrap;
 }
 .lang-btn:hover,.lang-btn.active {
   background:var(--gold); border-color:var(--gold);
@@ -466,17 +470,23 @@ footer a { color:var(--gold); text-decoration:none; }
 /* ── MOBILE ── */
 @media(max-width:640px){
   .lang-bar {
-    flex-direction:column; align-items:stretch; gap:8px;
-    padding:10px 16px;
+    flex-wrap:nowrap; gap:5px;
+    padding:7px 12px;
+    background:rgba(11,31,58,0.68);
   }
-  .lang-bar .logo-mini { margin-right:0; justify-content:center; font-size:13px; }
-  .lang-bar .logo-mini img { height:22px; }
-  .points-badge { margin-right:0; justify-content:center; font-size:11px; padding:4px 10px; }
+  .lang-bar .logo-mini {
+    margin-right:4px; font-size:11px; gap:4px; flex-shrink:0;
+  }
+  .lang-bar .logo-mini img { height:18px; }
+  .points-badge {
+    font-size:10.5px; padding:3px 8px; flex-shrink:0;
+    margin-right:0; order:3;
+  }
   .points-badge .cap-note { display:none; }
-  .lang-btns { justify-content:center; flex-wrap:wrap; }
-  .lang-btn { padding:4px 10px; font-size:10.5px; }
+  .lang-btns { flex-wrap:nowrap; gap:3px; flex:1; justify-content:flex-end; order:2; }
+  .lang-btn { padding:3px 7px; font-size:9.5px; white-space:nowrap; overflow:hidden; }
 
-  .hero { padding:200px 24px 72px; }
+  .hero { padding:140px 20px 64px; }
   .section-wrap { padding:72px 24px; }
   .stats-band { padding:56px 24px; }
   .stats-grid { gap:24px; }
@@ -488,8 +498,9 @@ footer a { color:var(--gold); text-decoration:none; }
   .sport-name::after { display:block; width:fit-content; margin-left:0 !important; margin-top:8px; }
 }
 @media(max-width:380px){
-  .hero { padding:230px 16px 60px; }
-  .lang-btn { padding:3px 7px; font-size:9.5px; }
+  .lang-bar { padding:6px 12px; }
+  .hero { padding:150px 14px 56px; }
+  .lang-btn { padding:2px 6px; font-size:9px; }
 }
 </style>
 </head>
