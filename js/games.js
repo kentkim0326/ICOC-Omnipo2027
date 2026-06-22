@@ -115,6 +115,11 @@
       title: '스크린골프 (Screen Golf)',
       icon: '⛳',
       init: () => global.ScreenGolfGame && global.ScreenGolfGame.start()
+    },
+    bridge: {
+      title: '브릿지 (Bridge)',
+      icon: '🃏',
+      init: () => global.BridgeGame && global.BridgeGame.start()
     }
     // 추후 추가: ...
   };
