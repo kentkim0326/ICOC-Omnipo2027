@@ -932,3 +932,85 @@
   min-height:20px; padding:6px 0 4px;
 }
 .br-actions { display:flex; gap:8px; justify-content:center; padding:4px 0; }
+
+/* ── Gin Rummy ── */
+.rm-topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 0 8px; font-size:13px; font-weight:600; color:var(--gold);
+}
+.rm-sub { font-size:10px; color:rgba(245,240,232,0.4); font-weight:400; }
+.rm-content { padding:2px 0; }
+.rm-piles {
+  display:flex; align-items:flex-start; gap:10px; margin-bottom:10px; flex-wrap:wrap;
+}
+.rm-pile-wrap { display:flex; flex-direction:column; align-items:center; gap:3px; }
+.rm-pile { cursor:pointer; border-radius:4px; transition:box-shadow 0.15s; }
+.rm-pile.rm-pile-on { box-shadow:0 0 0 2px var(--gold); }
+.rm-pile-lbl { font-size:9px; color:rgba(245,240,232,0.38); letter-spacing:0.06em; }
+.rm-pile-card { width:44px !important; height:60px !important; }
+.rm-spacer { flex:1; }
+.rm-ai-row {
+  display:flex; align-items:center; gap:3px; flex-wrap:wrap;
+  max-width:220px;
+}
+.rm-ai-cnt { font-size:10px; color:rgba(245,240,232,0.35); }
+.rm-ai-reveal {
+  display:flex; flex-wrap:wrap; gap:3px;
+  padding:6px 8px; background:rgba(255,255,255,0.03);
+  border-radius:4px; width:100%;
+}
+.rm-player-bar {
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:5px;
+}
+.rm-hand-lbl { font-size:10px; color:rgba(245,240,232,0.4); letter-spacing:0.1em; }
+.rm-dw { font-size:12px; font-weight:700; color:rgba(245,240,232,0.45); }
+.rm-dw.rm-dw-low { color:#5dcc5d; }
+.rm-hand { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:3px; padding-bottom:4px; }
+.rm-sel-bar {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  padding:6px 8px; margin-top:6px;
+  background:rgba(201,168,76,0.08); border-radius:4px;
+  font-size:11px; color:rgba(245,240,232,0.6);
+}
+.rm-act-btn { padding:4px 12px !important; font-size:11px !important; }
+.rm-knock { border-color:rgba(100,180,255,0.5) !important; color:rgba(100,180,255,0.9) !important; }
+.rm-actions { display:flex; gap:8px; justify-content:center; padding:8px 0 4px; }
+
+/* Cards */
+.rm-card {
+  width:38px; height:52px; flex-shrink:0;
+  background:#fffef8;
+  border:1.5px solid #bbb; border-radius:4px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:1px; box-sizing:border-box;
+  box-shadow:0 1px 3px rgba(0,0,0,0.25);
+  font-weight:700; user-select:none;
+  transition:transform 0.12s, box-shadow 0.12s;
+  cursor:default;
+}
+.rm-r { font-size:12px; line-height:1; }
+.rm-s { font-size:14px; line-height:1; }
+.rm-card.rm-red { color:#cc1122; }
+.rm-card.rm-back {
+  background:linear-gradient(135deg,#163278 25%,#2248a8 75%);
+  border-color:rgba(201,168,76,0.3);
+}
+.rm-card.rm-sm { width:16px !important; height:22px !important; border-radius:2px; }
+.rm-card.rm-empty {
+  background:transparent; border:1.5px dashed rgba(255,255,255,0.12); box-shadow:none;
+}
+.rm-card.rm-pick { cursor:pointer; }
+.rm-card.rm-pick:hover { transform:translateY(-4px); box-shadow:0 4px 10px rgba(0,0,0,0.3); }
+.rm-card.rm-sel {
+  border-color:var(--gold); border-width:2px;
+  transform:translateY(-8px);
+  box-shadow:0 0 0 2px rgba(201,168,76,0.35), 0 5px 12px rgba(0,0,0,0.3);
+}
+.rm-card.rm-melded { background:#efffef; border-color:#4a9e4a; }
+.rm-card.rm-melded.rm-red { color:#cc1122; }
+.rm-msg-line {
+  text-align:center; font-size:12px; color:rgba(245,240,232,0.6);
+  min-height:18px; padding:4px 0 2px;
+}
