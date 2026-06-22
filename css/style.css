@@ -577,3 +577,82 @@
   .game-modal { padding:6px; }
   .game-modal-box { padding:10px; }
 }
+
+/* ── Mahjong Solitaire ── */
+.mj-topbar {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:0 0 8px; gap:10px; flex-wrap:wrap;
+}
+.mj-status-text { font-size:12px; color:rgba(245,240,232,0.65); }
+.mj-hint-btn { padding:4px 12px !important; font-size:11px !important; }
+.mj-board-wrap {
+  overflow:auto;
+  background:linear-gradient(135deg, #1a3d1f 0%, #0d2a10 100%);
+  border-radius:6px; padding:4px;
+  min-height:240px;
+}
+.mj-board { position:relative; }
+
+/* 타일 기본 스타일 */
+.mj-tile {
+  position:absolute;
+  width:40px; height:52px;
+  background:#f5f0dc;
+  border:1.5px solid #b09060;
+  border-radius:3px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; line-height:1;
+  user-select:none; box-sizing:border-box;
+}
+/* 3D 측면 효과 */
+.mj-tile::before {
+  content:''; position:absolute;
+  left:-5px; top:3px;
+  width:5px; height:100%;
+  background:linear-gradient(to right, #5a3010, #8a5828);
+  border-radius:2px 0 0 2px;
+}
+.mj-tile::after {
+  content:''; position:absolute;
+  left:0; bottom:-5px;
+  width:100%; height:5px;
+  background:linear-gradient(to bottom, #6a4020, #4a2808);
+  border-radius:0 0 3px 3px;
+}
+.mj-tile.mj-free {
+  cursor:pointer;
+  background:#fffef2;
+  box-shadow:0 1px 3px rgba(0,0,0,0.3);
+}
+.mj-tile.mj-free:hover {
+  background:#fff9d0;
+  border-color:#c8a020;
+  transform:translateY(-2px);
+  z-index:99999 !important;
+}
+.mj-tile.mj-blocked {
+  background:#d0c4a0;
+  border-color:#9a8050;
+  cursor:default;
+  filter:brightness(0.82) saturate(0.7);
+}
+.mj-tile.mj-selected {
+  background:#fff3a0;
+  border-color:#d4af37;
+  box-shadow:0 0 0 2px rgba(212,175,55,0.7);
+  transform:translateY(-4px);
+  z-index:99999 !important;
+}
+.mj-tile.mj-hint {
+  animation:mj-hint 0.4s ease alternate 4;
+}
+@keyframes mj-hint {
+  from { border-color:#5be; box-shadow:0 0 6px rgba(80,190,230,0.7); }
+  to   { border-color:#09d; box-shadow:0 0 14px rgba(0,150,220,0.9); }
+}
+.mj-tile.mj-shake { animation:mj-shake 0.28s ease; }
+@keyframes mj-shake {
+  0%,100%{ transform:translateX(0) }
+  25%    { transform:translateX(-4px) }
+  75%    { transform:translateX(4px) }
+}
