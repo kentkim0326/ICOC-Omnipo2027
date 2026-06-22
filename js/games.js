@@ -100,6 +100,11 @@
       title: '쇼기 (Shogi)',
       icon: '🎴',
       init: () => global.ShogiGame && global.ShogiGame.start()
+    },
+    mahjong: {
+      title: '마작 솔리테어 (Mahjong)',
+      icon: '🀄',
+      init: () => global.MahjongGame && global.MahjongGame.start()
     }
     // 추후 추가: ...
   };
