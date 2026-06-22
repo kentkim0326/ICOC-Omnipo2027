@@ -120,6 +120,11 @@
       title: '브릿지 (Bridge)',
       icon: '🃏',
       init: () => global.BridgeGame && global.BridgeGame.start()
+    },
+    rummy: {
+      title: '진 러미 (Gin Rummy)',
+      icon: '🃏',
+      init: () => global.RummyGame && global.RummyGame.start()
     }
     // 추후 추가: ...
   };
