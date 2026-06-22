@@ -110,6 +110,11 @@
       title: '텍사스 홀덤 (Hold\'em)',
       icon: '♠',
       init: () => global.HoldemGame && global.HoldemGame.start()
+    },
+    screengolf: {
+      title: '스크린골프 (Screen Golf)',
+      icon: '⛳',
+      init: () => global.ScreenGolfGame && global.ScreenGolfGame.start()
     }
     // 추후 추가: ...
   };
