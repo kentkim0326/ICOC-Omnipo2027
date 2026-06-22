@@ -125,6 +125,11 @@
       title: '진 러미 (Gin Rummy)',
       icon: '🃏',
       init: () => global.RummyGame && global.RummyGame.start()
+    },
+    hearts: {
+      title: '하트 (Hearts)',
+      icon: '♥',
+      init: () => global.HeartsGame && global.HeartsGame.start()
     }
     // 추후 추가: ...
   };
