@@ -86,7 +86,24 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 .hero-bg-img {
   position:absolute; inset:0;
   width:100%; height:100%;
-  object-fit:cover; object-position:center 18%;
+  object-fit:cover; object-position:center 20%;
+}
+/* ── Hero Slideshow ── */
+.hero-slides {
+  position:absolute; inset:0; z-index:-3;
+  overflow:hidden;
+}
+.hero-slide {
+  position:absolute; inset:0;
+  opacity:0;
+  transition:opacity 1.4s ease-in-out;
+  will-change:opacity;
+}
+.hero-slide.active { opacity:1; }
+.hero-slide img {
+  width:100%; height:100%;
+  object-fit:cover; object-position:center 25%;
+  display:block;
 }
 .hero-bg-overlay {
   position:absolute; inset:0; z-index:-2;
@@ -461,10 +478,14 @@ footer a { color:var(--gold); text-decoration:none; }
 
 <!-- HERO -->
 <header class="hero">
-  <picture class="hero-bg-pic">
-    <source media="(max-width: 700px)" srcset="assets/hero-bg-mobile.jpg">
-    <img src="assets/hero-bg.jpg" alt="" class="hero-bg-img">
-  </picture>
+  <!-- Hero Slideshow: 기존 배경 + 4장 추가 슬라이드 -->
+  <div class="hero-slides" id="hero-slides">
+    <div class="hero-slide active"><img src="assets/hero-bg.jpg" alt="" loading="eager"></div>
+    <div class="hero-slide"><img src="assets/hero-slide-1.jpg" alt="" loading="lazy"></div>
+    <div class="hero-slide"><img src="assets/hero-slide-2.jpg" alt="" loading="lazy"></div>
+    <div class="hero-slide"><img src="assets/hero-slide-3.jpg" alt="" loading="lazy"></div>
+    <div class="hero-slide"><img src="assets/hero-slide-4.jpg" alt="" loading="lazy"></div>
+  </div>
   <div class="hero-bg-overlay"></div>
   <div class="omnipo-badge">
     <div class="omnipo-ring">
@@ -1111,7 +1132,23 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 <script src="js/rummikub.js"></script>
 <script src="js/billiards.js"></script>
 <script src="js/janggi.js"></script>
-<script src="js/shogi.js"></script>
+<script src="js/shogi.js">
+</script>
 
+<script>
+  // ── Hero Slideshow ──
+  (function() {
+    var slides = document.querySelectorAll('.hero-slide');
+    if (!slides.length) return;
+    var cur = 0;
+    var INTERVAL = 5000;
+    function next() {
+      slides[cur].classList.remove('active');
+      cur = (cur + 1) % slides.length;
+      slides[cur].classList.add('active');
+    }
+    setInterval(next, INTERVAL);
+  })();
+</script>
 </body>
 </html>
