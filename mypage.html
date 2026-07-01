@@ -219,6 +219,69 @@ const AVAILABLE_GAMES = [
   {id:'speedcube',name:'스피드 큐브',icon:'🎲',thresh:3},
 ];
 
+const CARD_IMGS = {
+  "go":"assets/game-cards/go.jpg",
+  "omok":"assets/game-cards/omok.jpg",
+  "chess":"assets/game-cards/chess.jpg",
+  "janggi":"assets/game-cards/janggi.jpg",
+  "shogi":"assets/game-cards/shogi.jpg",
+  "checkers":"assets/game-cards/checkers.jpg",
+  "reversi":"assets/game-cards/reversi.jpg",
+  "hex":"assets/game-cards/hex.jpg",
+  "quoridor":"assets/game-cards/quoridor.jpg",
+  "billiards":"assets/game-cards/billiards.jpg",
+  "bowling":"assets/game-cards/bowling.jpg",
+  "holdem":"assets/game-cards/holdem.jpg",
+  "blackjack":"assets/game-cards/blackjack.jpg",
+  "mahjong":"assets/game-cards/mahjong.jpg",
+  "bridge":"assets/game-cards/bridge.jpg",
+  "speedcube":"assets/game-cards/speedcube.jpg",
+  "davinci":"assets/game-cards/holdem.jpg",
+  "jinrimee":"assets/game-cards/bridge.jpg",
+  "hajo":"assets/game-cards/checkers.jpg",
+  "screengolf":"assets/game-cards/bowling.jpg"
+};
+
+function buildGameCards() {
+  const wrap = document.getElementById('game-cards-wrap');
+  if (!wrap) return;
+  wrap.className = 'game-cards-grid';
+  wrap.innerHTML = '';
+  AVAILABLE_GAMES.forEach(function(g) {
+    const stat = JSON.parse(localStorage.getItem('icoc_stat_' + g.name) || '{"ai_wins":0,"ai_losses":0}');
+    const total = stat.ai_wins + stat.ai_losses;
+    const rate  = total ? Math.round(stat.ai_wins / total * 100) : 0;
+    const img   = CARD_IMGS[g.id] || '';
+    const proThreshold = g.thresh || 5;
+    const isPro = stat.ai_wins >= proThreshold;
+    const card = document.createElement('div');
+    card.className = 'game-mp-card';
+    const imgHTML = img
+      ? '<img src="' + img + '" alt="' + g.name + '" loading="lazy" style="width:100%;height:100%;object-fit:cover;object-position:center top;">'
+      : '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:32px;background:rgba(14,40,71,0.8);">' + g.icon + '</div>';
+    card.innerHTML =
+      '<div class="card-img-wrap">' +
+        imgHTML +
+        '<div class="card-img-overlay"></div>' +
+        '<button class="card-play-btn" onclick="goPlay(\'' + g.id + '\')" title="' + g.name + ' 플레이">&#9654;</button>' +
+        (isPro ? '<div style="position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;color:#E8C97A;background:rgba(201,168,76,0.25);border:1px solid rgba(201,168,76,0.4);border-radius:6px;padding:1px 5px;">PRO</div>' : '') +
+      '</div>' +
+      '<div class="card-body">' +
+        '<div class="card-sport-name">' + g.name + '</div>' +
+        '<div class="card-status-badge">' + (total === 0 ? '미시작' : total + '전') + '</div>' +
+        '<div class="card-win-bar"><div class="card-win-fill" style="width:' + rate + '%;"></div></div>' +
+        '<div class="card-stats"><span>' + stat.ai_wins + '승 ' + stat.ai_losses + '패</span><span>' + rate + '%</span></div>' +
+        '<div class="card-progress-txt">' + stat.ai_wins + '/' + proThreshold + '승 → 인간 대전 해금</div>' +
+      '</div>';
+    wrap.appendChild(card);
+  });
+}
+
+function goPlay(key) {
+  window.location.href = 'index.html?game=' + key;
+}
+
+
 // ── 티어 결정 ──
 function getTier(pts) {
   if(pts >= 50000) return {name:'마스터',emoji:'🏆',color:'#C9A84C'};
