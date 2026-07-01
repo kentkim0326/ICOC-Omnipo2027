@@ -1,3 +1,4 @@
+/* ICOC Go AI v2.0 — 50-playout MCTS + heuristic rollout */
 /* ============================================================
    ICOC OMNIPO — 바둑 (Go / Baduk) vs AI  v2
    19×19 보드 · 개선된 AI (후보 추출 + 몬테카를로 경량 평가)
