@@ -50,7 +50,7 @@
     if (!supabase || !currentProfile) return;
     try {
       const { data } = await supabase
-        .from('profiles')
+        .from('icoc_profiles')
         .select('points')
         .eq('id', currentUser.id)
         .single();
@@ -73,7 +73,7 @@
     if (!supabase || !currentUser) return;
     try {
       await supabase
-        .from('profiles')
+        .from('icoc_profiles')
         .update({ points: newTotal, updated_at: new Date().toISOString() })
         .eq('id', currentUser.id);
     } catch (e) { /* 무시 */ }
@@ -104,7 +104,7 @@
   // ── 프로필 로드 ──
   async function loadProfile(userId) {
     const { data, error } = await supabase
-      .from('profiles')
+      .from('icoc_profiles')
       .select('*')
       .eq('id', userId)
       .single();
@@ -119,7 +119,7 @@
   async function saveProfile(profileData) {
     const localPts = parseInt(localStorage.getItem('icoc_points') || '0');
     const { data, error } = await supabase
-      .from('profiles')
+      .from('icoc_profiles')
       .upsert({
         id:          currentUser.id,
         email:       currentUser.email,
@@ -144,7 +144,7 @@
   // ── 닉네임 중복 체크 ──
   async function checkNicknameAvailable(nickname) {
     const { data } = await supabase
-      .from('profiles')
+      .from('icoc_profiles')
       .select('id')
       .eq('nickname', nickname)
       .neq('id', currentUser.id)
@@ -355,7 +355,7 @@
   async function loadGameRecords(userId) {
     if (!supabase) return [];
     const { data } = await supabase
-      .from('game_records')
+      .from('icoc_game_records')
       .select('*')
       .eq('user_id', userId)
       .order('wins', { ascending: false });
@@ -367,7 +367,7 @@
     try {
       // upsert: 있으면 wins/losses 증가, 없으면 새 row
       const { data: existing } = await supabase
-        .from('game_records')
+        .from('icoc_game_records')
         .select('id, wins, losses')
         .eq('user_id', currentUser.id)
         .eq('sport', sport)
@@ -375,7 +375,7 @@
 
       if (existing) {
         await supabase
-          .from('game_records')
+          .from('icoc_game_records')
           .update({
             wins:   won ? existing.wins+1   : existing.wins,
             losses: won ? existing.losses   : existing.losses+1,
@@ -384,7 +384,7 @@
           .eq('id', existing.id);
       } else {
         await supabase
-          .from('game_records')
+          .from('icoc_game_records')
           .insert({
             user_id: currentUser.id,
             sport,
