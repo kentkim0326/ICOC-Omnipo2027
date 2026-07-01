@@ -513,8 +513,11 @@ function changeVenueStyle(style) {
   const idx = order.indexOf(style);
   if(btns[idx]) btns[idx].classList.add('active');
   try {
-    if(window.mapboxgl && map.setStyle) map.setStyle('mapbox://styles/mapbox/' + (style==='dark'?'dark-v11':style==='light'?'light-v11':style==='streets'?'streets-v12':'outdoors-v12'));
-    else if(map.setStyle) map.setStyle(styles[style] || styles.dark);
+    if(window.mapboxgl) {
+      map.setStyle(styles[style] || styles.dark);
+    } else {
+      map.setStyle(styles['ml_' + style] || styles.ml_dark);
+    }
   } catch(e) { console.warn('Style change error', e); }
 }
 
@@ -661,8 +664,17 @@ function initVenueMap() {
   if(window.mapboxgl) {
     mapboxgl.accessToken = MAPBOX_TOKEN;
     map = new mapboxgl.Map({
-      container:'map', style:'mapbox://styles/mapbox/dark-v11',
+      container:'map', style:'mapbox://styles/mapbox/standard',
       center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
+      language: 'ko',
+    });
+    // Standard 스타일 다크모드
+    map.on('style.load', function() {
+      try {
+        map.setConfigProperty('basemap', 'lightPreset', 'night');
+        map.setConfigProperty('basemap', 'showPointOfInterestLabels', true);
+        map.setConfigProperty('basemap', 'showRoadLabels', true);
+      } catch(e) {}
     });
     map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}), 'top-left');
     map.on('load', addVenueMarker);
