@@ -10,126 +10,197 @@
 :root{ --navy:#0B1F3A; --gold:#C9A84C; --gold-l:#E8C97A; --cream:#F5F0E8; }
 *{ margin:0; padding:0; box-sizing:border-box; }
 body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',sans-serif;
-  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:24px; }
+  min-height:100vh; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; padding:24px; }
 
+/* lang bar */
+.lang-bar{
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  display:flex; justify-content:flex-end; align-items:center;
+  padding:8px 16px; gap:6px;
+  background:rgba(11,31,58,0.92); backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.lang-toggle-wrap{ position:relative; }
+.lang-trigger{
+  display:flex; align-items:center; gap:5px; padding:5px 12px 5px 8px;
+  border:1px solid rgba(201,168,76,0.3); border-radius:20px;
+  background:rgba(201,168,76,0.06); color:rgba(245,240,232,0.85);
+  font-size:12px; font-weight:600; cursor:pointer; font-family:inherit;
+}
+.lang-trigger .lt-flag{ font-size:16px; }
+.lang-trigger .caret{ font-size:9px; opacity:.5; transition:transform .2s; }
+.lang-toggle-wrap.open .caret{ transform:rotate(180deg); }
+.lang-dropdown{
+  position:absolute; top:calc(100% + 8px); right:0;
+  min-width:190px; background:rgba(10,28,55,0.98);
+  border:1px solid rgba(201,168,76,0.25); border-radius:12px;
+  padding:6px; display:grid; grid-template-columns:1fr 1fr; gap:2px;
+  opacity:0; pointer-events:none; transform:translateY(-6px);
+  transition:all .18s; z-index:200; max-height:340px; overflow-y:auto;
+}
+.lang-toggle-wrap.open .lang-dropdown{ opacity:1; pointer-events:all; transform:translateY(0); }
+.lang-option{
+  display:flex; align-items:center; gap:7px; padding:7px 10px;
+  border-radius:8px; cursor:pointer; transition:background .15s;
+}
+.lang-option:hover{ background:rgba(201,168,76,0.12); }
+.lang-option.active{ background:rgba(201,168,76,0.18); }
+.lang-option .lof{ font-size:18px; }
+.lang-option .lol{ font-size:11px; font-weight:500; color:rgba(245,240,232,0.8); white-space:nowrap; }
+.lang-option.active .lol{ color:#E8C97A; font-weight:700; }
+
+/* card */
 .card{
   background:rgba(14,40,71,0.9); border:1px solid rgba(201,168,76,0.3);
-  border-radius:20px; padding:36px 28px 32px; max-width:440px; width:100%;
+  border-radius:20px; padding:32px 24px 28px; max-width:420px; width:100%;
   text-align:center; backdrop-filter:blur(20px);
-  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5); margin-top:56px;
 }
-.logo{ font-family:'Playfair Display',serif; font-size:13px; font-weight:700;
-  color:var(--gold); letter-spacing:0.2em; margin-bottom:24px; }
+.logo{ font-family:'Playfair Display',serif; font-size:12px; font-weight:700;
+  color:var(--gold); letter-spacing:.2em; margin-bottom:20px; }
+.gift{ font-size:58px; display:block; margin-bottom:14px;
+  filter:drop-shadow(0 4px 12px rgba(201,168,76,.4)); }
+h1{ font-family:'Playfair Display',serif; font-size:24px; font-weight:900;
+  color:var(--gold-l); margin-bottom:7px; }
+.sub{ font-size:13px; color:rgba(245,240,232,.55); margin-bottom:22px; line-height:1.65; }
+.sub strong{ color:var(--gold-l); }
 
-.gift-emoji{ font-size:64px; margin-bottom:16px; display:block;
-  filter:drop-shadow(0 4px 12px rgba(201,168,76,0.4)); }
-
-h1{ font-family:'Playfair Display',serif; font-size:26px; font-weight:900;
-  color:var(--gold-l); margin-bottom:8px; }
-.sub{ font-size:13px; color:rgba(245,240,232,0.55); margin-bottom:28px; line-height:1.6; }
-
-.reward-row{
-  display:flex; gap:12px; margin-bottom:28px;
+/* invited banner */
+.invited{
+  display:none; background:rgba(201,168,76,.12);
+  border:1px solid rgba(201,168,76,.35); border-radius:12px;
+  padding:12px 16px; margin-bottom:20px;
+  font-size:13px; color:var(--gold-l); line-height:1.5;
 }
+.invited.show{ display:block; }
+
+/* reward row */
+.reward-row{ display:flex; gap:10px; margin-bottom:22px; }
 .reward-box{
-  flex:1; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2);
-  border-radius:12px; padding:16px 10px;
+  flex:1; background:rgba(201,168,76,.07);
+  border:1px solid rgba(201,168,76,.2); border-radius:12px; padding:14px 8px;
 }
-.reward-box .who{ font-size:10px; color:rgba(245,240,232,0.45); letter-spacing:0.06em;
-  text-transform:uppercase; margin-bottom:6px; }
-.reward-box .pts{ font-family:'Playfair Display',serif; font-size:28px; font-weight:900;
-  color:var(--gold); line-height:1; }
-.reward-box .pts-label{ font-size:10px; color:var(--gold); margin-top:2px; }
+.reward-box.me{ background:rgba(201,168,76,.13); border-color:rgba(201,168,76,.35); }
+.who{ font-size:10px; color:rgba(245,240,232,.4); letter-spacing:.06em;
+  text-transform:uppercase; margin-bottom:5px; }
+.pts{ font-family:'Playfair Display',serif; font-size:28px; font-weight:900; color:var(--gold); }
+.pts-l{ font-size:10px; color:var(--gold); margin-top:1px; }
 
-.divider{ height:1px; background:rgba(201,168,76,0.15); margin:0 0 24px; }
+.divider{ height:1px; background:rgba(201,168,76,.12); margin:0 0 20px; }
 
 /* link box */
-.link-wrap{ position:relative; margin-bottom:16px; }
+.link-wrap{ position:relative; margin-bottom:14px; }
 .link-input{
-  width:100%; padding:12px 48px 12px 14px;
-  background:rgba(255,255,255,0.05); border:1px solid rgba(201,168,76,0.25);
+  width:100%; padding:11px 50px 11px 14px;
+  background:rgba(255,255,255,.05); border:1px solid rgba(201,168,76,.22);
   border-radius:10px; color:var(--cream); font-size:12px;
-  font-family:'Noto Sans KR',sans-serif; outline:none;
+  font-family:inherit; outline:none;
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .btn-copy{
   position:absolute; right:8px; top:50%; transform:translateY(-50%);
   background:var(--gold); border:none; border-radius:6px;
   padding:5px 10px; font-size:11px; font-weight:700; color:var(--navy);
-  cursor:pointer; transition:all 0.2s;
+  cursor:pointer; transition:all .2s; white-space:nowrap;
 }
 .btn-copy:hover{ background:var(--gold-l); }
 
-.share-row{ display:flex; gap:8px; margin-bottom:24px; }
-.share-btn{
-  flex:1; padding:11px 0; border-radius:10px; border:none;
-  font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s;
-  font-family:'Noto Sans KR',sans-serif;
+/* SNS grid */
+.sns-grid{
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:14px;
 }
-.share-btn.kakao{ background:#FEE500; color:#3B1E08; }
-.share-btn.kakao:hover{ background:#ffd900; }
-.share-btn.copy2{ background:rgba(201,168,76,0.15); color:var(--gold-l);
-  border:1px solid rgba(201,168,76,0.3); }
-.share-btn.copy2:hover{ background:rgba(201,168,76,0.25); }
-.share-btn.x{ background:#000; color:#fff; border:1px solid #333; }
-.share-btn.x:hover{ background:#111; }
+.sns-row2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:18px; }
+
+.sns-btn{
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  padding:10px 6px; border-radius:10px; border:none;
+  font-size:12px; font-weight:700; cursor:pointer; transition:all .2s;
+  font-family:inherit; text-decoration:none;
+}
+.sns-kakao{ background:#FEE500; color:#3B1E08; }
+.sns-kakao:hover{ background:#ffd900; }
+.sns-x{ background:#000; color:#fff; border:1px solid #333; }
+.sns-x:hover{ background:#111; }
+.sns-copy{ background:rgba(201,168,76,.12); color:var(--gold-l);
+  border:1px solid rgba(201,168,76,.28); }
+.sns-copy:hover{ background:rgba(201,168,76,.22); }
+.sns-fb{ background:#1877F2; color:#fff; }
+.sns-fb:hover{ background:#1565d8; }
+.sns-ig{
+  background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);
+  color:#fff;
+}
+.sns-ig:hover{ opacity:.9; }
+.sns-tt{ background:#000; color:#fff; border:1px solid #333; }
+.sns-tt:hover{ background:#111; }
+.sns-icon{ font-size:15px; }
 
 .go-home{ display:inline-block; margin-top:4px;
-  color:rgba(245,240,232,0.4); font-size:12px; text-decoration:none; }
+  color:rgba(245,240,232,.4); font-size:12px; text-decoration:none; }
 .go-home:hover{ color:var(--gold); }
+.go-home.cta{
+  display:inline-block; margin-top:12px;
+  background:linear-gradient(135deg,#C9A84C,#E8C97A);
+  color:#0B1F3A; font-weight:700; font-size:14px;
+  padding:12px 24px; border-radius:10px; text-decoration:none;
+  box-shadow:0 4px 16px rgba(201,168,76,.3);
+}
 
 /* rules */
-.rules{ margin-top:20px; padding:16px; background:rgba(0,0,0,0.2);
+.rules{ margin-top:18px; padding:14px 16px; background:rgba(0,0,0,.2);
   border-radius:10px; text-align:left; }
-.rules-title{ font-size:11px; font-weight:700; color:rgba(245,240,232,0.4);
-  letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; }
-.rules li{ font-size:11px; color:rgba(245,240,232,0.45); line-height:1.8;
+.rules-title{ font-size:10px; font-weight:700; color:rgba(245,240,232,.4);
+  letter-spacing:.08em; text-transform:uppercase; margin-bottom:9px; }
+.rules li{ font-size:11px; color:rgba(245,240,232,.42); line-height:1.85;
   list-style:none; padding-left:12px; position:relative; }
 .rules li::before{ content:'·'; position:absolute; left:0; color:var(--gold); }
 
 /* toast */
 #toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
-  background:rgba(11,31,58,0.96); border:1px solid rgba(201,168,76,0.4);
+  background:rgba(11,31,58,.97); border:1px solid rgba(201,168,76,.4);
   border-radius:10px; padding:11px 20px; color:var(--gold-l); font-size:13px; font-weight:600;
-  backdrop-filter:blur(12px); opacity:0; transition:all 0.3s; pointer-events:none;
+  backdrop-filter:blur(12px); opacity:0; transition:all .3s; pointer-events:none;
   white-space:nowrap; z-index:999; }
 #toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
-
-/* invited banner */
-.invited-banner{
-  display:none; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.35);
-  border-radius:12px; padding:14px 18px; margin-bottom:24px;
-  font-size:13px; color:var(--gold-l); line-height:1.5;
-}
-.invited-banner.show{ display:block; }
 </style>
 </head>
 <body>
+
+<!-- LANG BAR -->
+<div class="lang-bar">
+  <div class="lang-toggle-wrap" id="lt-wrap">
+    <button class="lang-trigger" id="lt-trigger" type="button">
+      <span class="lt-flag" id="lt-flag">🇰🇷</span>
+      <span id="lt-code">KO</span>
+      <span class="caret">▼</span>
+    </button>
+    <div class="lang-dropdown" id="lt-dd"></div>
+  </div>
+</div>
+
+<!-- CARD -->
 <div class="card">
   <div class="logo">✦ ICOC · OMNIPO 2027</div>
 
-  <!-- 초대받은 경우 배너 -->
-  <div class="invited-banner" id="invited-banner">
-    🎁 친구의 초대로 방문하셨군요!<br>
-    아래 버튼으로 메인 사이트에 입장하시면<br>
-    <strong style="color:var(--gold)">10,000 포인트</strong>가 자동 지급됩니다.
+  <div class="invited" id="invited-banner">
+    🎁 <span data-t="invited_msg">친구의 초대로 방문하셨군요!<br>입장하시면 <strong>10,000 포인트</strong>가 지급됩니다.</span>
   </div>
 
-  <span class="gift-emoji">🎁</span>
-  <h1>친구 초대하기</h1>
-  <p class="sub">내 링크로 친구가 가입하면<br>나와 친구 모두 <strong style="color:var(--gold-l)">10,000 포인트</strong>를 받아요!</p>
+  <span class="gift">🎁</span>
+  <h1 data-t="title">친구 초대하기</h1>
+  <p class="sub" data-t="sub">내 링크로 친구가 가입하면<br>나와 친구 모두 <strong>10,000 포인트</strong>를 받아요!</p>
 
   <div class="reward-row">
-    <div class="reward-box">
-      <div class="who">나 (추천인)</div>
+    <div class="reward-box me">
+      <div class="who" data-t="me">나 (추천인)</div>
       <div class="pts">10K</div>
-      <div class="pts-label">포인트</div>
+      <div class="pts-l" data-t="pts_label">포인트</div>
     </div>
-    <div class="reward-box" style="background:rgba(201,168,76,0.13); border-color:rgba(201,168,76,0.35);">
-      <div class="who">친구 (피추천인)</div>
+    <div class="reward-box">
+      <div class="who" data-t="friend">친구 (피추천인)</div>
       <div class="pts" style="color:var(--gold-l)">10K</div>
-      <div class="pts-label" style="color:var(--gold-l)">포인트</div>
+      <div class="pts-l" style="color:var(--gold-l)" data-t="pts_label">포인트</div>
     </div>
   </div>
 
@@ -137,25 +208,47 @@ h1{ font-family:'Playfair Display',serif; font-size:26px; font-weight:900;
 
   <div class="link-wrap">
     <input class="link-input" id="ref-link" readonly value="링크 생성 중...">
-    <button class="btn-copy" onclick="copyLink()">복사</button>
+    <button class="btn-copy" onclick="copyLink()" data-t="copy_btn">복사</button>
   </div>
 
-  <div class="share-row">
-    <button class="share-btn kakao" onclick="shareKakao()">💬 카카오</button>
-    <button class="share-btn x" onclick="shareX()">✕ X</button>
-    <button class="share-btn copy2" onclick="copyLink()">🔗 링크 복사</button>
+  <!-- SNS 버튼 3+2 그리드 -->
+  <div class="sns-grid">
+    <button class="sns-btn sns-kakao" onclick="shareKakao()">
+      <span class="sns-icon">💬</span><span data-t="btn_kakao">카카오</span>
+    </button>
+    <button class="sns-btn sns-x" onclick="shareX()">
+      <span class="sns-icon">✕</span><span>X</span>
+    </button>
+    <button class="sns-btn sns-copy" onclick="copyLink()">
+      <span class="sns-icon">🔗</span><span data-t="btn_copy2">링크 복사</span>
+    </button>
   </div>
+  <div class="sns-row2">
+    <button class="sns-btn sns-fb" onclick="shareFacebook()">
+      <svg class="sns-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      <span>Facebook</span>
+    </button>
+    <button class="sns-btn sns-ig" onclick="shareInstagram()">
+      <svg class="sns-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+      <span>Instagram</span>
+    </button>
+  </div>
+  <!-- TikTok 별도 (full width) -->
+  <button class="sns-btn sns-tt" onclick="shareTikTok()" style="width:100%;margin-bottom:16px;">
+    <svg class="sns-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.87a8.18 8.18 0 004.78 1.52V6.95a4.85 4.85 0 01-1.01-.26z"/></svg>
+    <span data-t="btn_tiktok">TikTok 공유</span>
+  </button>
 
-  <a href="index.html" class="go-home">← 메인으로 돌아가기</a>
+  <a href="index.html" class="go-home" id="go-home-btn" data-t="go_home">← 메인으로 돌아가기</a>
 
   <div class="rules">
-    <div class="rules-title">📋 포인트 적립 안내</div>
+    <div class="rules-title" data-t="rules_title">📋 포인트 적립 안내</div>
     <ul>
-      <li>친구 추천: 추천인 · 피추천인 각 10,000P 지급</li>
-      <li>AI 대전 승리 시 +100P / 패배 시 -100P</li>
-      <li>매 시간 접속 체크인: 평일 1,000P / 주말 2,000P</li>
-      <li>포인트는 사이트 내 게임 참가권 등으로만 사용 가능</li>
-      <li>자기 추천, 중복 추천은 인정되지 않습니다</li>
+      <li data-t="r1">친구 추천: 추천인 · 피추천인 각 10,000P 지급</li>
+      <li data-t="r2">AI 대전 승리 시 +100P / 패배 시 -100P</li>
+      <li data-t="r3">매 시간 접속 체크인: 평일 1,000P / 주말 2,000P</li>
+      <li data-t="r4">포인트는 사이트 내 게임 참가권 등으로만 사용 가능</li>
+      <li data-t="r5">자기 추천, 중복 추천은 인정되지 않습니다</li>
     </ul>
   </div>
 </div>
@@ -164,69 +257,204 @@ h1{ font-family:'Playfair Display',serif; font-size:26px; font-weight:900;
 
 <script src="js/points.js"></script>
 <script>
-  const params = new URLSearchParams(location.search);
-  const incomingRef = params.get('ref');
+/* ── i18n ── */
+const LANGS = [
+  {code:'ko',flag:'🇰🇷',label:'한국어',short:'KO'},
+  {code:'en',flag:'🇺🇸',label:'English',short:'EN'},
+  {code:'zh',flag:'🇨🇳',label:'中文',short:'ZH'},
+  {code:'ja',flag:'🇯🇵',label:'日本語',short:'JA'},
+  {code:'es',flag:'🇪🇸',label:'Español',short:'ES'},
+  {code:'fr',flag:'🇫🇷',label:'Français',short:'FR'},
+  {code:'de',flag:'🇩🇪',label:'Deutsch',short:'DE'},
+  {code:'pt',flag:'🇧🇷',label:'Português',short:'PT'},
+  {code:'ru',flag:'🇷🇺',label:'Русский',short:'RU'},
+  {code:'ar',flag:'🇸🇦',label:'العربية',short:'AR'},
+  {code:'hi',flag:'🇮🇳',label:'हिन्दी',short:'HI'},
+  {code:'vi',flag:'🇻🇳',label:'Tiếng Việt',short:'VI'},
+  {code:'th',flag:'🇹🇭',label:'ภาษาไทย',short:'TH'},
+  {code:'id',flag:'🇮🇩',label:'Indonesia',short:'ID'},
+  {code:'ms',flag:'🇲🇾',label:'Melayu',short:'MS'},
+  {code:'tr',flag:'🇹🇷',label:'Türkçe',short:'TR'},
+  {code:'nl',flag:'🇳🇱',label:'Nederlands',short:'NL'},
+  {code:'pl',flag:'🇵🇱',label:'Polski',short:'PL'},
+  {code:'sv',flag:'🇸🇪',label:'Svenska',short:'SV'},
+  {code:'it',flag:'🇮🇹',label:'Italiano',short:'IT'},
+];
 
-  // 초대받은 경우 배너 표시
-  if (incomingRef) {
-    document.getElementById('invited-banner').classList.add('show');
-  }
+const T = {
+  ko:{ title:'친구 초대하기', sub:'내 링크로 친구가 가입하면<br>나와 친구 모두 <strong>10,000 포인트</strong>를 받아요!',
+    me:'나 (추천인)', friend:'친구 (피추천인)', pts_label:'포인트',
+    copy_btn:'복사', btn_kakao:'카카오', btn_copy2:'링크 복사', btn_tiktok:'TikTok 공유',
+    go_home:'← 메인으로 돌아가기',
+    invited_msg:'친구의 초대로 방문하셨군요!<br>입장하시면 <strong>10,000 포인트</strong>가 지급됩니다.',
+    rules_title:'📋 포인트 적립 안내',
+    r1:'친구 추천: 추천인 · 피추천인 각 10,000P 지급', r2:'AI 대전 승리 +100P / 패배 -100P',
+    r3:'매 시간 접속: 평일 1,000P / 주말 2,000P', r4:'포인트는 사이트 내 참가권으로만 사용',
+    r5:'자기 추천 · 중복 추천 불가',
+    share_text:'🧠 ICOC 브레인스포츠 올림픽 2027! 오목·체스·바둑·홀덤 국가대표 선발전! 가입하면 10,000P 🎁',
+    copied:'✅ 링크 복사 완료!', go_cta:'🎁 입장하고 10,000P 받기 →' },
+  en:{ title:'Invite Friends', sub:'When a friend joins via your link,<br>you both get <strong>10,000 Points</strong>!',
+    me:'Me (Referrer)', friend:'Friend (Referee)', pts_label:'Points',
+    copy_btn:'Copy', btn_kakao:'KakaoTalk', btn_copy2:'Copy Link', btn_tiktok:'Share on TikTok',
+    go_home:'← Back to Home',
+    invited_msg:"You've been invited by a friend!<br>Enter the site to receive <strong>10,000 Points</strong>.",
+    rules_title:'📋 Point Guide',
+    r1:'Referral: Both referrer & referee get 10,000P', r2:'AI Match Win +100P / Loss -100P',
+    r3:'Hourly Check-in: Weekday 1,000P / Weekend 2,000P', r4:'Points usable for in-site game passes only',
+    r5:'Self-referral & duplicates not allowed',
+    share_text:'🧠 ICOC Brain Sports Olympics 2027! Chess, Go, Poker national team trials! Join for 10,000P 🎁',
+    copied:'✅ Link copied!', go_cta:'🎁 Enter & Claim 10,000P →' },
+  zh:{ title:'邀请好友', sub:'通过您的链接注册，<br>双方均可获得 <strong>10,000 积分</strong>！',
+    me:'我 (推荐人)', friend:'好友 (被推荐人)', pts_label:'积分',
+    copy_btn:'复制', btn_kakao:'KakaoTalk', btn_copy2:'复制链接', btn_tiktok:'TikTok分享',
+    go_home:'← 返回首页',
+    invited_msg:'您是通过好友邀请来的！<br>进入网站即可获得 <strong>10,000 积分</strong>。',
+    rules_title:'📋 积分规则',
+    r1:'好友推荐: 双方各获10,000积分', r2:'AI对战胜利+100P / 败北-100P',
+    r3:'每小时签到: 平日1,000P / 周末2,000P', r4:'积分仅限站内游戏入场券使用',
+    r5:'不允许自我推荐或重复推荐',
+    share_text:'🧠 ICOC脑力运动奥林匹克2027！围棋·国际象棋·德州扑克国家代表选拔！注册赠10,000积分🎁',
+    copied:'✅ 链接已复制！', go_cta:'🎁 入场领取10,000积分 →' },
+  ja:{ title:'友達を招待', sub:'あなたのリンクから登録すると<br>双方に <strong>10,000 ポイント</strong>！',
+    me:'自分（紹介者）', friend:'友達（被紹介者）', pts_label:'ポイント',
+    copy_btn:'コピー', btn_kakao:'KakaoTalk', btn_copy2:'リンクコピー', btn_tiktok:'TikTokで共有',
+    go_home:'← ホームへ戻る',
+    invited_msg:'友達の招待でご来訪いただきました！<br>入場すると <strong>10,000 ポイント</strong>が付与されます。',
+    rules_title:'📋 ポイント案内',
+    r1:'友達紹介: 紹介者・被紹介者各10,000P', r2:'AI対戦 勝利+100P / 敗北-100P',
+    r3:'毎時チェックイン: 平日1,000P / 週末2,000P', r4:'ポイントはサイト内ゲーム券のみ使用可',
+    r5:'自己紹介・重複紹介は無効',
+    share_text:'🧠 ICOC脳力スポーツ五輪2027！囲碁・チェス・ポーカー代表選考！登録で10,000P🎁',
+    copied:'✅ リンクコピー完了！', go_cta:'🎁 入場して10,000Pを受け取る →' },
+  es:{ title:'Invitar Amigos', sub:'Cuando un amigo se une con tu enlace,<br>¡ambos reciben <strong>10,000 Puntos</strong>!',
+    me:'Yo (Referente)', friend:'Amigo (Referido)', pts_label:'Puntos',
+    copy_btn:'Copiar', btn_kakao:'KakaoTalk', btn_copy2:'Copiar enlace', btn_tiktok:'Compartir TikTok',
+    go_home:'← Volver al inicio', invited_msg:'¡Fuiste invitado por un amigo!<br>Entra y obtén <strong>10,000 Puntos</strong>.',
+    rules_title:'📋 Guía de Puntos', r1:'Referido: ambos 10,000P', r2:'Victoria IA +100P / Derrota -100P',
+    r3:'Check-in/hora: L-V 1,000P / Fin 2,000P', r4:'Puntos solo para pases de juego internos',
+    r5:'No se permiten auto-referidos ni duplicados',
+    share_text:'🧠 ICOC Brain Sports 2027! Ajedrez, Go, Poker — ¡Regístrate y gana 10,000P! 🎁',
+    copied:'✅ ¡Enlace copiado!', go_cta:'🎁 Entrar y reclamar 10,000P →' },
+  fr:{ title:'Inviter des Amis', sub:'Quand un ami s\'inscrit via votre lien,<br>vous recevez tous les deux <strong>10 000 Points</strong>!',
+    me:'Moi (Parrain)', friend:'Ami (Filleul)', pts_label:'Points',
+    copy_btn:'Copier', btn_kakao:'KakaoTalk', btn_copy2:'Copier le lien', btn_tiktok:'Partager TikTok',
+    go_home:'← Retour à l\'accueil', invited_msg:'Vous avez été invité par un ami!<br>Entrez pour recevoir <strong>10 000 Points</strong>.',
+    rules_title:'📋 Guide des Points', r1:'Parrainage: 10,000P chacun', r2:'Victoire IA +100P / Défaite -100P',
+    r3:'Check-in/heure: Sem 1,000P / Week 2,000P', r4:'Points utilisables pour des passes de jeu uniquement',
+    r5:'Auto-parrainage et doublons interdits',
+    share_text:'🧠 ICOC Brain Sports 2027! Échecs, Go, Poker — Inscrivez-vous pour 10 000P! 🎁',
+    copied:'✅ Lien copié!', go_cta:'🎁 Entrer et réclamer 10,000P →' },
+};
 
-  // 내 추천 링크 생성
-  function getUID() {
-    let uid = localStorage.getItem('icoc_uid');
-    if (!uid) {
-      uid = 'U' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
-      localStorage.setItem('icoc_uid', uid);
-    }
-    return uid;
-  }
+// fallback for missing langs
+['de','pt','ru','ar','hi','vi','th','id','ms','tr','nl','pl','sv','it'].forEach(c => {
+  T[c] = {...T['en']};
+});
 
-  const myLink = `${location.origin}${location.pathname.replace('referral.html','')}referral.html?ref=${getUID()}`;
-  document.getElementById('ref-link').value = myLink;
+let curLang = localStorage.getItem('icoc_lang') || 'ko';
 
-  function showToast(msg) {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.classList.add('show');
-    clearTimeout(t._t);
-    t._t = setTimeout(() => t.classList.remove('show'), 2500);
-  }
-
-  function copyLink() {
-    navigator.clipboard.writeText(myLink).then(() => showToast('✅ 링크 복사 완료!')).catch(() => {
-      document.getElementById('ref-link').select();
-      document.execCommand('copy');
-      showToast('✅ 링크 복사 완료!');
-    });
-  }
-
-  function shareKakao() {
-    // 카카오톡 공유 (Web Share API 폴백)
-    if (navigator.share) {
-      navigator.share({ title:'ICOC 브레인스포츠 2027', text:'나랑 같이 브레인스포츠 대결하자! 가입하면 10,000포인트 받아 🎁', url: myLink });
-    } else {
-      copyLink();
-    }
-  }
-
-  function shareX() {
-    const text = encodeURIComponent(`🧠 ICOC 브레인스포츠 올림픽 2027! 오목·체스·바둑·홀덤 등 23개 종목 국가대표 선발전 참여해봐! 가입하면 10,000P 🎁`);
-    window.open(`https://x.com/intent/tweet?text=${text}&url=${encodeURIComponent(myLink)}`,'_blank');
-  }
-
-  // 초대 링크로 들어온 경우 → 메인 이동 시 포인트 지급
+function applyLang(code) {
+  const t = T[code] || T['en'];
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const key = el.getAttribute('data-t');
+    if (t[key] !== undefined) el.innerHTML = t[key];
+  });
+  const l = LANGS.find(x => x.code === code) || LANGS[0];
+  document.getElementById('lt-flag').textContent = l.flag;
+  document.getElementById('lt-code').textContent = l.short;
+  document.documentElement.lang = code;
+  curLang = code;
+  localStorage.setItem('icoc_lang', code);
+  // update dynamic text
   if (incomingRef && !localStorage.getItem('icoc_ref_done')) {
-    document.querySelector('a.go-home').href = `index.html?ref=${incomingRef}`;
-    document.querySelector('a.go-home').textContent = '🎁 입장하고 10,000P 받기 →';
-    document.querySelector('a.go-home').style.cssText = `
-      display:inline-block; margin-top:12px;
-      background:linear-gradient(135deg,#C9A84C,#E8C97A);
-      color:#0B1F3A; font-weight:700; font-size:14px;
-      padding:12px 24px; border-radius:10px; text-decoration:none;
-      box-shadow:0 4px 16px rgba(201,168,76,0.3);
-    `;
+    document.getElementById('go-home-btn').textContent = t.go_cta || t.go_home;
   }
+}
+
+// Build lang dropdown
+const dd = document.getElementById('lt-dd');
+LANGS.forEach(l => {
+  const d = document.createElement('div');
+  d.className = 'lang-option' + (l.code===curLang?' active':'');
+  d.dataset.code = l.code;
+  d.innerHTML = `<span class="lof">${l.flag}</span><span class="lol">${l.label}</span>`;
+  d.addEventListener('click', () => {
+    applyLang(l.code);
+    dd.querySelectorAll('.lang-option').forEach(o => o.classList.toggle('active', o.dataset.code===l.code));
+    document.getElementById('lt-wrap').classList.remove('open');
+  });
+  dd.appendChild(d);
+});
+
+document.getElementById('lt-trigger').addEventListener('click', e => {
+  e.stopPropagation();
+  document.getElementById('lt-wrap').classList.toggle('open');
+});
+document.addEventListener('click', () => document.getElementById('lt-wrap').classList.remove('open'));
+
+/* ── Referral logic ── */
+const params = new URLSearchParams(location.search);
+const incomingRef = params.get('ref');
+if (incomingRef) document.getElementById('invited-banner').classList.add('show');
+
+function getUID() {
+  let uid = localStorage.getItem('icoc_uid');
+  if (!uid) {
+    uid = 'U'+Date.now().toString(36).toUpperCase()+Math.random().toString(36).slice(2,5).toUpperCase();
+    localStorage.setItem('icoc_uid', uid);
+  }
+  return uid;
+}
+
+const myLink = `${location.origin}${location.pathname.replace('referral.html','')}referral.html?ref=${getUID()}`;
+document.getElementById('ref-link').value = myLink;
+
+if (incomingRef && !localStorage.getItem('icoc_ref_done')) {
+  const goBtn = document.getElementById('go-home-btn');
+  goBtn.href = `index.html?ref=${incomingRef}`;
+  goBtn.className = 'go-home cta';
+}
+
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(myLink)
+    .then(() => toast((T[curLang]||T.en).copied))
+    .catch(() => { document.getElementById('ref-link').select(); document.execCommand('copy'); toast((T[curLang]||T.en).copied); });
+}
+
+const getShareText = () => (T[curLang]||T.en).share_text || T.en.share_text;
+
+function shareKakao() {
+  if (navigator.share) navigator.share({title:'ICOC Brain Sports 2027', text: getShareText(), url: myLink});
+  else copyLink();
+}
+function shareX() {
+  window.open(`https://x.com/intent/tweet?text=${encodeURIComponent(getShareText())}&url=${encodeURIComponent(myLink)}`,'_blank');
+}
+function shareFacebook() {
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(myLink)}&quote=${encodeURIComponent(getShareText())}`,'_blank','width=600,height=400');
+}
+function shareInstagram() {
+  // Instagram doesn't support direct URL sharing via web — copy to clipboard and open Instagram
+  copyLink();
+  toast('📋 링크 복사됨 — Instagram 앱에서 스토리나 DM에 붙여넣으세요!');
+  setTimeout(() => window.open('https://www.instagram.com/','_blank'), 1200);
+}
+function shareTikTok() {
+  copyLink();
+  toast('📋 링크 복사됨 — TikTok 앱에서 Bio나 댓글에 붙여넣으세요!');
+  setTimeout(() => window.open('https://www.tiktok.com/','_blank'), 1200);
+}
+
+// Init language
+applyLang(curLang);
 </script>
 </body>
 </html>
