@@ -456,252 +456,205 @@ const VENUE = {
   addr: p.get('addr') || '주소 정보 없음',
   city: p.get('city') || '',
 };
-
 const TYPES = {
-  go:         { label:'기원',       icon:'⚫', color:'#2d6b2d', sports:['바둑'] },
-  billiards:  { label:'당구장',     icon:'🎱', color:'#1a4a7a', sports:['당구(3구)','당구(4구)','스누커'] },
+  go:         { label:'기원',       icon:'⚫', color:'#2d6b2d', sports:['바둑','오목'] },
+  billiards:  { label:'당구장',     icon:'🎱', color:'#1a4a7a', sports:['당구(3구)','당구(4구)','스누커','포켓볼'] },
   bowling:    { label:'볼링장',     icon:'🎳', color:'#7a3a1a', sports:['볼링'] },
   screengolf: { label:'스크린골프', icon:'⛳', color:'#2a7a2a', sports:['스크린골프','파크골프'] },
-  board:      { label:'보드카페',   icon:'🎯', color:'#5a1a7a', sports:['오목','체스','장기','체커','루미큐브','할리갈리','스플렌더','카탄','헥스','쿼리도'] },
-  parkgolf:   { label:'파크골프',   icon:'🌿', color:'#3a7a1a', sports:['파크골프','필드골프'] },
+  board:      { label:'보드카페',   icon:'🎯', color:'#5a1a7a', sports:['오목','체스','장기','체커','루미큐브','블로커스'] },
   chess:      { label:'체스클럽',   icon:'♟️', color:'#7a6a1a', sports:['체스','장기','바둑','오목'] },
-  holdem:     { label:'홀덤펍',     icon:'🃏', color:'#7a1a1a', sports:['홀덤','진러미','블랙잭','브릿지'] },
-  pcbang:     { label:'PC방',       icon:'🖥️', color:'#1a3a7a', sports:['체스','오목','다빈치코드','커넥트4','리버시'] },
+  holdem:     { label:'홀덤펍',     icon:'🃏', color:'#7a1a1a', sports:['홀덤','진러미','블랙잭','브릿지','마작'] },
+  mahjong:    { label:'마작클럽',   icon:'🀄', color:'#8a1a1a', sports:['마작','홀덤','블랙잭'] },
+  pcbang:     { label:'PC방',       icon:'🖥️', color:'#1a3a7a', sports:['체스','오목','다빈치코드','스피드큐브'] },
 };
-const T = TYPES[VENUE.type] || { label:VENUE.type, icon:'📍', color:'#4a4a6a', sports:[] };
+const T = TYPES[VENUE.type] || { label:VENUE.type||'보드카페', icon:'📍', color:'#4a4a6a', sports:[] };
 const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
 
-// Fill DOM
-document.title = `${VENUE.name} — ICOC 2027`;
-document.getElementById('top-name').textContent = VENUE.name;
-const _tt = document.getElementById('top-type'); if(_tt) _tt.textContent = T.label;
-const _vi = document.getElementById('v-icon'); if(_vi) _vi.textContent = T.icon;
-document.getElementById('v-icon').style.cssText += `;background:${T.color}22;border-color:${T.color}55`;
-document.getElementById('v-name').textContent = VENUE.name;
-document.getElementById('v-type-badge').textContent = T.label;
-document.getElementById('v-addr').textContent = '📍 ' + VENUE.addr + (VENUE.city ? '  ·  ' + VENUE.city : '');
-document.getElementById('v-rank').textContent = '#' + rnd(1,30);
-document.getElementById('v-players').textContent = rnd(12,280);
-document.getElementById('v-matches').textContent = rnd(40,310);
-document.getElementById('v-rating').textContent = '★ ' + (3.8+Math.random()*1.2).toFixed(1);
-document.getElementById('chat-venue-name').textContent = VENUE.name + ' 채팅';
-// btn-route removed
-// btn-games removed
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibWlsaXZlcnNlMTAwNCIsImEiOiJjbXF0NmltcjYwMWprMnpzaGFrdjF5YnA3In0.yqIA5e6OePYT65r-xZShLA';
+var map;
+var is3d = true;
+
+// ── DOM 채우기 ──
+document.title = VENUE.name + ' — ICOC 2027';
+const _tn = document.getElementById('top-name');    if(_tn) _tn.textContent = VENUE.name;
+const _tt = document.getElementById('top-type');    if(_tt) _tt.textContent = T.label;
+const _vi = document.getElementById('v-icon');      if(_vi) { _vi.textContent = T.icon; _vi.style.cssText += ';background:' + T.color + '22;border-color:' + T.color + ';'; }
+const _vn = document.getElementById('v-name');      if(_vn) _vn.textContent = VENUE.name;
+const _vt = document.getElementById('v-type-badge');if(_vt) _vt.textContent = T.label;
+const _va = document.getElementById('v-addr');      if(_va) _va.textContent = '📍 ' + VENUE.addr + (VENUE.city ? '  ·  ' + VENUE.city : '');
+const _vr = document.getElementById('v-rank');      if(_vr) _vr.textContent = '#' + rnd(1,30);
+const _vp = document.getElementById('v-players');   if(_vp) _vp.textContent = rnd(12,280);
+const _vm = document.getElementById('v-matches');   if(_vm) _vm.textContent = rnd(40,310);
+const _vg = document.getElementById('v-rating');    if(_vg) _vg.textContent = '★ ' + (3.8+Math.random()*1.2).toFixed(1);
+const _vcn = document.getElementById('chat-venue-name'); if(_vcn) _vcn.textContent = VENUE.name + ' 채팅';
 
 // Sports tags
 const tagsEl = document.getElementById('v-sports-tags');
-T.sports.forEach(s => {
+if(tagsEl) T.sports.forEach(function(s) {
   const a = document.createElement('a');
-  a.href = `games.html?game=${encodeURIComponent(s)}`;
-  a.className = 'sport-tag';
-  a.innerHTML = `🎮 ${s}`;
+  a.href = 'games.html?game=' + encodeURIComponent(s);
+  a.className = 'sport-tag'; a.textContent = s;
   tagsEl.appendChild(a);
 });
 
-// ── MAP ──
-const MAPBOX_TOKEN = 'pk.eyJ1IjoibWlsaXZlcnNlMTAwNCIsImEiOiJjbXF0NmltcjYwMWprMnpzaGFrdjF5YnA3In0.yqIA5e6OePYT65r-xZShLA';
-let is3d = true;
+// ── 전역 함수들 (onclick에서 직접 호출) ──
 
-// Try Mapbox first, fallback to MapLibre
-var map;
-function initVenueMap(){
-  const el=document.getElementById('map');
-  if(!el||el.offsetWidth===0){setTimeout(initVenueMap,150);return;}
-  if(window.mapboxgl){
-  mapboxgl.accessToken = MAPBOX_TOKEN;
-  map = new mapboxgl.Map({
-    container:'map', style:'mapbox://styles/mapbox/dark-v11',
-    center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
-  });
-  map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}),'top-left');
-  map.on('load', addVenueMarker);
-} else {
-  map = new maplibregl.Map({
-    container:'map',
-    style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // changed by setVenueStyle
-    center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
-  });
-  map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
-  map.on('load', addVenueMarker);
-}
-}  // end initVenueMap
-document.addEventListener('DOMContentLoaded', initVenueMap);
-
-
-function addVenueMarker() {
-  const el = document.createElement('div');
-  el.className = 'my-venue-marker';
-  el.style.background = T.color + 'cc';
-  el.textContent = T.icon;
-  const Lib = window.mapboxgl || window.maplibregl;
-  new Lib.Marker({element:el, anchor:'bottom'})
-    .setLngLat([VENUE.lng, VENUE.lat])
-    .addTo(map);
+function changeVenueStyle(style) {
+  if (!map) return;
+  const styles = {
+    dark:    'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    light:   'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    streets: 'https://tiles.openfreemap.org/styles/liberty',
+    outdoor: 'https://tiles.openfreemap.org/styles/outdoor',
+  };
+  document.querySelectorAll('.style-pill').forEach(function(b) { b.classList.remove('active'); });
+  const btns = document.querySelectorAll('.style-pill');
+  const order = ['dark','light','streets','outdoor'];
+  const idx = order.indexOf(style);
+  if(btns[idx]) btns[idx].classList.add('active');
+  try {
+    if(window.mapboxgl && map.setStyle) map.setStyle('mapbox://styles/mapbox/' + (style==='dark'?'dark-v11':style==='light'?'light-v11':style==='streets'?'streets-v12':'outdoors-v12'));
+    else if(map.setStyle) map.setStyle(styles[style] || styles.dark);
+  } catch(e) { console.warn('Style change error', e); }
 }
 
-// 3D toggle
-const _btn3d = document.getElementById('btn-3d'); if(_btn3d) _btn3d.addEventListener('click', () => {
-  is3d = !is3d;
-  map.easeTo({pitch: is3d?55:0, bearing: is3d?-15:0, duration:800});
-  if(_btn3d) _btn3d.textContent = is3d ? '🧭' : '🗺️';
-});
+function toggle3D() {
+  if (!map) return;
+  const btn = document.getElementById('btn-3d-top');
+  try {
+    const pitch = map.getPitch();
+    if (pitch < 30) {
+      map.easeTo({ pitch:60, bearing:-20, duration:800 });
+      if(btn) { btn.textContent = '2D'; btn.title = '2D 전환'; }
+    } else {
+      map.easeTo({ pitch:0, bearing:0, duration:600 });
+      if(btn) { btn.textContent = '🏢'; btn.title = '3D 전환'; }
+    }
+  } catch(e) {}
+}
 
-// Bottom sheet collapse (mobile)
-const sheet = document.getElementById('bottom-sheet');
-let collapsed = false;
-const _sh = document.getElementById('sheet-handle'); if(_sh) _sh.addEventListener('click', () => {
-  collapsed = !collapsed;
-  sheet.classList.toggle('collapsed', collapsed);
-});
-map.on('click', () => { if(!collapsed){collapsed=true;sheet.classList.add('collapsed');} });
+function toggleChatPanel() {
+  const dd = document.getElementById('tb-chat-dropdown');
+  if(dd) dd.classList.toggle('open');
+}
 
-// Chat toggle
-const chatFab  = document.getElementById('chat-fab');
-const chatModal = document.getElementById('chat-modal');
-if(chatFab) chatFab.addEventListener('click', () => chatModal.classList.toggle('open'));
-document.getElementById('chat-close').addEventListener('click', () => chatModal.classList.remove('open'));
-
-// ── 슬라이드쇼: PC에서만 (768px 이상) ──
-(function(){
-  if(window.innerWidth < 768) return;
-  const slides = document.querySelectorAll('.venue-slide');
-  if(!slides.length) return;
-  let cur = 0;
-  setInterval(()=>{
-    slides[cur].classList.remove('vs-active');
-    cur = (cur+1) % slides.length;
-    slides[cur].classList.add('vs-active');
-  }, 2000);
-})();
+function closeAgeChat() {
+  const modal = document.getElementById('chat-modal');
+  if(modal) modal.style.display = 'none';
+  const dd = document.getElementById('tb-chat-dropdown');
+  if(dd) dd.classList.add('open');
+}
 
 function openAgeChat(age) {
   const modal = document.getElementById('chat-modal');
   if(!modal) return;
   modal.style.display = 'flex';
-  // 뒤로가기 버튼
   const sub = modal.querySelector('.chat-header-text p');
-  if(sub) sub.innerHTML = '<button onclick="closeAgeChat()" style="background:none;border:none;color:#C9A84C;font-size:12px;cursor:pointer;font-family:inherit;padding:0;">← 연령대 선택으로</button>';
+  if(sub) sub.innerHTML = '<button onclick="closeAgeChat()" style="background:none;border:none;color:#C9A84C;font-size:12px;cursor:pointer;font-family:inherit;padding:0;">← 연령대 선택</button>';
   const nameEl = document.getElementById('chat-venue-name');
   if(nameEl) nameEl.textContent = VENUE.name + ' · ' + age + ' 채팅방';
-  document.getElementById('chat-venue-name').textContent = VENUE.name + ' · ' + age + ' 채팅방';
   const msgs = document.getElementById('chat-messages');
-  if(msgs) msgs.innerHTML = '<div class="chat-coming-soon"><span class="icon">💬</span><strong style="color:var(--gold);display:block;margin-bottom:6px;">' + age + ' 전용 채팅방</strong>같은 연령대 ICOC 플레이어들과<br>경기 신청 · 정모 약속 · 팀 빌딩!<br><br><span style="color:rgba(245,240,232,0.4);font-size:11px;">🔔 곧 오픈 예정입니다</span></div>';
+  if(msgs) msgs.innerHTML = '<div class="chat-coming-soon"><span class="icon">💬</span><strong style="color:var(--gold);display:block;margin-bottom:8px;">' + age + ' 채팅방</strong>이 경기장의 ' + age + ' 유저들과 대전 신청, 정모, 팀 빌딩 등을 나눠보세요.<br><br>채팅 기능 오픈 준비 중...</div>';
   modal.classList.add('open');
 }
 
-
-
-function showWeatherTicker() {
-  // 이미 있으면 스킵
-  if (document.getElementById('venue-weather-ticker')) return;
-  const ticker = document.createElement('div');
-  ticker.id = 'venue-weather-ticker';
-  ticker.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(8,20,44,0.92);backdrop-filter:blur(10px);border-top:1px solid rgba(201,168,76,0.15);height:28px;overflow:hidden;display:flex;align-items:center;';
-  ticker.innerHTML = `
-    <div style="flex-shrink:0;padding:0 8px;"><span style="font-size:9px;font-weight:700;color:#C9A84C;">🌤 날씨</span></div>
-    <div style="flex:1;overflow:hidden;">
-      <div id="venue-weather-text" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.7);white-space:nowrap;animation:tickerScroll 35s linear infinite;padding:0 10px;line-height:28px;">날씨 불러오는 중...</div>
-    </div>`;
-  document.body.appendChild(ticker);
-  
-  // 날씨 데이터 로드 (open-meteo)
-  const cities = [
-    {name:'서울',lat:37.5665,lng:126.9780},
-    {name:'도쿄',lat:35.6762,lng:139.6503},
-    {name:'뉴욕',lat:40.7128,lng:-74.0060},
-    {name:'런던',lat:51.5074,lng:-0.1278},
-    {name:'베이징',lat:39.9042,lng:116.4074},
-    {name:'시드니',lat:-33.8688,lng:151.2093},
-  ];
-  const WMO = {0:'맑음',1:'대체로맑음',2:'흐릿',3:'흐림',45:'안개',48:'서리',51:'이슬비',53:'이슬비',55:'이슬비',61:'비',63:'비',65:'폭우',71:'눈',73:'눈',75:'폭설',80:'소나기',81:'소나기',82:'폭풍',95:'뇌우',99:'뇌우'};
-  
-  Promise.all(cities.map(c =>
-    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lng}&current_weather=true`)
-      .then(r=>r.json()).then(d=>({name:c.name,temp:Math.round(d.current_weather.temperature),code:d.current_weather.weathercode}))
-      .catch(()=>({name:c.name,temp:'?',code:0}))
-  )).then(results => {
-    const text = results.map(r=>`🌍 ${r.name} ${r.temp}°C ${WMO[r.code]||''}`).join('　·　');
-    const el = document.getElementById('venue-weather-text');
-    if(el) el.textContent = text + '　·　' + text;
-  });
-}
-
-// ── 지도 스타일 변경 ──
-function changeVenueStyle(style) {
-  if (!map) return;
-  const styles = {
-    dark:      'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-    light:     'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-    streets:   'https://tiles.openfreemap.org/styles/liberty',
-    outdoor:   'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-    satellite: 'https://tiles.openstreetmap.fr/toner/style.json',
-  };
-  const useMapbox = !!window.mapboxgl && map.setStyle && styles[style] && style !== 'satellite';
-  // MapLibre styles
-  const mlStyles = {
-    dark:     'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-    light:    'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-    streets:  'https://tiles.openfreemap.org/styles/liberty',
-    outdoor:  'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-    satellite:'https://tiles.openfreemap.org/styles/liberty',
-  };
-  const mbStyles = {
-    dark:     'mapbox://styles/mapbox/dark-v11',
-    light:    'mapbox://styles/mapbox/light-v11',
-    streets:  'mapbox://styles/mapbox/streets-v12',
-    outdoor:  'mapbox://styles/mapbox/outdoors-v12',
-    satellite:'mapbox://styles/mapbox/satellite-streets-v12',
-  };
-  const url = window.mapboxgl && map._maplibre !== true
-    ? mbStyles[style]
-    : mlStyles[style];
-  map.setStyle(url);
-}
-
-// ── 지도 스타일 변경 ──
-
-function toggle3D() {
-  if (!map) return;
-  const btn = document.getElementById('btn-3d-top');
-  const currentPitch = map.getPitch();
-  if (currentPitch < 30) {
-    map.easeTo({ pitch: 60, bearing: -20, duration: 800 });
-    if (btn) { btn.textContent = '2️⃣D'; btn.title = '2D로 전환'; }
-  } else {
-    map.easeTo({ pitch: 0, bearing: 0, duration: 600 });
-    if (btn) { btn.textContent = '🏢'; btn.title = '3D로 전환'; }
-  }
-}
-
-
-function closeAgeChat() {
-  const modal = document.getElementById('chat-modal');
-  if(modal) modal.style.display = 'none';
-  // 뒤로가기: 채팅 드롭다운 다시 보여주기
-  const dd = document.getElementById('tb-chat-dropdown');
-  if(dd) dd.classList.add('open');
-}
-function toggleChatPanel() {
-  const dd = document.getElementById('tb-chat-dropdown');
-  if (dd) dd.classList.toggle('open');
-}
-// 외부 클릭 시 채팅 드롭다운 닫기
-document.addEventListener('click', function(e) {
-  if (!e.target.closest('#tb-chat-wrap')) {
-    const dd = document.getElementById('tb-chat-dropdown');
-    if (dd) dd.classList.remove('open');
-  }
-});
-// 경기장 등록 버튼 - 로그인 시 표시
 function checkShowVenueRegBtn() {
   const btn = document.getElementById('tb-reg-btn');
-  if (!btn) return;
+  if(!btn) return;
   const loggedIn = !!(window.ICOC_AUTH && ICOC_AUTH.getCurrentUser && ICOC_AUTH.getCurrentUser());
   btn.style.display = loggedIn ? 'flex' : 'none';
 }
-setTimeout(checkShowVenueRegBtn, 1500);
-setInterval(checkShowVenueRegBtn, 5000);
 
+// ── 날씨 티커 ──
+function showWeatherTicker() {
+  if(document.getElementById('venue-weather-ticker')) return;
+  const ticker = document.createElement('div');
+  ticker.id = 'venue-weather-ticker';
+  ticker.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(8,20,44,0.92);backdrop-filter:blur(10px);border-top:1px solid rgba(201,168,76,0.15);height:28px;overflow:hidden;display:flex;align-items:center;';
+  ticker.innerHTML = '<div style="flex-shrink:0;padding:0 8px;"><span style="font-size:9px;font-weight:700;color:#C9A84C;">🌤 날씨</span></div><div style="flex:1;overflow:hidden;"><div id="venue-weather-text" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.7);white-space:nowrap;animation:tickerScroll 35s linear infinite;padding:0 10px;line-height:28px;">날씨 불러오는 중...</div></div>';
+  document.body.appendChild(ticker);
+  const cities = [{name:'서울',lat:37.5665,lng:126.9780},{name:'도쿄',lat:35.6762,lng:139.6503},{name:'뉴욕',lat:40.7128,lng:-74.0060},{name:'런던',lat:51.5074,lng:-0.1278},{name:'베이징',lat:39.9042,lng:116.4074},{name:'시드니',lat:-33.8688,lng:151.2093}];
+  const WMO = {0:'맑음',1:'대체로맑음',2:'흐릿',3:'흐림',45:'안개',61:'비',71:'눈',80:'소나기',95:'뇌우'};
+  Promise.all(cities.map(function(c) {
+    return fetch('https://api.open-meteo.com/v1/forecast?latitude=' + c.lat + '&longitude=' + c.lng + '&current_weather=true')
+      .then(function(r){return r.json();})
+      .then(function(d){return {name:c.name,temp:Math.round(d.current_weather.temperature),code:d.current_weather.weathercode};})
+      .catch(function(){return {name:c.name,temp:'?',code:0};});
+  })).then(function(results) {
+    const text = results.map(function(r){return '🌍 ' + r.name + ' ' + r.temp + '°C ' + (WMO[r.code]||'');}).join(' · ');
+    const el = document.getElementById('venue-weather-text');
+    if(el) el.textContent = text + ' · ' + text;
+  });
+}
+
+// ── 마커 추가 ──
+function addVenueMarker() {
+  const el = document.createElement('div');
+  el.className = 'my-venue-marker';
+  el.style.cssText = 'width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:3px solid rgba(201,168,76,0.8);box-shadow:0 4px 16px rgba(0,0,0,0.5);cursor:pointer;background:' + T.color + 'cc;';
+  el.textContent = T.icon;
+  const Lib = window.mapboxgl || window.maplibregl;
+  if(!Lib) return;
+  new Lib.Marker({element:el, anchor:'bottom'})
+    .setLngLat([VENUE.lng, VENUE.lat])
+    .addTo(map);
+  showWeatherTicker();
+  checkShowVenueRegBtn();
+}
+
+// ── 지도 초기화 ──
+function initVenueMap() {
+  const container = document.getElementById('map');
+  if(!container || container.offsetWidth === 0) {
+    setTimeout(initVenueMap, 150);
+    return;
+  }
+  if(window.mapboxgl) {
+    mapboxgl.accessToken = MAPBOX_TOKEN;
+    map = new mapboxgl.Map({
+      container:'map', style:'mapbox://styles/mapbox/dark-v11',
+      center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
+    });
+    map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}), 'top-left');
+    map.on('load', addVenueMarker);
+    map.on('error', function(e){ console.warn('Mapbox error:', e.error); });
+  } else if(window.maplibregl) {
+    map = new maplibregl.Map({
+      container:'map',
+      style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+      center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15,
+    });
+    map.addControl(new maplibregl.NavigationControl(), 'top-left');
+    map.on('load', addVenueMarker);
+  } else {
+    console.warn('No map library loaded');
+  }
+}
+
+// ── 이벤트 바인딩 (DOMContentLoaded 후) ──
+document.addEventListener('DOMContentLoaded', function() {
+  initVenueMap();
+  // Bottom sheet
+  const sheet = document.getElementById('bottom-sheet');
+  const handle = document.getElementById('sheet-handle');
+  let collapsed = false;
+  if(handle) handle.addEventListener('click', function() {
+    collapsed = !collapsed;
+    if(sheet) sheet.classList.toggle('collapsed', collapsed);
+  });
+  // Chat close
+  const chatClose = document.getElementById('chat-close');
+  if(chatClose) chatClose.addEventListener('click', closeAgeChat);
+  // 외부 클릭 시 채팅 드롭다운 닫기
+  document.addEventListener('click', function(e) {
+    if(!e.target.closest('#tb-chat-wrap')) {
+      const dd = document.getElementById('tb-chat-dropdown');
+      if(dd) dd.classList.remove('open');
+    }
+  });
+  setTimeout(checkShowVenueRegBtn, 1500);
+  setInterval(checkShowVenueRegBtn, 5000);
+});
 </script>
 </body>
 </html>
