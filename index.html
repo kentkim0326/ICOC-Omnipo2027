@@ -603,6 +603,17 @@ footer a { color:var(--gold); text-decoration:none; }
 </header>
 
 <!-- STATS -->
+<!-- NEWS TICKER -->
+<div class="news-ticker-wrap" id="news-ticker">
+  <span class="ticker-label">📰 뉴스</span>
+  <div class="ticker-viewport">
+    <div class="ticker-track" id="ticker-track">
+      <span class="ticker-item"><span class="ticker-bullet">⟳</span><span class="ticker-text">뉴스 불러오는 중...</span></span>
+    </div>
+  </div>
+  <button class="ticker-reload" onclick="ICOC_TICKER.reload()" title="새로고침">↻</button>
+</div>
+
 <div class="full-divider"></div>
 <div class="stats-band">
   <div class="stats-grid">
@@ -1583,6 +1594,7 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 <!-- ICOC 설정 & 인증 -->
 <script src="js/config.js"></script>
 <script src="js/map.js"></script>
+<script src="js/ticker.js"></script>
 <script src="js/auth.js"></script>
 
 <script>
