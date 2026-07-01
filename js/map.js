@@ -56,29 +56,38 @@
   let markers = [];
   let activeType = 'all';
 
+  const MAPBOX_TOKEN = window.ICOC_CONFIG?.MAPBOX_TOKEN || '';
+
   function initMap() {
     const container = document.getElementById('icoc-map');
-    if (!container || !window.maplibregl) return;
+    if (!container) return;
 
-    map = new maplibregl.Map({
-      container: 'icoc-map',
-      style: 'https://tiles.openfreemap.org/styles/liberty',
-      center: [127.024612, 37.532600], // 서울 중심
-      zoom: 10,
-      attributionControl: true,
-    });
-
-    map.addControl(new maplibregl.NavigationControl(), 'top-right');
-    map.addControl(new maplibregl.GeolocateControl({
-      positionOptions: { enableHighAccuracy: true },
-      trackUserLocation: false,
-    }), 'top-right');
-
-    map.on('load', () => {
-      loadVenues(SAMPLE_VENUES);
-      // Supabase 데이터 추가 로드
-      loadSupabaseVenues();
-    });
+    // Mapbox GL JS 사용
+    if (window.mapboxgl) {
+      mapboxgl.accessToken = MAPBOX_TOKEN;
+      map = new mapboxgl.Map({
+        container: 'icoc-map',
+        style: 'mapbox://styles/mapbox/dark-v11',
+        center: [127.024612, 37.532600],
+        zoom: 10,
+      });
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right');
+      map.addControl(new mapboxgl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: false,
+      }), 'top-right');
+      map.on('load', () => { loadVenues(SAMPLE_VENUES); loadSupabaseVenues(); });
+    } else if (window.maplibregl) {
+      // 폴백: MapLibre
+      map = new maplibregl.Map({
+        container: 'icoc-map',
+        style: 'https://tiles.openfreemap.org/styles/liberty',
+        center: [127.024612, 37.532600],
+        zoom: 10,
+      });
+      map.addControl(new maplibregl.NavigationControl(), 'top-right');
+      map.on('load', () => { loadVenues(SAMPLE_VENUES); loadSupabaseVenues(); });
+    }
   }
 
   function loadVenues(venues) {
@@ -108,7 +117,8 @@
         el.addEventListener('mouseleave', () => { el.style.transform='scale(1)'; });
 
         // 팝업
-        const popup = new maplibregl.Popup({ offset: 20, closeButton: true, maxWidth: '220px' })
+        const MapLibP = window.mapboxgl || window.maplibregl;
+        const popup = new MapLibP.Popup({ offset: 20, closeButton: true, maxWidth: '220px' })
           .setHTML(`
             <div class="map-popup">
               <div class="map-popup-type" style="color:${t.color}">${t.icon} ${t.label}</div>
@@ -118,7 +128,8 @@
             </div>
           `);
 
-        const marker = new maplibregl.Marker({ element: el })
+        const MapLib = window.mapboxgl || window.maplibregl;
+        const marker = new MapLib.Marker({ element: el })
           .setLngLat([v.lng, v.lat])
           .setPopup(popup)
           .addTo(map);
