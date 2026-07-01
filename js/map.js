@@ -118,21 +118,22 @@
 
         // 팝업
         const MapLibP = window.mapboxgl || window.maplibregl;
-        const popup = new MapLibP.Popup({ offset: 20, closeButton: true, maxWidth: '220px' })
-          .setHTML(`
-            <div class="map-popup">
-              <div class="map-popup-type" style="color:${t.color}">${t.icon} ${t.label}</div>
-              <div class="map-popup-name">${v.name}</div>
-              <div class="map-popup-addr">📍 ${v.addr}</div>
-              <div class="map-popup-city">🏙 ${v.city}</div>
-            </div>
-          `);
-
-        const MapLib = window.mapboxgl || window.maplibregl;
-        const marker = new MapLib.Marker({ element: el })
-          .setLngLat([v.lng, v.lat])
-          .setPopup(popup)
-          .addTo(map);
+        const popup = new MapLibP.Popup({ offset: 20, closeButton: true, maxWidth: '260px' })
+          .setHTML((() => {
+            const vp = new URLSearchParams({
+              id:v.id, name:v.name, type:v.type, lat:v.lat, lng:v.lng,
+              addr:v.addr||'', city:v.city||''
+            }).toString();
+            return `<div style="font-family:'Noto Sans KR',sans-serif;padding:4px 0;">
+              <div style="color:${t.color};font-size:11px;font-weight:700;letter-spacing:.06em;margin-bottom:5px;">${t.icon} ${t.label}</div>
+              <div style="font-size:15px;font-weight:700;color:#F5F0E8;margin-bottom:3px;">${v.name}</div>
+              <div style="font-size:11px;color:rgba(245,240,232,0.5);margin-bottom:12px;">📍 ${v.addr}</div>
+              <div style="display:flex;gap:7px;">
+                <a href="venue.html?${vp}" style="flex:2;display:block;text-align:center;padding:9px 0;background:linear-gradient(135deg,#C9A84C,#E8C97A);border-radius:9px;font-size:12px;font-weight:700;color:#0B1F3A;text-decoration:none;">🗺️ 상세 지도</a>
+                <a href="games.html?type=${v.type}" style="flex:1;display:block;text-align:center;padding:9px 0;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:9px;font-size:12px;font-weight:600;color:#E8C97A;text-decoration:none;">🎮 플레이</a>
+              </div>
+            </div>`;
+          })()).addTo(map);
 
         markers.push(marker);
       });
