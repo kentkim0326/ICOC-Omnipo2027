@@ -268,6 +268,7 @@
   }
 
   function doMove(m, color) {
+    if(global.ICOC_SFX) global.ICOC_SFX.piece();
     if (m.drop) {
       board[m.to[0]][m.to[1]] = { type: m.drop, color, promoted: false };
       hands[color][m.drop] -= 1;
@@ -346,7 +347,7 @@
     gameOver = true;
     setTurnUI();
     let pts;
-    if (result === 'win') { setStatus('🎉 외통! AI의 왕이 더 이상 움직일 수 없습니다. 승리!'); pts = 30; }
+    if (result === 'win') { setStatus('🎉 외통! AI의 왕이 더 이상 움직일 수 없습니다. 승리!'); pts = 30; if(global.ICOC_SFX) setTimeout(()=>global.ICOC_SFX.win(),100); }
     else { setStatus('😵 외통에 걸렸습니다. 당신의 왕이 더 이상 움직일 수 없습니다. 패배입니다.'); pts = 15; }
     if (!awarded) {
       awarded = true;
