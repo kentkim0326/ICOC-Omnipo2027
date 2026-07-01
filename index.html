@@ -2216,40 +2216,20 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── URL 파라미터로 게임 자동 실행 (?game=go 등) ──
 (function() {
   function tryAutoOpenGame() {
-    const params = new URLSearchParams(window.location.search);
-    const gameId = params.get('game');
-    if (!gameId) return;
-    // 게임 모달 함수 대기
-    const tryOpen = (attempts) => {
-      if (attempts > 30) return;
-      if (typeof openGame === 'function') {
-        openGame(gameId);
-        // URL 클린업
-        window.history.replaceState(null,'',window.location.pathname);
-      } else {
-        setTimeout(() => tryOpen(attempts + 1), 200);
-      }
-    };
-    tryOpen(0);
-  }
+  const p = new URLSearchParams(location.search);
+  const gk = p.get('game');
+  if (!gk) return;
+  const _try = (attempts) => {
+    const fn = window.openGame || (window.ICOC_GAMES && window.ICOC_GAMES.openGame);
+    if (fn) { fn(gk); return; }
+    if (attempts > 0) setTimeout(() => _try(attempts-1), 300);
+  };
+  // DOMContentLoaded 후 시도 (스크립트 로드 대기)
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', tryAutoOpenGame);
+    document.addEventListener('DOMContentLoaded', () => setTimeout(() => _try(5), 200));
   } else {
-    tryAutoOpenGame();
+    setTimeout(() => _try(5), 100);
   }
-})();
-</script>
-
-
-<script>
-// ── PWA Service Worker ──
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register(location.pathname.includes('/ICOC-Omnipo2027') ? '/ICOC-Omnipo2027/sw.js' : '/sw.js')
-      .then(r => console.log('[SW] Registered'))
-      .catch(e => console.warn('[SW]', e));
-  });
-}
-</script>
+}</script>
 </body>
 </html>
