@@ -262,39 +262,85 @@ function sfx(type) {
 
 
   function aiPickMove(){
-    // 1단계: 휴리스틱 스코어로 후보 추출
     const scored = [];
     for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
       if(board[r][c]!==EMPTY) continue;
       try {
-        const h = aiHeuristic(r, c);
-        if(h === null) continue;
-        scored.push({r, c, h});
-      } catch(e) {}
+        const h = aiHeuristic(r,c);
+        if(h===null) continue;
+        scored.push({r,c,h});
+      } catch(e){}
     }
     if(!scored.length) return null;
-    scored.sort((a,b) => b.h - a.h);
+    scored.sort((a,b)=>b.h-a.h);
 
-    // 즉각 포획/구출 (스코어 1000+) → 바로 실행
+    // 즉각 포획/구출 → 바로 실행
     if(scored[0].h >= 1000) return [scored[0].r, scored[0].c];
 
-    // 2단계: 상위 8후보에 경량 MCTS (5플레이아웃 × 20수 = 800시뮬)
-    const top = scored.slice(0, 8);
+    // 상위 12후보 × 10플레이아웃 × 30수 = 3600 시뮬레이션
+    const top = scored.slice(0, 12);
     let best = -Infinity, bestCell = null;
     for(const {r,c,h} of top){
       try {
-        const mc = lightMCEval(r, c, 5, 20);
-        const combined = h * 0.4 + mc * 600;
+        const mc = lightMCEval(r, c, 10, 30);
+        const combined = h * 0.35 + mc * 800;
         if(combined > best){ best = combined; bestCell = [r,c]; }
-      } catch(e) {
-        // fallback: 휴리스틱만
+      } catch(e){
         if(h > best){ best = h; bestCell = [r,c]; }
       }
     }
     return bestCell || [scored[0].r, scored[0].c];
   }
 
-  // 경량 몬테카를로 평가 (빠른 버전)
+  // 경량 MCTS: 포획 + 석수 + 활로 종합 평가
+  function lightMCEval(r, c, n, maxDepth){
+    let totalScore = 0;
+    const initCapW = capturedByWhite, initCapB = capturedByBlack;
+
+    for(let t=0;t<n;t++){
+      const firstRes = tryMove(board, WHITE, r, c, null, null);
+      if(!firstRes.ok) return -1;
+      let bd = firstRes.bd;
+      let color = BLACK;
+      let capW = firstRes.captured, capB = 0;
+      let passes = 0;
+
+      for(let step=0;step<maxDepth && passes<2;step++){
+        const mv = rolloutMove(bd, color, null);
+        if(!mv){ passes++; color = color===BLACK?WHITE:BLACK; continue; }
+        passes = 0;
+        const res = tryMove(bd, color, mv[0], mv[1], null, null);
+        if(!res.ok){ color = color===BLACK?WHITE:BLACK; continue; }
+        bd = res.bd;
+        if(color===BLACK) capB += res.captured;
+        else capW += res.captured;
+        color = color===BLACK ? WHITE : BLACK;
+      }
+
+      // 종합 평가: 포획 + 석수 + 활로 우세
+      let wStones=0, bStones=0;
+      let wLibs = new Set(), bLibs = new Set();
+      for(let rr=0;rr<SIZE;rr++) for(let cc=0;cc<SIZE;cc++){
+        if(bd[rr][cc]===WHITE){
+          wStones++;
+          for(const [nr,nc] of nbOf(rr,cc))
+            if(bd[nr][nc]===EMPTY) wLibs.add(nr*SIZE+nc);
+        } else if(bd[rr][cc]===BLACK){
+          bStones++;
+          for(const [nr,nc] of nbOf(rr,cc))
+            if(bd[nr][nc]===EMPTY) bLibs.add(nr*SIZE+nc);
+        }
+      }
+      const capScore = (capW - capB) * 2.5;
+      const stoneScore = (wStones - bStones) * 0.8;
+      const libScore = (wLibs.size - bLibs.size) * 0.4;
+      const val = capScore + stoneScore + libScore;
+      totalScore += val > 0 ? 1 : val < -4 ? 0 : 0.5 + val * 0.08;
+    }
+    return totalScore / n;
+  }
+
+
   function lightMCEval(r, c, n, depth){
     let wins = 0;
     for(let t=0;t<n;t++){
