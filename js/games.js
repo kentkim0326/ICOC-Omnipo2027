@@ -158,6 +158,12 @@
     if (body) body.innerHTML = '';
   }
 
+  // 스피드 큐브 추가
+  GAMES.speedcube = {
+    title: '스피드 큐브 (Speed Cube)',
+    icon: '🎲',
+    init: () => global.SpeedCubeGame && global.SpeedCubeGame.start()
+  };
   global.ICOC_GAMES = { GAMES, openGame, closeGame };
   // 전역 접근 (tryAutoOpenGame, go.js 등)
   global.openGame = openGame;
