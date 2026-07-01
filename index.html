@@ -2203,5 +2203,34 @@ window.ICOC_BGM = (function() {
   });
 })();
 </script>
+
+<script>
+// ── URL 파라미터로 게임 자동 실행 (?game=go 등) ──
+(function() {
+  function tryAutoOpenGame() {
+    const params = new URLSearchParams(window.location.search);
+    const gameId = params.get('game');
+    if (!gameId) return;
+    // 게임 모달 함수 대기
+    const tryOpen = (attempts) => {
+      if (attempts > 30) return;
+      if (typeof openGame === 'function') {
+        openGame(gameId);
+        // URL 클린업
+        window.history.replaceState(null,'',window.location.pathname);
+      } else {
+        setTimeout(() => tryOpen(attempts + 1), 200);
+      }
+    };
+    tryOpen(0);
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryAutoOpenGame);
+  } else {
+    tryAutoOpenGame();
+  }
+})();
+</script>
+
 </body>
 </html>
