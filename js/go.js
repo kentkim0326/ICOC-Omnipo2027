@@ -404,8 +404,8 @@ function sfx(type) {
   }
 
   function checkWinAfterMove(color) {
-    // 바둑: 두 번 연속 패스로만 종료. 돌 개수로 즉시 승리 없음.
-    // (AI가 첫 수에 응답 안 하는 버그 원인이었음 - 흰 돌 0개 판정)
+    // 바둑: 두 번 연속 패스로만 종료.
+    // 첫 수 직후 흰돌 0개 → 즉시종료 버그 방지.
     return false;
   }
 
