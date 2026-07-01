@@ -5,7 +5,7 @@
    ============================================================ */
 
 (function (global) {
-  const SIZE = 15;
+  const SIZE = 19;
   const EMPTY = 0, BLACK = 1, WHITE = 2; // BLACK = 플레이어, WHITE = AI
   const DIRS = [[1, 0], [0, 1], [1, 1], [1, -1]];
 
