@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>친구 초대 — ICOC Brain Sports Omnipo 2027</title>
+<link rel="icon" href="assets/favicon-32.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{ --navy:#0B1F3A; --gold:#C9A84C; --gold-l:#E8C97A; --cream:#F5F0E8; }
+*{ margin:0; padding:0; box-sizing:border-box; }
+body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',sans-serif;
+  min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:24px; }
+
+.card{
+  background:rgba(14,40,71,0.9); border:1px solid rgba(201,168,76,0.3);
+  border-radius:20px; padding:36px 28px 32px; max-width:440px; width:100%;
+  text-align:center; backdrop-filter:blur(20px);
+  box-shadow:0 20px 60px rgba(0,0,0,0.5);
+}
+.logo{ font-family:'Playfair Display',serif; font-size:13px; font-weight:700;
+  color:var(--gold); letter-spacing:0.2em; margin-bottom:24px; }
+
+.gift-emoji{ font-size:64px; margin-bottom:16px; display:block;
+  filter:drop-shadow(0 4px 12px rgba(201,168,76,0.4)); }
+
+h1{ font-family:'Playfair Display',serif; font-size:26px; font-weight:900;
+  color:var(--gold-l); margin-bottom:8px; }
+.sub{ font-size:13px; color:rgba(245,240,232,0.55); margin-bottom:28px; line-height:1.6; }
+
+.reward-row{
+  display:flex; gap:12px; margin-bottom:28px;
+}
+.reward-box{
+  flex:1; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2);
+  border-radius:12px; padding:16px 10px;
+}
+.reward-box .who{ font-size:10px; color:rgba(245,240,232,0.45); letter-spacing:0.06em;
+  text-transform:uppercase; margin-bottom:6px; }
+.reward-box .pts{ font-family:'Playfair Display',serif; font-size:28px; font-weight:900;
+  color:var(--gold); line-height:1; }
+.reward-box .pts-label{ font-size:10px; color:var(--gold); margin-top:2px; }
+
+.divider{ height:1px; background:rgba(201,168,76,0.15); margin:0 0 24px; }
+
+/* link box */
+.link-wrap{ position:relative; margin-bottom:16px; }
+.link-input{
+  width:100%; padding:12px 48px 12px 14px;
+  background:rgba(255,255,255,0.05); border:1px solid rgba(201,168,76,0.25);
+  border-radius:10px; color:var(--cream); font-size:12px;
+  font-family:'Noto Sans KR',sans-serif; outline:none;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.btn-copy{
+  position:absolute; right:8px; top:50%; transform:translateY(-50%);
+  background:var(--gold); border:none; border-radius:6px;
+  padding:5px 10px; font-size:11px; font-weight:700; color:var(--navy);
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-copy:hover{ background:var(--gold-l); }
+
+.share-row{ display:flex; gap:8px; margin-bottom:24px; }
+.share-btn{
+  flex:1; padding:11px 0; border-radius:10px; border:none;
+  font-size:13px; font-weight:700; cursor:pointer; transition:all 0.2s;
+  font-family:'Noto Sans KR',sans-serif;
+}
+.share-btn.kakao{ background:#FEE500; color:#3B1E08; }
+.share-btn.kakao:hover{ background:#ffd900; }
+.share-btn.copy2{ background:rgba(201,168,76,0.15); color:var(--gold-l);
+  border:1px solid rgba(201,168,76,0.3); }
+.share-btn.copy2:hover{ background:rgba(201,168,76,0.25); }
+.share-btn.x{ background:#000; color:#fff; border:1px solid #333; }
+.share-btn.x:hover{ background:#111; }
+
+.go-home{ display:inline-block; margin-top:4px;
+  color:rgba(245,240,232,0.4); font-size:12px; text-decoration:none; }
+.go-home:hover{ color:var(--gold); }
+
+/* rules */
+.rules{ margin-top:20px; padding:16px; background:rgba(0,0,0,0.2);
+  border-radius:10px; text-align:left; }
+.rules-title{ font-size:11px; font-weight:700; color:rgba(245,240,232,0.4);
+  letter-spacing:0.08em; text-transform:uppercase; margin-bottom:10px; }
+.rules li{ font-size:11px; color:rgba(245,240,232,0.45); line-height:1.8;
+  list-style:none; padding-left:12px; position:relative; }
+.rules li::before{ content:'·'; position:absolute; left:0; color:var(--gold); }
+
+/* toast */
+#toast{ position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(10px);
+  background:rgba(11,31,58,0.96); border:1px solid rgba(201,168,76,0.4);
+  border-radius:10px; padding:11px 20px; color:var(--gold-l); font-size:13px; font-weight:600;
+  backdrop-filter:blur(12px); opacity:0; transition:all 0.3s; pointer-events:none;
+  white-space:nowrap; z-index:999; }
+#toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* invited banner */
+.invited-banner{
+  display:none; background:rgba(201,168,76,0.12); border:1px solid rgba(201,168,76,0.35);
+  border-radius:12px; padding:14px 18px; margin-bottom:24px;
+  font-size:13px; color:var(--gold-l); line-height:1.5;
+}
+.invited-banner.show{ display:block; }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="logo">✦ ICOC · OMNIPO 2027</div>
+
+  <!-- 초대받은 경우 배너 -->
+  <div class="invited-banner" id="invited-banner">
+    🎁 친구의 초대로 방문하셨군요!<br>
+    아래 버튼으로 메인 사이트에 입장하시면<br>
+    <strong style="color:var(--gold)">10,000 포인트</strong>가 자동 지급됩니다.
+  </div>
+
+  <span class="gift-emoji">🎁</span>
+  <h1>친구 초대하기</h1>
+  <p class="sub">내 링크로 친구가 가입하면<br>나와 친구 모두 <strong style="color:var(--gold-l)">10,000 포인트</strong>를 받아요!</p>
+
+  <div class="reward-row">
+    <div class="reward-box">
+      <div class="who">나 (추천인)</div>
+      <div class="pts">10K</div>
+      <div class="pts-label">포인트</div>
+    </div>
+    <div class="reward-box" style="background:rgba(201,168,76,0.13); border-color:rgba(201,168,76,0.35);">
+      <div class="who">친구 (피추천인)</div>
+      <div class="pts" style="color:var(--gold-l)">10K</div>
+      <div class="pts-label" style="color:var(--gold-l)">포인트</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="link-wrap">
+    <input class="link-input" id="ref-link" readonly value="링크 생성 중...">
+    <button class="btn-copy" onclick="copyLink()">복사</button>
+  </div>
+
+  <div class="share-row">
+    <button class="share-btn kakao" onclick="shareKakao()">💬 카카오</button>
+    <button class="share-btn x" onclick="shareX()">✕ X</button>
+    <button class="share-btn copy2" onclick="copyLink()">🔗 링크 복사</button>
+  </div>
+
+  <a href="index.html" class="go-home">← 메인으로 돌아가기</a>
+
+  <div class="rules">
+    <div class="rules-title">📋 포인트 적립 안내</div>
+    <ul>
+      <li>친구 추천: 추천인 · 피추천인 각 10,000P 지급</li>
+      <li>AI 대전 승리 시 +100P / 패배 시 -100P</li>
+      <li>매 시간 접속 체크인: 평일 1,000P / 주말 2,000P</li>
+      <li>포인트는 사이트 내 게임 참가권 등으로만 사용 가능</li>
+      <li>자기 추천, 중복 추천은 인정되지 않습니다</li>
+    </ul>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="js/points.js"></script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const incomingRef = params.get('ref');
+
+  // 초대받은 경우 배너 표시
+  if (incomingRef) {
+    document.getElementById('invited-banner').classList.add('show');
+  }
+
+  // 내 추천 링크 생성
+  function getUID() {
+    let uid = localStorage.getItem('icoc_uid');
+    if (!uid) {
+      uid = 'U' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
+      localStorage.setItem('icoc_uid', uid);
+    }
+    return uid;
+  }
+
+  const myLink = `${location.origin}${location.pathname.replace('referral.html','')}referral.html?ref=${getUID()}`;
+  document.getElementById('ref-link').value = myLink;
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(myLink).then(() => showToast('✅ 링크 복사 완료!')).catch(() => {
+      document.getElementById('ref-link').select();
+      document.execCommand('copy');
+      showToast('✅ 링크 복사 완료!');
+    });
+  }
+
+  function shareKakao() {
+    // 카카오톡 공유 (Web Share API 폴백)
+    if (navigator.share) {
+      navigator.share({ title:'ICOC 브레인스포츠 2027', text:'나랑 같이 브레인스포츠 대결하자! 가입하면 10,000포인트 받아 🎁', url: myLink });
+    } else {
+      copyLink();
+    }
+  }
+
+  function shareX() {
+    const text = encodeURIComponent(`🧠 ICOC 브레인스포츠 올림픽 2027! 오목·체스·바둑·홀덤 등 23개 종목 국가대표 선발전 참여해봐! 가입하면 10,000P 🎁`);
+    window.open(`https://x.com/intent/tweet?text=${text}&url=${encodeURIComponent(myLink)}`,'_blank');
+  }
+
+  // 초대 링크로 들어온 경우 → 메인 이동 시 포인트 지급
+  if (incomingRef && !localStorage.getItem('icoc_ref_done')) {
+    document.querySelector('a.go-home').href = `index.html?ref=${incomingRef}`;
+    document.querySelector('a.go-home').textContent = '🎁 입장하고 10,000P 받기 →';
+    document.querySelector('a.go-home').style.cssText = `
+      display:inline-block; margin-top:12px;
+      background:linear-gradient(135deg,#C9A84C,#E8C97A);
+      color:#0B1F3A; font-weight:700; font-size:14px;
+      padding:12px 24px; border-radius:10px; text-decoration:none;
+      box-shadow:0 4px 16px rgba(201,168,76,0.3);
+    `;
+  }
+</script>
+</body>
+</html>
