@@ -6,6 +6,46 @@
    ============================================================ */
 
 (function (global) {
+/* ── 바둑 효과음 (WebAudio) ── */
+function sfx(type) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    if (type === 'place') {
+      o.type = 'sine';
+      o.frequency.setValueAtTime(600, ctx.currentTime);
+      o.frequency.exponentialRampToValueAtTime(300, ctx.currentTime + 0.08);
+      g.gain.setValueAtTime(0.18, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.1);
+      o.start(); o.stop(ctx.currentTime + 0.1);
+    } else if (type === 'capture') {
+      o.type = 'sawtooth';
+      o.frequency.setValueAtTime(200, ctx.currentTime);
+      g.gain.setValueAtTime(0.25, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      o.start(); o.stop(ctx.currentTime + 0.15);
+    } else if (type === 'invalid') {
+      o.frequency.setValueAtTime(180, ctx.currentTime);
+      g.gain.setValueAtTime(0.08, ctx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+      o.start(); o.stop(ctx.currentTime + 0.05);
+    } else if (type === 'win') {
+      [523,659,784,1047].forEach(function(freq, i) {
+        const o2 = ctx.createOscillator(); const g2 = ctx.createGain();
+        o2.connect(g2); g2.connect(ctx.destination);
+        o2.frequency.value = freq;
+        g2.gain.setValueAtTime(0.15, ctx.currentTime + i*0.12);
+        g2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i*0.12 + 0.2);
+        o2.start(ctx.currentTime + i*0.12); o2.stop(ctx.currentTime + i*0.12 + 0.2);
+      });
+    } else {
+      o.start(); o.stop(ctx.currentTime + 0.05);
+    }
+  } catch(e) {}
+}
+
   'use strict';
 
   const SIZE   = 19;
@@ -348,7 +388,7 @@
       if(!res.ok){sfx('invalid');return;}
       board=res.bd; capturedByBlack+=res.captured;
       if(res.newKo){koPoint=res.newKo.pt;koColor=res.newKo.col;}else{koPoint=null;}
-      passCount=0; renderBoard(); markLastMove(r,c); sfx('place');
+      passCount=0; renderBoard(); markLastMove(r,c); sfx(res.captured>0?'capture':'place');
       if(checkWinAfterMove(BLACK)){return;}
       turn=WHITE; setTurnUI(); setTimeout(doAiTurn,400);
     }
