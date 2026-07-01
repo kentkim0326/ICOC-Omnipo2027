@@ -645,43 +645,147 @@ function renderDistrict(wrap){
 
 
 function renderGeneration(wrap) {
+  // 세대별 데이터 (세대별 Top 플레이어 포함)
   const GENS = [
-    {label:'10대',emoji:'🧒',range:'10~19',players:4821, topSport:'오목',  pts:125400},
-    {label:'20대',emoji:'🧑',range:'20~29',players:18432,topSport:'체스',  pts:284700},
-    {label:'30대',emoji:'👨',range:'30~39',players:22150,topSport:'바둑',  pts:412300},
-    {label:'40대',emoji:'🧔',range:'40~49',players:15280,topSport:'당구',  pts:338900},
-    {label:'50대',emoji:'👴',range:'50~59',players:9840, topSport:'장기',  pts:201500},
-    {label:'60대',emoji:'👵',range:'60~69',players:4320, topSport:'바둑',  pts:98700},
-    {label:'70대+',emoji:'🧓',range:'70+', players:1240, topSport:'바둑',  pts:42300},
+    {
+      label:'10대', emoji:'🧒', range:'10~19', players:4821, topSport:'오목', pts:125400,
+      top:[
+        {rank:1,nick:'OmokKid_KR',  flag:'🇰🇷',city:'서울',  sport:'오목',   pts:8420, iso:'kr'},
+        {rank:2,nick:'ChessJunior', flag:'🇺🇸',city:'뉴욕',  sport:'체스',   pts:7850, iso:'us'},
+        {rank:3,nick:'GoYoung_JP',  flag:'🇯🇵',city:'도쿄',  sport:'바둑',   pts:7340, iso:'jp'},
+        {rank:4,nick:'ReversiGen',  flag:'🇨🇳',city:'상하이',sport:'리버시', pts:6910, iso:'cn'},
+        {rank:5,nick:'Teen_Poker',  flag:'🇩🇪',city:'베를린',sport:'홀덤',   pts:6480, iso:'de'},
+      ]
+    },
+    {
+      label:'20대', emoji:'🧑', range:'20~29', players:18432, topSport:'체스', pts:284700,
+      top:[
+        {rank:1,nick:'ChessMaster20', flag:'🇷🇺',city:'모스크바', sport:'체스',  pts:18200, iso:'ru'},
+        {rank:2,nick:'Go20Pro_KR',    flag:'🇰🇷',city:'서울',    sport:'바둑',  pts:16900, iso:'kr'},
+        {rank:3,nick:'Billiard_BR',   flag:'🇧🇷',city:'상파울루',sport:'당구',  pts:15400, iso:'br'},
+        {rank:4,nick:'Connect4_FR',   flag:'🇫🇷',city:'파리',    sport:'커넥트4',pts:14700,iso:'fr'},
+        {rank:5,nick:'MahjongPro_CN', flag:'🇨🇳',city:'베이징',  sport:'마작',  pts:13800, iso:'cn'},
+      ]
+    },
+    {
+      label:'30대', emoji:'👨', range:'30~39', players:22150, topSport:'바둑', pts:412300,
+      top:[
+        {rank:1,nick:'OmokGod_KR',   flag:'🇰🇷',city:'서울 강남', sport:'오목', pts:32400, iso:'kr'},
+        {rank:2,nick:'GoSage_CN',    flag:'🇨🇳',city:'베이징',    sport:'바둑', pts:28900, iso:'cn'},
+        {rank:3,nick:'Shogi30_JP',   flag:'🇯🇵',city:'오사카',    sport:'쇼기', pts:25600, iso:'jp'},
+        {rank:4,nick:'PokerKing_US', flag:'🇺🇸',city:'라스베이거스',sport:'홀덤',pts:23100,iso:'us'},
+        {rank:5,nick:'Chess30_DE',   flag:'🇩🇪',city:'뮌헨',      sport:'체스', pts:21400, iso:'de'},
+      ]
+    },
+    {
+      label:'40대', emoji:'🧔', range:'40~49', players:15280, topSport:'당구', pts:338900,
+      top:[
+        {rank:1,nick:'Billiards40',  flag:'🇰🇷',city:'부산',     sport:'당구',  pts:24800, iso:'kr'},
+        {rank:2,nick:'Go40Master',   flag:'🇨🇳',city:'광저우',   sport:'바둑',  pts:22300, iso:'cn'},
+        {rank:3,nick:'Janggi_Ace',   flag:'🇰🇷',city:'대구',     sport:'장기',  pts:19700, iso:'kr'},
+        {rank:4,nick:'Bridge40_GB',  flag:'🇬🇧',city:'런던',     sport:'브릿지',pts:17900, iso:'gb'},
+        {rank:5,nick:'Checkers_ZA',  flag:'🇿🇦',city:'요하네스버그',sport:'체커',pts:16200,iso:'za'},
+      ]
+    },
+    {
+      label:'50대', emoji:'👴', range:'50~59', players:9840, topSport:'장기', pts:201500,
+      top:[
+        {rank:1,nick:'Janggi50_KR',  flag:'🇰🇷',city:'인천',    sport:'장기',  pts:18400, iso:'kr'},
+        {rank:2,nick:'GoClassic50',  flag:'🇯🇵',city:'교토',    sport:'바둑',  pts:16700, iso:'jp'},
+        {rank:3,nick:'Chess50_RU',   flag:'🇷🇺',city:'상트페',  sport:'체스',  pts:14900, iso:'ru'},
+        {rank:4,nick:'Mahjong50_CN', flag:'🇨🇳',city:'청두',    sport:'마작',  pts:13200, iso:'cn'},
+        {rank:5,nick:'Golf50_KR',    flag:'🇰🇷',city:'제주',    sport:'스크린골프',pts:11800,iso:'kr'},
+      ]
+    },
+    {
+      label:'60대', emoji:'👵', range:'60~69', players:4320, topSport:'바둑', pts:98700,
+      top:[
+        {rank:1,nick:'GoGrandpa_KR', flag:'🇰🇷',city:'서울',   sport:'바둑', pts:12400, iso:'kr'},
+        {rank:2,nick:'Chess60_JP',   flag:'🇯🇵',city:'나고야',  sport:'체스', pts:10800, iso:'jp'},
+        {rank:3,nick:'Janggi60_KR',  flag:'🇰🇷',city:'광주',   sport:'장기', pts:9300,  iso:'kr'},
+        {rank:4,nick:'Bridge60_FR',  flag:'🇫🇷',city:'리용',   sport:'브릿지',pts:8100, iso:'fr'},
+        {rank:5,nick:'Omok60_KR',    flag:'🇰🇷',city:'수원',   sport:'오목', pts:7200,  iso:'kr'},
+      ]
+    },
+    {
+      label:'70대+', emoji:'🧓', range:'70+', players:1240, topSport:'바둑', pts:42300,
+      top:[
+        {rank:1,nick:'GoWisdom_JP',  flag:'🇯🇵',city:'도쿄',   sport:'바둑', pts:8900,  iso:'jp'},
+        {rank:2,nick:'Chess70_KR',   flag:'🇰🇷',city:'서울',   sport:'체스', pts:7400,  iso:'kr'},
+        {rank:3,nick:'Janggi70_KR',  flag:'🇰🇷',city:'전주',   sport:'장기', pts:6100,  iso:'kr'},
+        {rank:4,nick:'Checkers70',   flag:'🇺🇸',city:'플로리다',sport:'체커', pts:5200,  iso:'us'},
+        {rank:5,nick:'Bridge70_GB',  flag:'🇬🇧',city:'런던',   sport:'브릿지',pts:4300, iso:'gb'},
+      ]
+    },
   ];
-  wrap.innerHTML += '<div class="lb-sec">👥 세대별 플레이어 현황</div>';
+
+  wrap.innerHTML += '<div class="lb-sec">👥 세대별 랭킹 — 세대를 선택하면 Top 플레이어를 볼 수 있습니다</div>';
+
+  const container = document.createElement('div');
+  container.style.cssText = 'display:flex;flex-direction:column;gap:8px;';
   const maxPts = 412300;
-  const grid = document.createElement('div');
-  grid.style.cssText = 'display:grid;gap:10px;padding:4px 0;';
-  GENS.forEach((g,i) => {
+  const colors = ['#C9A84C','#93c5fd','#4ade80','#f87171','#a78bfa','#34d399','#fb923c'];
+
+  GENS.forEach((g, i) => {
     const pct = Math.round(g.pts / maxPts * 100);
-    const colors = ['#C9A84C','#93c5fd','#4ade80','#f87171','#a78bfa','#34d399','#fb923c'];
-    grid.innerHTML += `
-    <div style="background:rgba(14,40,71,0.6);border:1px solid rgba(201,168,76,${i<3?'0.4':'0.15'});border-radius:12px;padding:14px 16px;">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
-        <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;">${g.emoji}</div>
+    const genId = 'gen-' + i;
+
+    const genDiv = document.createElement('div');
+    genDiv.style.cssText = 'border:1px solid rgba(201,168,76,' + (i<3?'0.4':'0.15') + ');border-radius:12px;overflow:hidden;';
+
+    // 세대 헤더 (클릭 토글)
+    genDiv.innerHTML = `
+      <div class="gen-header" style="background:rgba(14,40,71,0.7);padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:12px;user-select:none;" onclick="toggleGen('${genId}')">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;">${g.emoji}</div>
         <div style="flex:1;">
-          <div style="font-size:15px;font-weight:700;color:${colors[i]};margin-bottom:2px;">${g.label} <span style="font-size:11px;opacity:.5;">(${g.range}세)</span></div>
-          <div style="font-size:11px;color:rgba(245,240,232,0.5);">👤 ${g.players.toLocaleString()}명 · 🥇 ${g.topSport}</div>
+          <div style="font-size:15px;font-weight:700;color:${colors[i]};margin-bottom:2px;">${g.label} <span style="font-size:11px;opacity:.45;">(${g.range}세)</span></div>
+          <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;margin-top:5px;width:140px;">
+            <div style="width:${pct}%;height:100%;background:${colors[i]};border-radius:2px;"></div>
+          </div>
         </div>
-        <div style="text-align:right;">
-          <div style="font-size:14px;font-weight:700;color:#C9A84C;">${(g.pts/1000).toFixed(0)}K P</div>
-          <div style="font-size:10px;color:rgba(245,240,232,.4);">총 포인트</div>
+        <div style="text-align:right;flex-shrink:0;">
+          <div style="font-size:13px;font-weight:700;color:#C9A84C;">${(g.pts/1000).toFixed(0)}K P</div>
+          <div style="font-size:10px;color:rgba(245,240,232,.4);">${g.players.toLocaleString()}명</div>
+        </div>
+        <div style="font-size:16px;color:rgba(245,240,232,.4);transition:transform .2s;" id="arrow-${genId}">▶</div>
+      </div>
+      <div id="${genId}" style="display:none;background:rgba(8,20,44,0.5);">
+        <div style="padding:10px 12px 4px;font-size:11px;color:rgba(201,168,76,.7);font-weight:700;">🏅 ${g.label} TOP 5</div>
+        ${g.top.map(p => `
+        <div style="display:flex;align-items:center;gap:10px;padding:9px 14px;border-bottom:1px solid rgba(201,168,76,0.07);">
+          <div style="width:22px;text-align:center;font-size:${p.rank<=3?'16':'12'}px;font-weight:700;color:${p.rank===1?'#FFD700':p.rank===2?'#C0C0C0':p.rank===3?'#CD7F32':'rgba(245,240,232,.4)'};">${p.rank===1?'🥇':p.rank===2?'🥈':p.rank===3?'🥉':p.rank}</div>
+          <div style="width:32px;height:20px;flex-shrink:0;">
+            <img src="https://flagcdn.com/w40/${p.iso}.png" style="width:32px;height:20px;object-fit:cover;border-radius:2px;" alt="">
+          </div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;color:#F5F0E8;">${p.nick}</div>
+            <div style="font-size:10px;color:rgba(245,240,232,.4);">${p.city} · ${p.sport}</div>
+          </div>
+          <div style="font-size:13px;font-weight:700;color:#C9A84C;">${p.pts.toLocaleString()}P</div>
+        </div>`).join('')}
+        <div style="padding:8px;text-align:center;">
+          <button onclick="toggleGen('${genId}')" style="background:none;border:1px solid rgba(201,168,76,.2);border-radius:8px;padding:5px 16px;color:rgba(245,240,232,.5);font-size:11px;cursor:pointer;font-family:inherit;">▲ 닫기</button>
         </div>
       </div>
-      <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-        <div style="width:${pct}%;height:100%;background:${colors[i]};border-radius:3px;transition:width .8s;"></div>
-      </div>
-    </div>`;
+    `;
+    container.appendChild(genDiv);
   });
-  wrap.appendChild(grid);
-  wrap.innerHTML += '<div style="font-size:11px;color:rgba(245,240,232,0.3);text-align:center;padding:12px 0;">* 글로벌 AI 대전 기반 샘플 데이터</div>';
+
+  wrap.appendChild(container);
+  wrap.innerHTML += '<div style="font-size:11px;color:rgba(245,240,232,0.3);text-align:center;padding:12px 0;">* 샘플 데이터 · AI 대전 결과가 쌓이면 실시간 업데이트</div>';
 }
+
+function toggleGen(id) {
+  const el = document.getElementById(id);
+  const arrow = document.getElementById('arrow-' + id);
+  if (!el) return;
+  const open = el.style.display === 'block';
+  el.style.display = open ? 'none' : 'block';
+  if (arrow) {
+    arrow.style.transform = open ? 'rotate(0deg)' : 'rotate(90deg)';
+  }
+}
+
 
 function renderPersonal(wrap){
   const top3=PERSONAL.slice(0,3), rest=PERSONAL.slice(3);
