@@ -107,6 +107,22 @@
     if (!awarded) {
       awarded = true;
       const r = global.ICOC_POINTS.addPoints(pts, 'omok_' + result);
+      // 승패 기록 (마이페이지용)
+      if (window.ICOC_AUTH && ICOC_AUTH.recordGameResult) {
+        ICOC_AUTH.recordGameResult('오목', result === 'win', pts);
+      }
+      // localStorage 직접 저장 (백업)
+      try {
+        const sk = 'icoc_stat_오목';
+        const s = JSON.parse(localStorage.getItem(sk) || '{"ai_wins":0,"ai_losses":0,"pts":0}');
+        if(result==='win') s.ai_wins++; else s.ai_losses++;
+        s.pts = (s.pts||0) + pts;
+        localStorage.setItem(sk, JSON.stringify(s));
+        // 히스토리
+        const hist = JSON.parse(localStorage.getItem('icoc_history')||'[]');
+        hist.unshift({sport:'오목',icon:'⬤',won:result==='win',pts,time:Date.now()});
+        localStorage.setItem('icoc_history', JSON.stringify(hist.slice(0,50)));
+      } catch(e) {}
       setPointsMsg(
         r.capped
           ? `+${r.added}P 적립 (오늘 획득 한도 도달, 보유 ${r.total.toLocaleString()}P)`
