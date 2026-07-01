@@ -284,9 +284,13 @@
     else { setStatus(`무승부 (포획 ${capturedByBlack} : ${capturedByWhite})`); sfx('draw'); }
     if(!awarded){
       awarded=true;
-      if(global.ICOC_POINTS){
+      const isLoggedIn = !!(global.ICOC_AUTH?.currentUser || global.currentUser);
+      if(isLoggedIn && global.ICOC_POINTS){
         if(result==='win') global.ICOC_POINTS.onGameWin();
         else if(result==='lose') global.ICOC_POINTS.onGameLoss();
+        setPointsMsg('포인트가 적립되었습니다.');
+      } else if(!isLoggedIn) {
+        setPointsMsg('⚡ 구글 로그인 시 포인트 적립 & 국가대표 등록 가능');
       }
     }
   }
