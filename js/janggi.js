@@ -286,7 +286,12 @@
   }
 
   function onCellClick(r, c) {
-    if(global.ICOC_SFX)global.ICOC_SFX.piece();
+    if(global.ICOC_SFX) global.ICOC_SFX.piece();
+    // 온라인 모드
+    if (window.ICOC_ONLINE?.active && !window._jOnline) {
+      if (!ICOC_ONLINE.isMyTurn || turn !== PLAYER || gameOver) return;
+      window._jOnline = true;
+    }
     if (turn !== PLAYER || gameOver) return;
     const p = board[r][c];
     if (selected) {
@@ -299,7 +304,8 @@
         setStatus(inCk ? '⚔️ 장군! AI의 궁을 위협하고 있습니다.' : '');
         turn = AI;
         setTurnUI();
-        doAiTurn();
+        if (window._jOnline) { ICOC_ONLINE.sendMove({r,c}); ICOC_ONLINE.showTurnIndicator(false); window._jOnline=false; return; }
+    doAiTurn();
         return;
       }
       if (p && p.color === PLAYER) {
@@ -377,5 +383,12 @@
     reset();
   }
 
-  global.JanggiGame = { start };
+  
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    window._jOnline = false;
+    onCellClick(payload.r, payload.c);
+    ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.JanggiGame = { start, applyOpponentMove };
 })(window);
