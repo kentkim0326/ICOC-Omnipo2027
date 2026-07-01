@@ -113,10 +113,16 @@
   }
 
   function onCellClick(r, c) {
+    if (window.ICOC_ONLINE?.active) {
+      if (!ICOC_ONLINE.isMyTurn || gameOver) return;
+      window._goingOnline = true;
+    }
     if (gameOver || turn !== PLAYER || board[r][c] !== EMPTY) return;
     board[r][c] = PLAYER;
     renderCell(r, c);
     if (checkWinFor(board, PLAYER)) { endGame('win'); return; }
+    
+    if (window._goingOnline) { ICOC_ONLINE.sendMove({r,c}); ICOC_ONLINE.showTurnIndicator(false); window._goingOnline=false; return; }
     turn = AI;
     setTurnUI();
     setStatus('AI가 생각 중...');
@@ -184,5 +190,12 @@
     reset();
   }
 
-  global.HexGame = { start };
+  
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    window._goingOnline = false;
+    onCellClick(payload.r, payload.c);
+    window.ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.HexGame = { start, applyOpponentMove };
 })(window);
