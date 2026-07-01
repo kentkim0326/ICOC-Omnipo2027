@@ -127,6 +127,7 @@
   function endGame(win) {
     if (awarded) return;
     gameOver = true; awarded = true;
+    if(global.ICOC_SFX) setTimeout(()=>global.ICOC_SFX[win?"win":"lose"](),200);
     const pts = win ? 30 : 15;
     setMsg(win
       ? '🎉 완성! 모든 타일을 제거했습니다!'
@@ -149,7 +150,10 @@
 
     if (selected === tile) { selected = null; renderFree(); return; }
 
+    if(global.ICOC_SFX) global.ICOC_SFX.card();
+
     if (selected && tilesMatch(selected, tile)) {
+      if(global.ICOC_SFX) setTimeout(()=>global.ICOC_SFX.flip(),80);
       // 매칭 성공 — 제거
       selected.removed = true; tile.removed = true;
       if (selected.el) selected.el.style.display = 'none';
