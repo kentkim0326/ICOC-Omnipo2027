@@ -517,6 +517,39 @@ footer a { color:var(--gold); text-decoration:none; }
   .lang-btn { padding:2px 6px; font-size:9px; }
 }
 </style>
+
+<style id="lang-toggle-css">
+.lang-toggle-wrap{position:relative;display:inline-flex;align-items:center;}
+.lang-trigger-main{
+  display:flex;align-items:center;gap:5px;padding:5px 10px 5px 7px;
+  border:1px solid rgba(201,168,76,0.3);border-radius:20px;
+  background:rgba(201,168,76,0.07);color:rgba(245,240,232,0.9);
+  font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
+  transition:all .2s;white-space:nowrap;
+}
+.lang-trigger-main:hover{background:rgba(201,168,76,0.16);border-color:var(--gold);}
+.lang-trigger-main span:first-child{font-size:17px;line-height:1;}
+.lang-dropdown-main{
+  position:absolute;top:calc(100% + 8px);right:0;
+  min-width:196px;background:rgba(9,24,50,0.99);
+  border:1px solid rgba(201,168,76,0.25);border-radius:12px;
+  padding:6px;display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  opacity:0;pointer-events:none;transform:translateY(-6px);
+  transition:all .18s;z-index:2000;max-height:340px;overflow-y:auto;
+}
+.lang-dropdown-main::-webkit-scrollbar{width:3px;}
+.lang-dropdown-main::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.25);border-radius:2px;}
+.lang-toggle-wrap.open .lang-dropdown-main{opacity:1;pointer-events:all;transform:translateY(0);}
+.ld-opt{
+  display:flex;align-items:center;gap:7px;padding:7px 10px;
+  border-radius:8px;cursor:pointer;transition:background .15s;
+}
+.ld-opt:hover{background:rgba(201,168,76,0.12);}
+.ld-opt.active{background:rgba(201,168,76,0.18);}
+.ld-opt .lof{font-size:18px;line-height:1;}
+.ld-opt .lol{font-size:11px;font-weight:500;color:rgba(245,240,232,0.8);white-space:nowrap;}
+.ld-opt.active .lol{color:#E8C97A;font-weight:700;}
+</style>
 </head>
 <body>
 
@@ -528,20 +561,28 @@ footer a { color:var(--gold); text-decoration:none; }
     <span id="points-badge-num">0</span>P
     <span id="points-badge-cap" class="cap-note"></span>
   </span>
-  <div class="lang-btns">
-    <button class="lang-btn active" onclick="setLang('ko')">한국어</button>
-    <button class="lang-btn" onclick="setLang('en')">English</button>
-    <button class="lang-btn" onclick="setLang('zh')">中文</button>
-    <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+  <div class="lang-toggle-wrap" id="lt-wrap-main">
+    <button class="lang-trigger-main" id="lt-trigger-main" type="button">
+      <span id="lt-flag-main">🇰🇷</span>
+      <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
+      <span style="font-size:9px;opacity:.5;">▼</span>
+    </button>
+    <div class="lang-dropdown-main" id="lt-dd-main"></div>
   </div>
-  <a href="#map-section" class="nav-venue-btn" onclick="document.getElementById('map-section').scrollIntoView({behavior:'smooth'});return false;">
-    📍 경기장
+  <a href="venue.html" class="nav-venue-btn">
+    🗺️ 경기장 지도
+  </a>
+  <a href="games.html" class="nav-venue-btn">
+    🎮 게임
   </a>
   <a href="referral.html" class="nav-venue-btn" style="color:#E8C97A;border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);">
     🎁 친구 초대 <span style="font-size:10px;background:rgba(201,168,76,0.25);padding:1px 5px;border-radius:6px;margin-left:2px;">+10,000P</span>
   </a>
   <a href="leaderboard.html" class="nav-venue-btn">
     🏆 리더보드
+  </a>
+  <a href="about.html" class="nav-venue-btn">
+    ℹ️ About
   </a>
   <!-- 배경음악 플레이어 -->
   <div class="nav-music-player" id="nav-music-player">
@@ -573,13 +614,8 @@ footer a { color:var(--gold); text-decoration:none; }
 <header class="hero">
   <!-- Hero Slideshow: 기존 배경 + 4장 추가 슬라이드 -->
   <div class="hero-slides" id="hero-slides">
-    <div class="hero-slide active"><img src="assets/hero-bg.jpg" alt="" loading="eager"></div>
-    <div class="hero-slide"><img src="assets/hero-slide-1.jpg" alt="" loading="lazy"></div>
-    <div class="hero-slide"><img src="assets/hero-slide-2.jpg" alt="" loading="lazy"></div>
-    <div class="hero-slide"><img src="assets/hero-slide-3.jpg" alt="" loading="lazy"></div>
-    <div class="hero-slide"><img src="assets/hero-slide-4.jpg" alt="" loading="lazy"></div>
-    <div class="hero-slide hero-slide-video">
-      <video class="hero-video" src="assets/videos/hero-vid-0.mp4" muted playsinline loop preload="none"></video>
+    <div class="hero-slide hero-slide-video active">
+      <video class="hero-video" src="assets/videos/hero-vid-0.mp4" muted playsinline loop preload="auto"></video>
     </div>
     <div class="hero-slide hero-slide-video">
       <video class="hero-video" src="assets/videos/hero-vid-1.mp4" muted playsinline loop preload="none"></video>
@@ -1227,7 +1263,7 @@ footer a { color:var(--gold); text-decoration:none; }
     <div class="timeline-item">
       <div class="timeline-date" data-i18n="t2d">2027 · 서울</div>
       <div class="timeline-title" data-i18n="t2t">제1회 Brain Sports Omnipo 2027</div>
-      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 15개국 · 해외 참가자 200명+ · 24개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
+      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 50개국 · 해외 참가자 1,000명+ · 66개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
     </div>
     <div class="timeline-item">
       <div class="timeline-date" data-i18n="t3d">2028</div>
@@ -1382,7 +1418,7 @@ const T = {
     org_l:"주관 기관", org_d:"문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)",
     rm_title:"대회 로드맵", rm_body:"서울에서 시작해 아시아로, 그리고 세계로. Brain Sports Omnipo를 향한 여정입니다.",
     t1d:"2026 · 준비기", t1t:"ICOC 공식 출범 및 스폰서 유치", t1b:"문체부 사단법인 완비 · 종목 네트워크 구성 · 종목별 국제 기구 협약 체결 · 스폰서십 확보",
-    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 24개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
+    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 50개국 · 해외 참가자 1,000명+ · 66개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
     t3d:"2028", t3t:"아시아 위성 예선 확대", t3b:"30개국 · 아시아 3개 도시 위성 예선 · 전문 리그 신설 · 미디어 파트너십 확대",
     t4d:"2029~", t4t:"아시아 브레인스포츠 리그 창설", t4b:"시즌제 리그 운영 · 서울 파이널 정례화 · 글로벌 Brain Sports Omnipo로 성장",
     ct_title:"참가·스폰서 문의", ct_body:"대회 참가, 스폰서십, 종목별 파트너십 문의를 환영합니다.",
@@ -1397,7 +1433,7 @@ const T = {
     cta_reg:"Contact Us", cta_play:"Play Now",
     s1:"Official Sports", s2:"Global Players", s3:"Target Countries", s4:"Seoul 2027",
     sp_title:"66 Official Sports",
-    sp_body:'Twenty-four disciplines. One stage. Cards marked "▶ PLAY" can be played instantly against AI — no login required.',
+    sp_body:'Sixty-six disciplines. One stage. Cards marked "▶ PLAY" can be played instantly against AI — no login required.',
     c1n:"Baduk / Go", c1d:"The ancient strategy game with millennia of history. Capture more enemy stones than AI on a 13x13 board. Play now!", c1p:"60M players worldwide",
     c2n:"Chess", c2d:"The world's largest mind sport with 600M players across 170 countries. Checkmate to win. Play now against AI!", c2p:"600M players worldwide",
     c3n:"Janggi (Korean Chess)", c3d:"Korea's traditional board game, connecting diaspora communities worldwide.", c3p:"10M players worldwide",
@@ -1747,6 +1783,62 @@ window.ICOC_BGM = (function() {
     // 시작
     showSlide(0);
   })();
+</script>
+
+<script>
+// ── 언어 드롭다운 (국기 포함) ──
+(function(){
+  const LANGS=[
+    {c:'ko',f:'🇰🇷',l:'한국어',s:'KO'},
+    {c:'en',f:'🇺🇸',l:'English',s:'EN'},
+    {c:'zh',f:'🇨🇳',l:'中文',s:'ZH'},
+    {c:'ja',f:'🇯🇵',l:'日本語',s:'JA'},
+    {c:'es',f:'🇪🇸',l:'Español',s:'ES'},
+    {c:'fr',f:'🇫🇷',l:'Français',s:'FR'},
+    {c:'de',f:'🇩🇪',l:'Deutsch',s:'DE'},
+    {c:'pt',f:'🇧🇷',l:'Português',s:'PT'},
+    {c:'ru',f:'🇷🇺',l:'Русский',s:'RU'},
+    {c:'ar',f:'🇸🇦',l:'العربية',s:'AR'},
+    {c:'hi',f:'🇮🇳',l:'हिन्दी',s:'HI'},
+    {c:'vi',f:'🇻🇳',l:'Tiếng Việt',s:'VI'},
+    {c:'th',f:'🇹🇭',l:'ภาษาไทย',s:'TH'},
+    {c:'id',f:'🇮🇩',l:'Indonesia',s:'ID'},
+    {c:'ms',f:'🇲🇾',l:'Melayu',s:'MS'},
+    {c:'tr',f:'🇹🇷',l:'Türkçe',s:'TR'},
+    {c:'nl',f:'🇳🇱',l:'Nederlands',s:'NL'},
+    {c:'pl',f:'🇵🇱',l:'Polski',s:'PL'},
+    {c:'sv',f:'🇸🇪',l:'Svenska',s:'SV'},
+    {c:'it',f:'🇮🇹',l:'Italiano',s:'IT'},
+  ];
+  const saved = localStorage.getItem('icoc_lang')||'ko';
+  function applyMain(code){
+    const l=LANGS.find(x=>x.c===code)||LANGS[0];
+    const flag=document.getElementById('lt-flag-main');
+    const cd=document.getElementById('lt-code-main');
+    if(flag) flag.textContent=l.f;
+    if(cd) cd.textContent=l.s;
+    document.querySelectorAll('.ld-opt').forEach(o=>o.classList.toggle('active',o.dataset.c===code));
+    localStorage.setItem('icoc_lang',code);
+    if(typeof setLang==='function') setLang(code);
+  }
+  document.addEventListener('DOMContentLoaded',function(){
+    const dd=document.getElementById('lt-dd-main');
+    const wrap=document.getElementById('lt-wrap-main');
+    const trigger=document.getElementById('lt-trigger-main');
+    if(!dd||!wrap||!trigger) return;
+    LANGS.forEach(l=>{
+      const d=document.createElement('div');
+      d.className='ld-opt'+(l.c===saved?' active':'');
+      d.dataset.c=l.c;
+      d.innerHTML='<span class="lof">'+l.f+'</span><span class="lol">'+l.l+'</span>';
+      d.addEventListener('click',function(){applyMain(l.c);wrap.classList.remove('open');});
+      dd.appendChild(d);
+    });
+    trigger.addEventListener('click',function(e){e.stopPropagation();wrap.classList.toggle('open');});
+    document.addEventListener('click',function(){wrap.classList.remove('open');});
+    applyMain(saved);
+  });
+})();
 </script>
 </body>
 </html>
