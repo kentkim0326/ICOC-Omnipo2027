@@ -4,7 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Brain Sports Omnipo 2027 — ICOC</title>
-<link rel="icon" type="image/png" href="assets/logo.png">
+<link rel="icon" href="assets/favicon.ico" type="image/x-icon">
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link rel="apple-touch-icon" href="assets/logo-hero.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Sans+SC:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
@@ -50,6 +52,7 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   color:var(--gold); letter-spacing:0.15em;
 }
 .lang-bar .logo-mini img { height:28px; width:auto; display:block; }
+.logo-nav-img { height:34px !important; width:34px !important; object-fit:contain; border-radius:3px; background:rgba(0,0,0,0.2); }
 .lang-btns { display:flex; gap:6px; }
 .lang-btn {
   padding:5px 14px;
@@ -508,7 +511,7 @@ footer a { color:var(--gold); text-decoration:none; }
 
 <!-- LANG BAR -->
 <nav class="lang-bar">
-  <span class="logo-mini"><img src="assets/logo.png" alt="ICOC"> ICOC · OMNIPO</span>
+  <span class="logo-mini"><img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img"> ICOC · OMNIPO</span>
   <span class="points-badge">
     <span class="coin">🪙</span>
     <span id="points-badge-num">0</span>P
@@ -519,6 +522,17 @@ footer a { color:var(--gold); text-decoration:none; }
     <button class="lang-btn" onclick="setLang('en')">English</button>
     <button class="lang-btn" onclick="setLang('zh')">中文</button>
     <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+  </div>
+  <div class="nav-auth-area">
+    <button class="nav-login-btn" id="nav-login-btn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      구글 로그인
+    </button>
+    <div class="nav-user-area" id="nav-user-area" style="display:none">
+      <span id="nav-flag">🌍</span>
+      <span id="nav-nickname" class="nav-nickname">-</span>
+      <span class="nav-arrow">▾</span>
+    </div>
   </div>
 </nav>
 
@@ -736,6 +750,319 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-name">하트 (Hearts)</div>
       <div class="sport-desc">윈도우 기본 게임으로 전 세계에 알려진 클래식 트릭테이킹. 하트(1점)와 Q♠(13점)을 피하고, 모두 가져가면 상대방이 26점 — 역발상 전략이 핵심!</div>
       <div class="sport-players">전 세계 수억 명</div>
+    </div>
+
+
+  <!-- 카테고리: 전략 보드 추가 -->
+  <div class="sport-cat-divider reveal">
+    <span class="sport-cat-label">🧩 전략 보드 & 추가 종목</span>
+  </div>
+
+    <div class="sport-card coming-soon" data-game="yutnori">
+      <span class="sport-icon">🎲</span>
+      <div class="sport-name">윷놀이 (Yut Nori)</div>
+      <div class="sport-desc">한국 전통 보드게임. 윷을 던져 말을 움직여 먼저 모든 말이 집에 돌아오면 승리하는 국민 게임.</div>
+      <div class="sport-players">한국 전통 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="xiangqi">
+      <span class="sport-icon">♟️</span>
+      <div class="sport-name">샹치 (Xiangqi/中國象棋)</div>
+      <div class="sport-desc">중국 전통 장기. 세계 최다 인구가 즐기는 전략 보드게임으로 체스·장기와 함께 3대 장기 중 하나.</div>
+      <div class="sport-players">전 세계 2억+ 명</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="chinese-checkers">
+      <span class="sport-icon">⭐</span>
+      <div class="sport-name">중국체커 (Chinese Checkers)</div>
+      <div class="sport-desc">별 모양 보드에서 2~6명이 자신의 말을 상대편 목적지로 먼저 이동시키는 클래식 멀티플레이 보드게임.</div>
+      <div class="sport-players">전 세계 수천만 명</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="nine-mens-morris">
+      <span class="sport-icon">⬜</span>
+      <div class="sport-name">나인맨스모리스 (Nine Men's Morris)</div>
+      <div class="sport-desc">3,500년 역사의 고대 전략 게임. 9개 말을 배치해 3개 일렬로 만들고 상대 말을 제거하는 추상 전략 게임.</div>
+      <div class="sport-players">MSO 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="mancala">
+      <span class="sport-icon">🟤</span>
+      <div class="sport-name">만칼라 (Mancala)</div>
+      <div class="sport-desc">아프리카·중동 기원의 씨앗 이동 게임. 구멍에 씨앗을 분배하며 상대방보다 많은 씨앗을 모으는 전략 게임.</div>
+      <div class="sport-players">아프리카 전통 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="abalone">
+      <span class="sport-icon">🔵</span>
+      <div class="sport-name">아발론 (Abalone)</div>
+      <div class="sport-desc">육각형 보드에서 흑백 구슬을 밀어 상대 구슬 6개를 보드 밖으로 떨어뜨리는 세련된 2인 추상 전략 게임.</div>
+      <div class="sport-players">MSO 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="blokus">
+      <span class="sport-icon">🟦</span>
+      <div class="sport-name">블로커스 (Blokus)</div>
+      <div class="sport-desc">폴리오미노 조각을 보드에 배치하되 자신의 조각은 꼭짓점끼리만 닿게 하며 상대를 압박하는 전략 게임.</div>
+      <div class="sport-players">전 세계 수백만 명</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="azul">
+      <span class="sport-icon">🔷</span>
+      <div class="sport-name">아줄 (Azul)</div>
+      <div class="sport-desc">포르투갈 타일 아줄레주에서 영감받은 추상 전략 게임. 타일 드래프팅으로 패턴을 완성하며 점수를 얻는 게임.</div>
+      <div class="sport-players">스피엘 데스 야레스 수상</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="ultimate-ttt">
+      <span class="sport-icon">⊞</span>
+      <div class="sport-name">얼티밋 틱택토 (Ultimate TTT)</div>
+      <div class="sport-desc">9개의 틱택토 판이 하나의 큰 틱택토를 이루는 메타 게임. 어디에 두느냐가 상대의 다음 판을 결정하는 전략 게임.</div>
+      <div class="sport-players">전략성 높은 마인드스포츠</div>
+    </div>
+
+  <!-- 카테고리: 현대 보드게임 -->
+  <div class="sport-cat-divider reveal">
+    <span class="sport-cat-label">🎯 현대 보드게임</span>
+  </div>
+
+    <div class="sport-card coming-soon" data-game="catan">
+      <span class="sport-icon">🏔️</span>
+      <div class="sport-name">카탄 (Catan)</div>
+      <div class="sport-desc">자원 교환·건설·협상이 어우러진 현대 보드게임의 고전. 정착민들이 섬을 개발하며 승점 10점을 먼저 달성하면 승리.</div>
+      <div class="sport-players">전 세계 4,000만+ 판매</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="ticket-to-ride">
+      <span class="sport-icon">🚂</span>
+      <div class="sport-name">티켓 투 라이드 (Ticket to Ride)</div>
+      <div class="sport-desc">기차 노선을 연결해 목적지 카드를 완성하는 전략 보드게임. 세계 각지 맵으로 즐기는 루트 빌딩의 정석.</div>
+      <div class="sport-players">스피엘 데스 야레스 수상</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="splendor">
+      <span class="sport-icon">💎</span>
+      <div class="sport-name">스플렌더 (Splendor)</div>
+      <div class="sport-desc">보석을 수집하고 개발 카드를 구매해 귀족의 방문을 받는 엔진 빌딩 게임. 15점을 먼저 달성하면 승리.</div>
+      <div class="sport-players">전 세계 인기 전략 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="codenames">
+      <span class="sport-icon">🔍</span>
+      <div class="sport-name">코드네임 (Codenames)</div>
+      <div class="sport-desc">스파이 마스터가 한 단어 힌트로 팀원들이 코드명 카드를 맞히는 팀워크 언어 게임. 먼저 요원을 모두 찾은 팀 승리.</div>
+      <div class="sport-players">스피엘 데스 야레스 수상</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="7-wonders">
+      <span class="sport-icon">🏛️</span>
+      <div class="sport-name">7 원더스 (7 Wonders)</div>
+      <div class="sport-desc">고대 문명의 불가사의를 건설하는 카드 드래프팅 게임. 3시대에 걸쳐 군사·상업·과학·문화를 발전시켜 최고 문명 건설.</div>
+      <div class="sport-players">세계 최다 판매 보드게임 중 하나</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="carcassonne">
+      <span class="sport-icon">🏰</span>
+      <div class="sport-name">카르카손 (Carcassonne)</div>
+      <div class="sport-desc">타일을 놓아 성·도로·수도원을 연결하고 미플을 배치해 점수를 획득하는 타일 배치 전략 게임의 고전.</div>
+      <div class="sport-players">스피엘 데스 야레스 수상</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="domino">
+      <span class="sport-icon">🁣</span>
+      <div class="sport-name">도미노 (Dominoes)</div>
+      <div class="sport-desc">같은 점의 도미노 타일을 연결하는 클래식 게임. 먼저 모든 패를 내려놓거나 가장 낮은 점수를 가진 플레이어가 승리.</div>
+      <div class="sport-players">전 세계 국민 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="sequence">
+      <span class="sport-icon">🟩</span>
+      <div class="sport-name">시퀀스 (Sequence)</div>
+      <div class="sport-desc">카드를 내고 보드에 칩을 놓아 5개 연속 줄을 먼저 완성하는 전략 보드게임. 카드 운과 전술적 판단이 결합된 게임.</div>
+      <div class="sport-players">전 세계 인기 패밀리 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="dixit">
+      <span class="sport-icon">🎨</span>
+      <div class="sport-name">딕싯 (Dixit)</div>
+      <div class="sport-desc">몽환적인 그림 카드를 단서로 설명하고 다른 플레이어의 카드에서 찾는 창의적 커뮤니케이션 게임.</div>
+      <div class="sport-players">스피엘 데스 야레스 수상</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="jenga">
+      <span class="sport-icon">🪵</span>
+      <div class="sport-name">젠가 (Jenga)</div>
+      <div class="sport-desc">나무 블록 탑에서 블록을 빼내 탑 위에 올려놓는 균형 게임. 탑을 무너뜨린 사람이 패배하는 긴장감 넘치는 게임.</div>
+      <div class="sport-players">전 세계 1억+ 판매</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="scrabble">
+      <span class="sport-icon">🔤</span>
+      <div class="sport-name">스크래블 (Scrabble)</div>
+      <div class="sport-desc">알파벳 타일로 보드에 단어를 만들어 점수를 획득하는 언어 전략 게임. 어휘력·전략·수학적 판단이 모두 필요.</div>
+      <div class="sport-players">MSO 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="alkkagi">
+      <span class="sport-icon">🔴</span>
+      <div class="sport-name">알까기 (Alkkagi)</div>
+      <div class="sport-desc">손가락으로 바둑돌을 튕겨 상대 돌을 판 밖으로 내보내는 한국 전통 놀이. 단순하지만 정밀한 조준과 전략이 필요.</div>
+      <div class="sport-players">한국 전통 놀이</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="pentomino">
+      <span class="sport-icon">🔲</span>
+      <div class="sport-name">펜토미노 (Pentomino)</div>
+      <div class="sport-desc">5개 정사각형으로 이루어진 12가지 펜토미노 조각을 빈틈없이 배치하는 공간 퍼즐. 수학적 사고력과 공간 인지 능력 게임.</div>
+      <div class="sport-players">교육적 퍼즐 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="azul2">
+      <span class="sport-icon">🎴</span>
+      <div class="sport-name">한국 화투 (Korean Hwatu)</div>
+      <div class="sport-desc">꽃과 달을 상징하는 48장 화투패로 즐기는 다양한 한국 카드게임의 총칭. 맞고·고스톱·도리짓고 등 다양한 변형.</div>
+      <div class="sport-players">한국 국민 게임</div>
+    </div>
+
+  <!-- 카테고리: 추가 카드 게임 -->
+  <div class="sport-cat-divider reveal">
+    <span class="sport-cat-label">🂱 카드 게임</span>
+  </div>
+
+    <div class="sport-card coming-soon" data-game="durak">
+      <span class="sport-icon">🃏</span>
+      <div class="sport-name">두라크 (Durak)</div>
+      <div class="sport-desc">러시아 국민 카드게임. 공격과 방어를 주고받으며 마지막까지 카드를 들고 있는 사람이 '바보(Durak)'가 되는 게임.</div>
+      <div class="sport-players">러시아·동유럽 국민 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="mighty">
+      <span class="sport-icon">👑</span>
+      <div class="sport-name">마이티 (Mighty)</div>
+      <div class="sport-desc">한국 대학가의 전통 카드게임. 주공이 프렌드를 정하고 야당과 맞서 약속한 트릭 수를 달성하는 트릭테이킹 게임.</div>
+      <div class="sport-players">한국 대학가 인기 게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="spades">
+      <span class="sport-icon">♠️</span>
+      <div class="sport-name">스페이드 (Spades)</div>
+      <div class="sport-desc">스페이드 수트를 항상 으뜸패로 고정하고 예측한 트릭 수를 달성하는 파트너십 트릭테이킹 카드게임.</div>
+      <div class="sport-players">미국 국민 카드게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="hula">
+      <span class="sport-icon">🌺</span>
+      <div class="sport-name">훌라 (Hula)</div>
+      <div class="sport-desc">등록과 붙이기를 통해 손패를 먼저 터는 한국의 대표 손 털기 카드게임. 빠른 두뇌 회전과 기회 포착이 핵심.</div>
+      <div class="sport-players">한국 인기 카드게임</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="page-one">
+      <span class="sport-icon">1️⃣</span>
+      <div class="sport-name">페이지원 (Page One)</div>
+      <div class="sport-desc">일본식 원카드. 앞사람이 낸 카드와 같은 수나 무늬를 내며 손을 비우는 게임. 특수 카드 효과로 역전극이 펼쳐짐.</div>
+      <div class="sport-players">일본·동아시아 인기 게임</div>
+    </div>
+
+  <!-- 카테고리: 액티브 브레인스포츠 -->
+  <div class="sport-cat-divider reveal">
+    <span class="sport-cat-label">🎳 액티브 브레인스포츠</span>
+  </div>
+
+    <div class="sport-card coming-soon" data-game="carom">
+      <span class="sport-icon">🔴</span>
+      <div class="sport-name">당구 3구 (3-Cushion Carom)</div>
+      <div class="sport-desc">수구로 3개의 쿠션을 통과해 2개 목적구를 맞히는 당구 최고 난이도 종목. 물리적 계산과 포지셔닝이 핵심.</div>
+      <div class="sport-players">세계당구연맹 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="four-ball">
+      <span class="sport-icon">🟡</span>
+      <div class="sport-name">당구 4구 (Four Ball)</div>
+      <div class="sport-desc">4개의 공을 사용하는 한국식 당구. 2개의 목적구를 1타로 연속 맞히며 점수를 쌓는 전통적인 국내 당구 종목.</div>
+      <div class="sport-players">한국 전통 당구 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="snooker">
+      <span class="sport-icon">🟢</span>
+      <div class="sport-name">스누커 (Snooker)</div>
+      <div class="sport-desc">15개 빨간공과 6개 컬러공을 순서대로 포켓에 넣는 영국 전통 당구. 정교한 큐 컨트롤과 전략적 스네잌이 핵심.</div>
+      <div class="sport-players">전 세계 1억+ 팬</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="nine-ball">
+      <span class="sport-icon">9️⃣</span>
+      <div class="sport-name">9볼 (Nine-Ball Pool)</div>
+      <div class="sport-desc">1~9번 공을 숫자 순서대로 맞혀 9번 공을 먼저 포켓에 넣으면 승리. 빠른 게임 진행과 콤비 샷이 매력.</div>
+      <div class="sport-players">WPA 세계 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="park-golf">
+      <span class="sport-icon">🌿</span>
+      <div class="sport-name">파크골프 (Park Golf)</div>
+      <div class="sport-desc">공원에서 즐기는 미니 골프 스포츠. 전용 클럽과 공으로 홀을 공략하며 적은 타수로 공을 홀에 넣는 대중 스포츠.</div>
+      <div class="sport-players">일본·한국 인기 스포츠</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="darts">
+      <span class="sport-icon">🎯</span>
+      <div class="sport-name">다트 (Darts)</div>
+      <div class="sport-desc">다트보드를 향해 다트를 던져 정확한 점수 목표를 달성하는 정밀 스포츠. 501·301·크리켓 등 다양한 방식으로 진행.</div>
+      <div class="sport-players">전 세계 7,000만+ 플레이어</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="air-hockey">
+      <span class="sport-icon">🥅</span>
+      <div class="sport-name">에어하키 (Air Hockey)</div>
+      <div class="sport-desc">공기 부상 테이블 위에서 퍽을 밀어 상대 골대에 넣는 반응속도와 전략의 게임. 세계 에어하키 협회(AHPA) 공인 종목.</div>
+      <div class="sport-players">AHPA 세계 공인 종목</div>
+    </div>
+
+  <!-- 카테고리: 퍼즐 & 수리 -->
+  <div class="sport-cat-divider reveal">
+    <span class="sport-cat-label">🧮 퍼즐 & 수리 게임</span>
+  </div>
+
+    <div class="sport-card coming-soon" data-game="sudoku">
+      <span class="sport-icon">🔢</span>
+      <div class="sport-name">스도쿠 (Sudoku)</div>
+      <div class="sport-desc">9×9 격자에 1~9 숫자를 논리적으로 배치하는 수학 퍼즐. 세계 스도쿠 챔피언십이 개최되는 글로벌 두뇌 스포츠.</div>
+      <div class="sport-players">전 세계 수억 명</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="rubiks-cube">
+      <span class="sport-icon">🧊</span>
+      <div class="sport-name">루빅스 큐브 (Speed Cubing)</div>
+      <div class="sport-desc">6면 컬러 큐브를 가장 빠르게 맞추는 스피드큐빙. WCA 세계대회에서 평균 5~10초를 다투는 두뇌·손 협응 스포츠.</div>
+      <div class="sport-players">WCA 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="nonogram">
+      <span class="sport-icon">🖼️</span>
+      <div class="sport-name">노노그램 (Nonogram)</div>
+      <div class="sport-desc">행·열 숫자 힌트를 이용해 격자를 채워 숨겨진 그림을 완성하는 논리 퍼즐. 네모로직·피크로스라고도 불림.</div>
+      <div class="sport-players">전 세계 인기 논리 퍼즐</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="crossword">
+      <span class="sport-icon">📝</span>
+      <div class="sport-name">크로스워드 (Crossword)</div>
+      <div class="sport-desc">가로·세로 힌트를 이용해 격자를 단어로 채우는 어휘력 게임. 언어·지식·추론이 결합된 세계 최대 규모 퍼즐 대회 종목.</div>
+      <div class="sport-players">MSO 공식 종목</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="kakuro">
+      <span class="sport-icon">➕</span>
+      <div class="sport-name">카쿠로 (Kakuro)</div>
+      <div class="sport-desc">크로스워드와 스도쿠를 결합한 수학 퍼즐. 각 행·열의 합이 주어진 값이 되도록 1~9 중복 없이 칸을 채우는 두뇌 게임.</div>
+      <div class="sport-players">일본 기원 수학 퍼즐</div>
+    </div>
+
+    <div class="sport-card coming-soon" data-game="speed-math">
+      <span class="sport-icon">⚡</span>
+      <div class="sport-name">스피드 수학 (Speed Math)</div>
+      <div class="sport-desc">빠른 암산과 수학적 문제 해결 능력을 겨루는 두뇌 스포츠. 계산 대회·암산 올림피아드로 세계적으로 경쟁이 활발.</div>
+      <div class="sport-players">세계암산올림피아드 종목</div>
     </div>
 
   </div>
@@ -1213,6 +1540,12 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 <script src="js/bridge.js"></script>
 <script src="js/rummy.js"></script>
 <script src="js/hearts.js"></script>
+
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- ICOC 설정 & 인증 -->
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
 
 <script>
   // ── Hero Slideshow ──
