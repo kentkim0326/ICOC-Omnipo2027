@@ -54,7 +54,7 @@
 
   // ── 방 참가 (Guest) ──
   async function joinRoom(code, callbacks) {
-    if (!init()) return alert('Supabase 연결 필요');
+    if (!init()) { alert('로그인 후 멀티플레이가 가능합니다.'); return; }
     onMoveCallback  = callbacks.onMove;
     onStartCallback = callbacks.onStart;
     onEndCallback   = callbacks.onEnd;
@@ -62,7 +62,12 @@
     // DB에서 방 찾기
     const { data: room, error } = await sb.from('icoc_game_rooms')
       .select('*').eq('id', code.toUpperCase()).eq('status','waiting').maybeSingle();
-    if (!room) return '방을 찾을 수 없습니다. 코드를 다시 확인하세요.';
+    if (error || !room) {
+      const msg = error?.message?.includes('does not exist')
+        ? '멀티플레이 테이블이 없습니다. Supabase SQL을 먼저 실행해주세요.'
+        : '방을 찾을 수 없습니다. 코드를 다시 확인하세요.';
+      alert(msg); return;
+    }
 
     roomId  = room.id;
     gameKey = room.game;
