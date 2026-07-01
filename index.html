@@ -594,6 +594,121 @@ footer a { color:var(--gold); text-decoration:none; }
 .nav-dd-btn:hover{background:rgba(201,168,76,0.12);}
 .nav-dd-logout{color:#f87171;}
 .nav-dd-logout:hover{background:rgba(248,113,113,0.12);}
+
+/* ── Google 로그인 버튼 (히어로) ── */
+.hero-google-slim {
+  display:inline-flex; align-items:center; gap:8px;
+  padding:10px 22px; border-radius:24px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.25);
+  color:#fff; font-size:14px; font-weight:600;
+  cursor:pointer; transition:all .2s;
+  backdrop-filter:blur(8px); font-family:inherit;
+  white-space:nowrap;
+}
+.hero-google-slim:hover {
+  background:rgba(255,255,255,0.22);
+  border-color:rgba(255,255,255,0.5);
+  transform:translateY(-1px);
+}
+@media(max-width:640px) {
+  .hero-google-slim { padding:8px 18px; font-size:13px; }
+}
+
+/* ── 네비 음악 플레이어 ── */
+.nav-music-player { display:flex; align-items:center; gap:4px; }
+.music-toggle {
+  background:transparent; border:none; cursor:pointer;
+  font-size:16px; padding:2px 4px; color:var(--cream);
+  opacity:0.7; transition:opacity .2s;
+}
+.music-toggle:hover { opacity:1; }
+/* 슬라이더: 모바일에서 숨김 */
+.music-volume {
+  width:52px; height:3px; cursor:pointer; accent-color:var(--gold);
+  border-radius:2px;
+}
+@media(max-width:767px) { .music-volume { display:none; } }
+
+/* ── 네비 로그인 버튼 ── */
+.nav-login-btn {
+  display:flex; align-items:center; gap:5px;
+  padding:5px 10px; border-radius:18px;
+  border:1px solid rgba(201,168,76,0.3);
+  background:rgba(201,168,76,0.08);
+  color:var(--cream); font-size:11px; font-weight:600;
+  cursor:pointer; font-family:inherit; white-space:nowrap; transition:all .2s;
+}
+.nav-login-btn:hover { background:rgba(201,168,76,0.18); border-color:var(--gold); }
+.nav-login-btn svg { flex-shrink:0; }
+/* 모바일: 텍스트 숨기고 아이콘만 */
+@media(max-width:640px) {
+  .nav-login-btn .login-txt { display:none; }
+  .nav-login-btn { padding:5px 8px; }
+}
+
+/* ── 네비 포인트 뱃지 ── */
+.points-badge {
+  display:inline-flex; align-items:center; gap:3px;
+  padding:4px 10px; border-radius:16px;
+  background:rgba(201,168,76,0.1);
+  border:1px solid rgba(201,168,76,0.2);
+  font-size:12px; font-weight:700; color:var(--gold-l);
+  white-space:nowrap;
+}
+@media(max-width:640px) { .points-badge { font-size:11px; padding:3px 8px; } }
+
+
+/* ── 히어로 유저 카드 (로그인 후) ── */
+.hero-user-slim {
+  display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,0.08); backdrop-filter:blur(12px);
+  border:1px solid rgba(201,168,76,0.25); border-radius:28px;
+  padding:8px 16px 8px 8px; margin-bottom:16px;
+}
+.hero-avatar-sm {
+  width:36px; height:36px; border-radius:50%; border:2px solid var(--gold);
+  object-fit:cover; flex-shrink:0;
+}
+.hero-nick-sm { font-weight:700; font-size:14px; color:var(--cream); }
+.hero-meta-sm { font-size:11px; color:rgba(245,240,232,0.55); }
+.hero-mypage-slim {
+  margin-left:auto; padding:5px 12px; border-radius:14px;
+  border:1px solid rgba(201,168,76,0.3);
+  background:rgba(201,168,76,0.1); color:var(--gold-l);
+  font-size:11px; font-weight:600; cursor:pointer;
+  font-family:inherit; white-space:nowrap; transition:all .2s;
+}
+.hero-mypage-slim:hover { background:rgba(201,168,76,0.22); }
+
+/* ── 히어로 SNS 버튼 ── */
+.hero-sns-row {
+  display:flex; gap:10px; justify-content:center;
+  flex-wrap:wrap; margin-top:14px;
+}
+.hero-social-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:9px 20px; border-radius:22px;
+  font-size:13px; font-weight:700; cursor:pointer;
+  text-decoration:none; transition:all .2s;
+}
+.hero-yt  { background:#FF0000; color:#fff; }
+.hero-fb  { background:#1877F2; color:#fff; }
+.hero-social-btn:hover { transform:translateY(-2px); opacity:.9; }
+@media(max-width:480px) {
+  .hero-social-btn { padding:8px 16px; font-size:12px; }
+}
+
+
+/* ── 히어로 인증 영역 ── */
+#hero-auth-area {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  margin-bottom:16px;
+}
+#hero-user-area {
+  width:100%; max-width:320px; margin:0 auto 12px;
+}
+
 </style>
 </head>
 <body>
@@ -631,8 +746,8 @@ footer a { color:var(--gold); text-decoration:none; }
       <!-- 로그인 -->
       <div class="nav-auth-area">
         <button class="nav-login-btn" id="nav-login-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          <span class="login-txt">구글 로그인</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span class="login-txt">로그인</span>
         </button>
         <div class="nav-user-area" id="nav-user-area" style="display:none;position:relative;">
           <span id="nav-flag">🌍</span>
@@ -734,9 +849,10 @@ footer a { color:var(--gold); text-decoration:none; }
   <div class="hero-bottom-area">
     <!-- 로그인 전 -->
     <div id="hero-auth-area">
+      <p style="font-size:11px;color:rgba(245,240,232,0.45);margin-bottom:8px;letter-spacing:.06em;">로그인 없이도 AI 대전 가능 · 랭킹·포인트는 구글 로그인</p>
       <button class="hero-google-slim" id="hero-login-btn">
-        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-        Continue with Google
+        <svg width="15" height="15" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        🇰🇷 국가대표 등록 / 로그인
       </button>
     </div>
     <!-- 로그인 후 유저카드 -->
