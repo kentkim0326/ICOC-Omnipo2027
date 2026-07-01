@@ -198,7 +198,20 @@ body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',san
   <a href="index.html" class="btn-back">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>홈
   </a>
-  <div class="bar-title">🏆 글로벌 리더보드</div>
+  <div class="bar-title" id="lb-title">🏆 글로벌 리더보드</div>
+  <select id="lb-lang" onchange="changeLbLang(this.value)"
+    style="padding:4px 8px;border-radius:16px;border:1px solid rgba(201,168,76,0.3);background:rgba(11,31,58,0.9);color:#E8C97A;font-size:11px;cursor:pointer;font-family:inherit;outline:none;">
+    <option value="ko">🇰🇷 한국어</option>
+    <option value="en">🇺🇸 English</option>
+    <option value="zh">🇨🇳 中文</option>
+    <option value="ja">🇯🇵 日本語</option>
+    <option value="es">🇪🇸 Español</option>
+    <option value="fr">🇫🇷 Français</option>
+    <option value="de">🇩🇪 Deutsch</option>
+    <option value="pt">🇧🇷 Português</option>
+    <option value="ar">🇸🇦 العربية</option>
+    <option value="hi">🇮🇳 हिन्दी</option>
+  </select>
   <div class="live-badge"><div class="live-dot"></div>실시간</div>
 </div>
 
@@ -669,5 +682,41 @@ function renderPersonal(wrap){
 buildSportPills('all');
 render();
 </script>
+
+<script>
+const LB_T = {
+  ko: { title:'🏆 글로벌 리더보드', tab_country:'🌐 국가별', tab_city:'🏙️ 도시별', tab_district:'📍 동네별', tab_personal:'👤 개인', top3:'🥇 TOP 3 국가', allrank:'전체 국가 랭킹', search:'종목 검색...' },
+  en: { title:'🏆 Global Leaderboard', tab_country:'🌐 Country', tab_city:'🏙️ City', tab_district:'📍 District', tab_personal:'👤 Personal', top3:'🥇 TOP 3 Countries', allrank:'All Country Rankings', search:'Search sport...' },
+  zh: { title:'🏆 全球排行榜', tab_country:'🌐 国家', tab_city:'🏙️ 城市', tab_district:'📍 地区', tab_personal:'👤 个人', top3:'🥇 TOP 3 国家', allrank:'国家排名', search:'搜索项目...' },
+  ja: { title:'🏆 グローバルランキング', tab_country:'🌐 国別', tab_city:'🏙️ 都市別', tab_district:'📍 地区別', tab_personal:'👤 個人', top3:'🥇 TOP 3 国', allrank:'全国ランキング', search:'種目検索...' },
+  es: { title:'🏆 Ranking Global', tab_country:'🌐 País', tab_city:'🏙️ Ciudad', tab_district:'📍 Distrito', tab_personal:'👤 Personal', top3:'🥇 TOP 3 Países', allrank:'Ranking de Países', search:'Buscar deporte...' },
+  fr: { title:'🏆 Classement Mondial', tab_country:'🌐 Pays', tab_city:'🏙️ Ville', tab_district:'📍 Quartier', tab_personal:'👤 Individuel', top3:'🥇 TOP 3 Pays', allrank:'Classement des Pays', search:'Chercher sport...' },
+  de: { title:'🏆 Globale Rangliste', tab_country:'🌐 Land', tab_city:'🏙️ Stadt', tab_district:'📍 Bezirk', tab_personal:'👤 Persönlich', top3:'🥇 TOP 3 Länder', allrank:'Länder-Ranking', search:'Sport suchen...' },
+  pt: { title:'🏆 Placar Global', tab_country:'🌐 País', tab_city:'🏙️ Cidade', tab_district:'📍 Bairro', tab_personal:'👤 Individual', top3:'🥇 TOP 3 Países', allrank:'Ranking de Países', search:'Buscar esporte...' },
+  ar: { title:'🏆 لوحة المتصدرين', tab_country:'🌐 الدولة', tab_city:'🏙️ المدينة', tab_district:'📍 الحي', tab_personal:'👤 فردي', top3:'🥇 أفضل 3 دول', allrank:'ترتيب الدول', search:'بحث رياضة...' },
+  hi: { title:'🏆 वैश्विक लीडरबोर्ड', tab_country:'🌐 देश', tab_city:'🏙️ शहर', tab_district:'📍 जिला', tab_personal:'👤 व्यक्तिगत', top3:'🥇 शीर्ष 3 देश', allrank:'सभी देश रैंकिंग', search:'खेल खोजें...' },
+};
+
+function changeLbLang(lang) {
+  const t = LB_T[lang] || LB_T.ko;
+  const el = (id) => document.getElementById(id);
+  if(el('lb-title')) el('lb-title').textContent = t.title;
+  document.querySelectorAll('.tab-btn').forEach((btn,i) => {
+    const keys = ['tab_country','tab_city','tab_district','tab_personal'];
+    if(keys[i]) btn.textContent = t[keys[i]];
+  });
+  if(el('lb-search-input')) el('lb-search-input').placeholder = t.search;
+  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  localStorage.setItem('lb_lang', lang);
+}
+
+// Auto-apply saved language on load
+document.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('lb_lang') || localStorage.getItem('icoc_lang') || 'ko';
+  const sel = document.getElementById('lb-lang');
+  if(sel) { sel.value = saved; changeLbLang(saved); }
+});
+</script>
+
 </body>
 </html>
