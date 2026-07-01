@@ -360,6 +360,11 @@
       const move = legalTargets.find(m => m.to[0] === r && m.to[1] === c);
       if (move) {
         doMove(move);
+        if (window.ICOC_ONLINE?.active) {
+          ICOC_ONLINE.sendMove({r, c});
+          ICOC_ONLINE.showTurnIndicator(false);
+          return;
+        }
         turn = AI;
         setTurnUI();
         if (!checkGameEndAfter(AI)) doAiTurn();
@@ -437,5 +442,12 @@
     reset();
   }
 
-  global.ChessGame = { start };
+  
+  // 온라인: 상대 수 적용
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    onCellClick(payload.r, payload.c);
+    ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.ChessGame = { start, applyOpponentMove };
 })(window);
