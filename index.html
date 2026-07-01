@@ -619,8 +619,8 @@ footer a { color:var(--gold); text-decoration:none; }
 }
 .goban-inner {
   position: absolute;
-  inset: 0;
-  padding: 4%;
+  /* 5% inset: edge 교차점 돌이 overflow:hidden에 안 잘리게 */
+  inset: 5%;
 }
 .grid-line {
   position: absolute;
