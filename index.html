@@ -537,6 +537,9 @@ footer a { color:var(--gold); text-decoration:none; }
   <a href="#map-section" class="nav-venue-btn" onclick="document.getElementById('map-section').scrollIntoView({behavior:'smooth'});return false;">
     📍 경기장
   </a>
+  <a href="referral.html" class="nav-venue-btn" style="color:#E8C97A;border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);">
+    🎁 친구 초대 <span style="font-size:10px;background:rgba(201,168,76,0.25);padding:1px 5px;border-radius:6px;margin-left:2px;">+10,000P</span>
+  </a>
   <!-- 배경음악 플레이어 -->
   <div class="nav-music-player" id="nav-music-player">
     <button class="music-toggle" id="music-toggle" title="배경음악 ON/OFF" onclick="ICOC_BGM.toggle()">
@@ -1582,6 +1585,7 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 </script>
 
 <script src="js/points.js"></script>
+<script src="js/lang.js"></script>
 <script src="js/games.js"></script>
 <script src="js/board-ui.js"></script>
 <script src="js/omok.js"></script>
