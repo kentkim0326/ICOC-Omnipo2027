@@ -545,6 +545,18 @@ footer a { color:var(--gold); text-decoration:none; }
     <div class="hero-slide"><img src="assets/hero-slide-2.jpg" alt="" loading="lazy"></div>
     <div class="hero-slide"><img src="assets/hero-slide-3.jpg" alt="" loading="lazy"></div>
     <div class="hero-slide"><img src="assets/hero-slide-4.jpg" alt="" loading="lazy"></div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-0.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-1.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-2.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-3.mp4" muted playsinline loop preload="none"></video>
+    </div>
   </div>
   <div class="hero-bg-overlay"></div>
   <div class="omnipo-badge">
@@ -1584,18 +1596,47 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 <script src="js/auth.js"></script>
 
 <script>
-  // ── Hero Slideshow ──
+  // ── Hero Slideshow (이미지 + 영상 혼합) ──
   (function() {
     var slides = document.querySelectorAll('.hero-slide');
     if (!slides.length) return;
     var cur = 0;
-    var INTERVAL = 5000;
-    function next() {
-      slides[cur].classList.remove('active');
-      cur = (cur + 1) % slides.length;
-      slides[cur].classList.add('active');
+    var timer = null;
+
+    function getVideo(slide) {
+      return slide.querySelector('video');
     }
-    setInterval(next, INTERVAL);
+
+    function showSlide(idx) {
+      // 현재 슬라이드 비활성화
+      slides[cur].classList.remove('active');
+      var oldVid = getVideo(slides[cur]);
+      if (oldVid) { oldVid.pause(); oldVid.currentTime = 0; }
+
+      cur = idx % slides.length;
+      var slide = slides[cur];
+      slide.classList.add('active');
+
+      var vid = getVideo(slide);
+      if (vid) {
+        // 영상 슬라이드: 영상 길이만큼 표시 후 다음으로
+        vid.load();
+        vid.play().catch(function(){});
+        if (timer) clearTimeout(timer);
+        var duration = 5500; // 기본 5.5초 (영상 약 5.2초)
+        vid.addEventListener('loadedmetadata', function() {
+          duration = (vid.duration * 1000) + 800;
+        }, { once: true });
+        timer = setTimeout(function() { showSlide(cur + 1); }, duration);
+      } else {
+        // 이미지 슬라이드: 5초 후 다음
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(function() { showSlide(cur + 1); }, 5000);
+      }
+    }
+
+    // 시작
+    showSlide(0);
   })();
 </script>
 </body>
