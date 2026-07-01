@@ -409,6 +409,7 @@ const ABOUT_T = {
     footer:'© 2026 ICOC International Brain Sports Association · Deother · Ministry of Culture, Sports and Tourism (Korea)',
   },
   zh: {
+    history_body2:'韩国社团法人ICOC（国际脑力运动协会）是为将韩国选手连接到国际舞台而设立的国内加盟法人，获得文化体育观光部认可。负责发掘国内最强脑力运动选手并将其注册到全球排名中。',
     hero_label:'国际脑力运动全能波协会',
     hero_h1:'多项目<br>脑力运动<br>全能波',
     hero_sub:'围棋·国际象棋·将棋·台球·桥牌·模拟高尔夫<br>国际多项目脑力运动全能波',
@@ -427,6 +428,7 @@ const ABOUT_T = {
     footer:'© 2026 ICOC国际脑力运动协会 · Deother · 韩国文化体育观光部',
   },
   ja: {
+    history_body2:'韓国の社団法人ICOC（国際ブレインスポーツ協会）は、韓国選手を国際舞台に繋ぐために設立された国内加盟法人であり、文化体育観光省の認可を受けています。国内最強のブレインスポーツ選手を発掘し、グローバルランキングに登録する役割を担います。',
     hero_label:'国際ブレインスポーツオムニポ委員会',
     hero_h1:'マルチ種目<br>ブレインスポーツ<br>オムニポ',
     hero_sub:'囲碁·チェス·チャンギ·ビリヤード·ブリッジ·スクリーンゴルフ<br>国際マルチ種目ブレインスポーツオムニポ',
@@ -505,70 +507,74 @@ function changeAboutLang(lang) {
   const qs  = (sel) => document.querySelector(sel);
   const qsa = (sel) => Array.from(document.querySelectorAll(sel));
 
-  // 1. 히어로 (about-hero 안)
+  // 히어로
   const heroWrap = qs('.about-hero');
   if (heroWrap) {
     const lbl = heroWrap.querySelector('.sec-label');
-    if (lbl) lbl.textContent = t.hero_label;
-    const h1 = heroWrap.querySelector('h1');
-    if (h1) h1.innerHTML = t.hero_h1;
-    const ps = heroWrap.querySelectorAll('p');
-    if (ps[1]) ps[1].innerHTML = t.hero_sub; // 두 번째 p (첫 번째가 sec-label p)
-    else if (ps[0]) ps[0].innerHTML = t.hero_sub;
+    const h1  = heroWrap.querySelector('h1');
+    const ps  = heroWrap.querySelectorAll('p');
+    if(lbl && t.hero_label) lbl.textContent = t.hero_label;
+    if(h1  && t.hero_h1)    h1.innerHTML   = t.hero_h1;
+    if(ps[1] && t.hero_sub) ps[1].innerHTML = t.hero_sub;
+    else if(ps[0] && t.hero_sub) ps[0].innerHTML = t.hero_sub;
   }
 
-  // 2. 비전 섹션 — .sec h2 / .sec-body
-  const secs = qsa('.sec');
-  if (secs[0]) {
-    const lbl = secs[0].querySelector('.sec-label');
-    if (lbl) lbl.textContent = t.vision_label;
-    const h2  = secs[0].querySelector('h2, .sec-title');
-    if (h2)  h2.textContent = t.vision_h;
-    const bod = secs[0].querySelector('.sec-body, p.sec-body');
-    if (bod) bod.textContent = t.vision_body;
-  }
+  // 각 sec를 레이블로 식별
+  qsa('.sec').forEach(function(sec) {
+    const lbl = sec.querySelector('.sec-label');
+    if (!lbl) return;
+    const labelText = lbl.textContent.trim();
 
-  // 3. 공식 종목 섹션
-  if (secs[1]) {
-    const lbl = secs[1].querySelector('.sec-label');
-    if (lbl) lbl.textContent = t.sports_label;
-    const h2 = secs[1].querySelector('h2, .sec-title');
-    if (h2) h2.textContent = t.sports_h;
-  }
+    // 역사 섹션
+    if (labelText === '창립 역사' || labelText === 'Founding History' || labelText === '创始历史' || lbl.id === 'history-label') {
+      if(t.history_label) lbl.textContent = t.history_label;
+      const h = sec.querySelector('h2, .sec-title');
+      if(h && t.history_h) h.textContent = t.history_h;
+      const b  = sec.querySelector('#history-body');
+      const b2 = sec.querySelector('#history-body2');
+      if(b  && t.history_body)  b.innerHTML  = t.history_body;
+      if(b2 && t.history_body2) b2.innerHTML = t.history_body2;
+    }
+    // 비전 섹션
+    else if (labelText.includes('비전') || labelText.includes('Vision') || labelText.includes('愿景') || labelText.includes('ビジョン')) {
+      if(t.vision_label) lbl.textContent = t.vision_label;
+      const h = sec.querySelector('h2, .sec-title');
+      if(h && t.vision_h) h.textContent = t.vision_h;
+      const b = sec.querySelector('.sec-body');
+      if(b && t.vision_body) b.textContent = t.vision_body;
+    }
+    // 공식 종목 섹션
+    else if (labelText.includes('종목') || labelText.includes('Sport') || labelText.includes('项目') || labelText.includes('種目') || labelText.includes('Deporte')) {
+      if(t.sports_label) lbl.textContent = t.sports_label;
+      const h = sec.querySelector('h2, .sec-title');
+      if(h && t.sports_h) h.textContent = t.sports_h;
+    }
+    // 로드맵 섹션
+    else if (labelText.includes('로드맵') || labelText.includes('Road') || labelText.includes('路线') || labelText.includes('ロード')) {
+      if(t.road_label) lbl.textContent = t.road_label;
+      const h = sec.querySelector('h2, .sec-title');
+      if(h && t.road_h) h.textContent = t.road_h;
+    }
+  });
 
-  // 4. 로드맵 섹션
-  if (secs[2]) {
-    const lbl = secs[2].querySelector('.sec-label');
-    if (lbl) lbl.textContent = t.road_label;
-    const h2 = secs[2].querySelector('h2, .sec-title');
-    if (h2) h2.textContent = t.road_h;
-  }
-
-  // 5. Dream / Coubertin section
-  const dreamLabel = document.getElementById('dream-label');
-  if(dreamLabel) dreamLabel.textContent = t.dream_label || '';
-  const dreamTitle = document.getElementById('dream-title');
-  if(dreamTitle) dreamTitle.textContent = t.dream_title || '';
-  const dreamBody  = document.getElementById('dream-body');
-  if(dreamBody)  dreamBody.textContent = t.dream_body  || '';
-  const dreamQuote = document.getElementById('dream-quote');
-  if(dreamQuote) dreamQuote.innerHTML = (t.dream_quote || '').replace(' — ',' —<br><span style="font-size:12px;opacity:.6;">') + '</span>';
-  const dreamBody2 = document.getElementById('dream-body2');
-  if(dreamBody2) dreamBody2.textContent = t.dream_body2 || '';
-
-  // 6. CTA
+  // CTA
   const ctaTitle = qs('.cta-title');
-  if (ctaTitle) ctaTitle.textContent = t.cta_h;
+  if(ctaTitle && t.cta_h) ctaTitle.textContent = t.cta_h;
   const ctaSub = qs('.cta-sub');
-  if (ctaSub) ctaSub.textContent = t.cta_sub;
+  if(ctaSub && t.cta_sub) ctaSub.textContent = t.cta_sub;
 
-  // 6. 푸터
+  // 푸터
   const foot = qs('footer');
-  if (foot) foot.innerHTML = t.footer;
+  if(foot && t.footer) foot.innerHTML = t.footer;
+
+  // 드롭다운 언어 select 현재 값 동기화
+  const sel = document.getElementById('about-lang');
+  if(sel && sel.value !== lang) sel.value = lang;
 
   document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
   localStorage.setItem('about_lang', lang);
 }
+
 document.addEventListener('DOMContentLoaded', () => {
   const saved = localStorage.getItem('about_lang') || localStorage.getItem('icoc_lang') || 'ko';
   const sel = document.getElementById('about-lang');
