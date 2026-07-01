@@ -56,7 +56,7 @@
           <span id="nav-nickname" class="nav-nickname">-</span>
           <span class="nav-arrow">▾</span>
           <div class="nav-user-dd" id="nav-user-dd">
-            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.openMyPage()" class="nav-dd-btn">👤 마이페이지</button>
+            <button onclick="window.location.href='mypage.html'" class="nav-dd-btn">👤 마이페이지</button>
             <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.signOut()" class="nav-dd-btn nav-dd-logout">🚪 로그아웃</button>
           </div>
         </div>
@@ -684,7 +684,7 @@
     document.getElementById('nav-login-btn')?.addEventListener('click', signInWithGoogle);
     document.getElementById('nav-user-area')?.addEventListener('click', openMyPage);
     document.getElementById('hero-login-btn')?.addEventListener('click', signInWithGoogle);
-    document.getElementById('hero-mypage-btn')?.addEventListener('click', openMyPage);
+    document.getElementById('hero-mypage-btn')?.addEventListener('click', ()=>{ window.location.href='mypage.html'; });
 
     // 세션 확인
     const { data: { session } } = await supabase.auth.getSession();
