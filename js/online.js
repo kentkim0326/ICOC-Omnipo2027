@@ -23,8 +23,9 @@
     if (sb) return true; // 이미 초기화됨 (Multiple GoTrueClient 방지)
     const cfg = window.ICOC_CONFIG;
     if (!cfg || cfg.SUPABASE_URL === 'YOUR_SUPABASE_URL') return false;
-    // auth.js가 이미 Supabase 초기화했다면 재사용
+    // config.js singleton 재사용 — createClient 절대 재호출 안 함
     if (window._ICOC_SB) { sb = window._ICOC_SB; return true; }
+    // fallback
     sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
     window._ICOC_SB = sb;
     return true;
