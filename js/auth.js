@@ -109,6 +109,12 @@
       return false;
     }
     try {
+      // 이미 초기화된 인스턴스 재사용 (Multiple GoTrueClient 방지)
+      if (window._ICOC_SB) {
+        supabase = window._ICOC_SB;
+        console.log('[ICOC] Supabase 기존 인스턴스 재사용');
+        return true;
+      }
       supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
       window._ICOC_SB = supabase; // online.js 등에서 재사용
       console.log('[ICOC] Supabase 초기화 완료');
