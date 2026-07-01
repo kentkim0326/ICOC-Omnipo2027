@@ -262,27 +262,64 @@ function sfx(type) {
 
 
   function aiPickMove(){
-    // 빠른 휴리스틱 AI (MCTS 제거 - 모바일 성능)
+    // 1단계: 휴리스틱 스코어로 후보 추출
     const scored = [];
     for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
       if(board[r][c]!==EMPTY) continue;
-      // 자살수 체크
-      const test=tryMove(board,WHITE,r,c,koPoint,koColor);
-      if(!test.ok) continue;
-      const h=aiHeuristic(r,c);
-      if(h===null) continue;
-      scored.push({r,c,h});
+      try {
+        const h = aiHeuristic(r, c);
+        if(h === null) continue;
+        scored.push({r, c, h});
+      } catch(e) {}
     }
     if(!scored.length) return null;
-    scored.sort((a,b)=>b.h-a.h);
+    scored.sort((a,b) => b.h - a.h);
 
-    // 즉시 승/방어 (스코어 매우 높을 때)
+    // 즉각 포획/구출 (스코어 1000+) → 바로 실행
     if(scored[0].h >= 1000) return [scored[0].r, scored[0].c];
 
-    // 상위 5개 중 랜덤 선택 (다양성)
-    const topN = Math.min(5, scored.length);
-    const pick = scored[Math.floor(Math.random() * topN)];
-    return [pick.r, pick.c];
+    // 2단계: 상위 8후보에 경량 MCTS (5플레이아웃 × 20수 = 800시뮬)
+    const top = scored.slice(0, 8);
+    let best = -Infinity, bestCell = null;
+    for(const {r,c,h} of top){
+      try {
+        const mc = lightMCEval(r, c, 5, 20);
+        const combined = h * 0.4 + mc * 600;
+        if(combined > best){ best = combined; bestCell = [r,c]; }
+      } catch(e) {
+        // fallback: 휴리스틱만
+        if(h > best){ best = h; bestCell = [r,c]; }
+      }
+    }
+    return bestCell || [scored[0].r, scored[0].c];
+  }
+
+  // 경량 몬테카를로 평가 (빠른 버전)
+  function lightMCEval(r, c, n, depth){
+    let wins = 0;
+    for(let t=0;t<n;t++){
+      // 첫 수: AI(백) 착수
+      const firstRes = tryMove(board, WHITE, r, c, null, null);
+      if(!firstRes.ok) return -1;
+      let bd = firstRes.bd;
+      let color = BLACK;
+      let capW = firstRes.captured, capB = 0;
+
+      // 빠른 랜덤 롤아웃
+      for(let step=0;step<depth;step++){
+        const mv = rolloutMove(bd, color, null);
+        if(!mv) break;
+        const res = tryMove(bd, color, mv[0], mv[1], null, null);
+        if(!res.ok){ color = color===BLACK?WHITE:BLACK; continue; }
+        bd = res.bd;
+        if(color===BLACK) capB += res.captured;
+        else capW += res.captured;
+        color = color===BLACK ? WHITE : BLACK;
+      }
+      // 포획 수로 승패 판단 (단순하지만 빠름)
+      if(capW > capB) wins++;
+    }
+    return wins / n;
   }
 
 
