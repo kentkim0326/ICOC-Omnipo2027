@@ -109,15 +109,14 @@
       return false;
     }
     try {
-      // 이미 초기화된 인스턴스 재사용 (Multiple GoTrueClient 방지)
+      // config.js에서 이미 singleton 생성 — 절대 createClient 재호출 안 함
       if (window._ICOC_SB) {
         supabase = window._ICOC_SB;
-        console.log('[ICOC] Supabase 기존 인스턴스 재사용');
         return true;
       }
+      // fallback: config.js보다 auth.js가 먼저 실행된 엣지케이스
       supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
-      window._ICOC_SB = supabase; // online.js 등에서 재사용
-      console.log('[ICOC] Supabase 초기화 완료');
+      window._ICOC_SB = supabase;
       return true;
     } catch(e) {
       console.error('[ICOC] Supabase 초기화 실패:', e);
