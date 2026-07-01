@@ -455,40 +455,7 @@
         '당구':'🎱','볼링':'🎳','스크린골프':'⛳','홀덤':'🃏','브릿지':'🎴',
         '진러미':'🃏','하츠':'♥️','다트':'🎯',
       };
-      el.innerHTML = \`<div class="mp-stat-grid">\${records.map(r => {
-        const local = JSON.parse(localStorage.getItem('icoc_stat_'+r.sport)||'{"ai_wins":0,"ai_losses":0,"pts":0}');
-        const aiW = Math.max(r.wins||0, local.ai_wins||0);
-        const aiL = Math.max(r.losses||0, local.ai_losses||0);
-        const total = aiW + aiL;
-        const rate = total>0 ? Math.round(aiW/total*100) : 0;
-        const threshold = ({바둑:5,체스:5,장기:5,쇼기:5,오목:3,체커:3,마작:3,당구:5,볼링:3,홀덤:5,브릿지:10,진러미:5,하츠:5,다트:3})[r.sport] || 3;
-        const proUnlocked = aiW >= threshold;
-        const pts = r.points_earned || local.pts || 0;
-        const icon = SPORT_ICONS[r.sport] || '🎮';
-        const pct = Math.min(100, Math.round(aiW/threshold*100));
-        return \`<div class="mp-game-card \${proUnlocked?'mp-pro':''}">
-          <div class="mp-game-top">
-            <span class="mp-game-icon">\${icon}</span>
-            <div class="mp-game-info">
-              <span class="mp-game-name">\${r.sport}</span>
-              <span class="mp-game-badge \${proUnlocked?'badge-pro':'badge-ai'}">
-                \${proUnlocked?'🏆 PRO':'🤖 AI 수련 중'}
-              </span>
-            </div>
-            <div class="mp-game-pts">🪙 \${pts.toLocaleString()}P</div>
-          </div>
-          <div class="mp-game-stats">
-            <span class="mp-stat-w">\${aiW}승</span>
-            <span class="mp-stat-l">\${aiL}패</span>
-            <span class="mp-stat-rate">\${rate}%</span>
-          </div>
-          \${!proUnlocked ? \`<div class="mp-prog-wrap">
-            <div class="mp-prog-bar" style="width:\${pct}%"></div>
-          </div>
-          <div class="mp-prog-label">AI \${aiW}/\${threshold}승 달성 시 인간 대전 해금 🔓</div>\` : \`
-          <div class="mp-unlocked-msg">✅ 인간 대전 해금 완료 — 국가대표 도전 가능!</div>\`}
-        </div>\`;
-      }).join('')}</div>\`;
+      el.innerHTML = buildGameStatsHTML(records);
     });
   }
 
@@ -498,6 +465,53 @@
   }
 
   // ── 게임 전적 ──
+  function buildGameStatsHTML(records) {
+    const ICONS = {'바둑':'⚫','체스':'♟️','장기':'🈴','쇼기':'🎌','오목':'⚪',
+      '마작':'🀄','체커':'🔴','백개먼':'🎲','리버시':'🟢','커넥트4':'🔵',
+      '당구':'🎱','볼링':'🎳','스크린골프':'⛳','홀덤':'🃏','브릿지':'🎴',
+      '진러미':'🃏','하츠':'♥️','다트':'🎯'};
+    const THRESH = {'바둑':5,'체스':5,'장기':5,'쇼기':5,'오목':3,'체커':3,'마작':3,
+      '당구':5,'볼링':3,'스크린골프':3,'홀덤':5,'브릿지':10,'진러미':5,'하츠':5,'다트':3};
+    let html = '<div class="mp-stat-grid">';
+    records.forEach(function(r) {
+      var local = JSON.parse(localStorage.getItem('icoc_stat_' + r.sport) || '{"ai_wins":0,"ai_losses":0,"pts":0}');
+      var aiW = Math.max(r.wins || 0, local.ai_wins || 0);
+      var aiL = Math.max(r.losses || 0, local.ai_losses || 0);
+      var total = aiW + aiL;
+      var rate = total > 0 ? Math.round(aiW / total * 100) : 0;
+      var threshold = THRESH[r.sport] || 3;
+      var proUnlocked = aiW >= threshold;
+      var pts = r.points_earned || local.pts || 0;
+      var icon = ICONS[r.sport] || '🎮';
+      var pct = Math.min(100, Math.round(aiW / threshold * 100));
+      var badgeCls = proUnlocked ? 'badge-pro' : 'badge-ai';
+      var badgeTxt = proUnlocked ? '🏆 PRO' : '🤖 AI 수련 중';
+      var cardCls = proUnlocked ? 'mp-game-card mp-pro' : 'mp-game-card';
+      var progressHTML = proUnlocked
+        ? '<div class="mp-unlocked-msg">✅ 인간 대전 해금 완료 — 국가대표 도전 가능!</div>'
+        : '<div class="mp-prog-wrap"><div class="mp-prog-bar" style="width:' + pct + '%"></div></div>'
+          + '<div class="mp-prog-label">AI ' + aiW + '/' + threshold + '승 달성 시 인간 대전 해금 🔓</div>';
+      html += '<div class="' + cardCls + '">'
+        + '<div class="mp-game-top">'
+        + '<span class="mp-game-icon">' + icon + '</span>'
+        + '<div class="mp-game-info">'
+        + '<span class="mp-game-name">' + r.sport + '</span>'
+        + '<span class="mp-game-badge ' + badgeCls + '">' + badgeTxt + '</span>'
+        + '</div>'
+        + '<div class="mp-game-pts">🪙 ' + pts.toLocaleString() + 'P</div>'
+        + '</div>'
+        + '<div class="mp-game-stats">'
+        + '<span class="mp-stat-w">' + aiW + '승</span>'
+        + '<span class="mp-stat-l">' + aiL + '패</span>'
+        + '<span class="mp-stat-rate">' + rate + '%</span>'
+        + '</div>'
+        + progressHTML
+        + '</div>';
+    });
+    html += '</div>';
+    return html;
+  }
+
   async function loadGameRecords(userId) {
     if (!supabase) return [];
     const { data } = await supabase
