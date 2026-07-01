@@ -897,7 +897,7 @@ footer a { color:var(--gold); text-decoration:none; }
           <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
           <span style="font-size:9px;opacity:.5;">▼</span>
         </button>
-        <div class="lang-dropdown-main" id="lt-dd-main"></div>
+        <div class="lang-dropdown-main" id="lt-dd-main" style="position:absolute;top:calc(100% + 8px);right:0;min-width:180px;background:rgba(10,28,55,0.98);border:1px solid rgba(201,168,76,0.25);border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,0.5);backdrop-filter:blur(20px);padding:6px;display:none;grid-template-columns:1fr 1fr;gap:2px;z-index:2000;max-height:360px;overflow-y:auto;"></div>
       </div>
       <div class="nav-music-player" id="nav-music-player">
         <button class="music-toggle" id="music-toggle" title="배경음악" onclick="ICOC_BGM.toggle()">
@@ -1930,7 +1930,249 @@ const T = {
     fl_name:"お名前", fl_email:"メールアドレス", fl_type:"お問い合わせ種別", fl_sport:"関心のある種目", fl_msg:"メッセージ", fl_send:"送信する",
     form_ok_title:"お問い合わせを受け付けました", form_ok_body:"できる限り早くご返答いたします。",
     ft:"© 2026 ICOC国際ブレインスポーツ協会 · Deother · 文化体育観光部認可社団法人",
+  },
+
+  es:{
+    hero_eyebrow:"ICOC · Comité Internacional de Omnipo de Deportes Mentales",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Ajedrez·Janggi·Billar·Bridge·Golf de Pantalla & más<br>El Primer Campeonato Mundial Multi-Disciplinario de Deportes Mentales",
+    cta_reg:"Contactar", cta_play:"Jugar Ahora",
+    s1:"Deportes Oficiales", s2:"Jugadores Globales", s3:"Países Objetivo", s4:"Seúl 2027",
+    sp_title:"66 Deportes Mentales Oficiales",
+    sp_body:"Las 66 disciplinas donde se mide la inteligencia humana. El primer campeonato mundial multi-disciplinario.",
+    ab_title:"¿Por qué Brain Sports Omnipo?",
+    ab_quote:'"66 deportes mentales en un solo escenario."',
+    rm_title:"Hoja de Ruta",
+    ct_title:"Contacto & Patrocinadores",
+    fl_name:"Nombre", fl_email:"Correo", fl_type:"Tipo", fl_msg:"Mensaje", fl_send:"Enviar",
+    ft:"© 2026 ICOC · Diather · Ministerio de Cultura, Deporte y Turismo de Corea"
+  },
+  fr:{
+    hero_eyebrow:"ICOC · Comité International d'Omnipo des Sports Cérébraux",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Échecs·Janggi·Billard·Bridge·Golf sur Écran & plus<br>Le Premier Championnat Mondial Multi-Discipline de Sports Cérébraux",
+    cta_reg:"Nous Contacter", cta_play:"Jouer Maintenant",
+    s1:"Sports Officiels", s2:"Joueurs Mondiaux", s3:"Pays Cibles", s4:"Séoul 2027",
+    sp_title:"66 Sports Cérébraux Officiels",
+    sp_body:"Les 66 disciplines où l'intelligence humaine se mesure. Premier championnat mondial multi-discipline.",
+    ab_title:"Pourquoi Brain Sports Omnipo ?",
+    ab_quote:'"66 sports cérébraux sur une seule scène."',
+    rm_title:"Feuille de Route",
+    ct_title:"Contact & Sponsors",
+    fl_name:"Nom", fl_email:"Email", fl_type:"Type", fl_msg:"Message", fl_send:"Envoyer",
+    ft:"© 2026 ICOC · Diather · Ministère de la Culture, des Sports et du Tourisme de Corée"
+  },
+  de:{
+    hero_eyebrow:"ICOC · Internationales Komitee für Omnipo-Gehirnsport",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Schach·Janggi·Billard·Bridge·Bildschirmgolf & mehr<br>Die erste multidisziplinäre Gehirnsport-Weltmeisterschaft",
+    cta_reg:"Kontakt", cta_play:"Jetzt Spielen",
+    s1:"Offizielle Sportarten", s2:"Globale Spieler", s3:"Zielländer", s4:"Seoul 2027",
+    sp_title:"66 Offizielle Gehirnsportarten",
+    sp_body:"66 Disziplinen, in denen menschliche Intelligenz gemessen wird. Erste multidisziplinäre Weltmeisterschaft.",
+    ab_title:"Warum Brain Sports Omnipo?",
+    ab_quote:'"66 Gehirnsportarten auf einer Bühne."',
+    rm_title:"Fahrplan",
+    ct_title:"Kontakt & Sponsoren",
+    fl_name:"Name", fl_email:"E-Mail", fl_type:"Typ", fl_msg:"Nachricht", fl_send:"Senden",
+    ft:"© 2026 ICOC · Diather · Koreanisches Ministerium für Kultur, Sport und Tourismus"
+  },
+  pt:{
+    hero_eyebrow:"ICOC · Comité Internacional de Omnipo de Esportes Mentais",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Xadrez·Janggi·Bilhar·Bridge·Golf em Tela & mais<br>O Primeiro Campeonato Mundial Multi-Disciplina de Esportes Mentais",
+    cta_reg:"Contato", cta_play:"Jogar Agora",
+    s1:"Esportes Oficiais", s2:"Jogadores Globais", s3:"Países Alvo", s4:"Seul 2027",
+    sp_title:"66 Esportes Mentais Oficiais",
+    sp_body:"As 66 disciplinas onde a inteligência humana é medida. Primeiro campeonato mundial multi-disciplina.",
+    ab_title:"Por Que Brain Sports Omnipo?",
+    ab_quote:'"66 esportes mentais em um único palco."',
+    rm_title:"Roteiro",
+    ct_title:"Contato & Patrocinadores",
+    fl_name:"Nome", fl_email:"Email", fl_type:"Tipo", fl_msg:"Mensagem", fl_send:"Enviar",
+    ft:"© 2026 ICOC · Diather · Ministério da Cultura, Esporte e Turismo da Coreia"
+  },
+  ru:{
+    hero_eyebrow:"ICOC · Международный комитет Омнипо по интеллектуальным видам спорта",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Го·Шахматы·Чанги·Бильярд·Бридж·Экран-Гольф и др.<br>Первый многодисциплинарный чемпионат мира по интеллектуальным видам спорта",
+    cta_reg:"Связаться", cta_play:"Играть сейчас",
+    s1:"Официальные виды", s2:"Игроки мира", s3:"Страны", s4:"Сеул 2027",
+    sp_title:"66 официальных видов интеллектуального спорта",
+    sp_body:"66 дисциплин, где измеряется человеческий интеллект. Первый многодисциплинарный чемпионат мира.",
+    ab_title:"Почему Brain Sports Omnipo?",
+    ab_quote:'"66 видов интеллектуального спорта на одной арене."',
+    rm_title:"Дорожная карта",
+    ct_title:"Контакты и спонсоры",
+    fl_name:"Имя", fl_email:"Email", fl_type:"Тип", fl_msg:"Сообщение", fl_send:"Отправить",
+    ft:"© 2026 ICOC · Diather · Министерство культуры, спорта и туризма Кореи"
+  },
+  ar:{
+    hero_eyebrow:"ICOC · اللجنة الدولية لأومنيبو الرياضات العقلية",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"غو·شطرنج·جانغي·بلياردو·بريدج·غولف الشاشة والمزيد<br>أول بطولة عالمية متعددة التخصصات للرياضات العقلية",
+    cta_reg:"تواصل معنا", cta_play:"العب الآن",
+    s1:"الرياضات الرسمية", s2:"اللاعبون العالميون", s3:"الدول المستهدفة", s4:"سيول 2027",
+    sp_title:"66 رياضة عقلية رسمية",
+    sp_body:"66 تخصصاً حيث يُقاس الذكاء البشري. أول بطولة عالمية متعددة التخصصات.",
+    ab_title:"لماذا Brain Sports Omnipo؟",
+    ab_quote:'"66 رياضة عقلية على منصة واحدة."',
+    rm_title:"خارطة الطريق",
+    ct_title:"التواصل والرعاة",
+    fl_name:"الاسم", fl_email:"البريد الإلكتروني", fl_type:"النوع", fl_msg:"الرسالة", fl_send:"إرسال",
+    ft:"© 2026 ICOC · Diather · وزارة الثقافة والرياضة والسياحة الكورية"
+  },
+  hi:{
+    hero_eyebrow:"ICOC · अंतर्राष्ट्रीय ब्रेन स्पोर्ट्स ओम्निपो समिति",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"गो·शतरंज·जांगी·बिलियर्ड्स·ब्रिज·स्क्रीन गोल्फ और अधिक<br>विश्व का पहला बहु-अनुशासन ब्रेन स्पोर्ट्स चैम्पियनशिप",
+    cta_reg:"संपर्क करें", cta_play:"अभी खेलें",
+    s1:"आधिकारिक खेल", s2:"वैश्विक खिलाड़ी", s3:"लक्ष्य देश", s4:"सियोल 2027",
+    sp_title:"66 आधिकारिक ब्रेन स्पोर्ट्स",
+    sp_body:"66 अनुशासन जहाँ मानव बुद्धिमत्ता को मापा जाता है।",
+    ab_title:"Brain Sports Omnipo क्यों?",
+    ab_quote:'"एक मंच पर 66 ब्रेन स्पोर्ट्स।"',
+    rm_title:"रोडमैप",
+    ct_title:"संपर्क और प्रायोजक",
+    fl_name:"नाम", fl_email:"ईमेल", fl_type:"प्रकार", fl_msg:"संदेश", fl_send:"भेजें",
+    ft:"© 2026 ICOC · Diather · कोरियाई संस्कृति, खेल और पर्यटन मंत्रालय"
+  },
+  vi:{
+    hero_eyebrow:"ICOC · Ủy ban Quốc tế Omnipo Thể thao Trí tuệ",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Cờ vây·Cờ vua·Janggi·Bi-a·Bridge·Golf màn hình & thêm<br>Giải vô địch thế giới đa môn thể thao trí tuệ đầu tiên",
+    cta_reg:"Liên hệ", cta_play:"Chơi ngay",
+    s1:"Môn thể thao chính thức", s2:"Người chơi toàn cầu", s3:"Quốc gia mục tiêu", s4:"Seoul 2027",
+    sp_title:"66 Môn Thể Thao Trí Tuệ Chính Thức",
+    sp_body:"66 môn thi đấu nơi trí tuệ con người được đo lường. Giải đấu đa môn đầu tiên trên thế giới.",
+    ab_title:"Tại sao Brain Sports Omnipo?",
+    ab_quote:'"66 môn thể thao trí tuệ trên một sân khấu."',
+    rm_title:"Lộ trình",
+    ct_title:"Liên hệ & Nhà tài trợ",
+    fl_name:"Họ tên", fl_email:"Email", fl_type:"Loại", fl_msg:"Tin nhắn", fl_send:"Gửi",
+    ft:"© 2026 ICOC · Diather · Bộ Văn hóa, Thể thao và Du lịch Hàn Quốc"
+  },
+  th:{
+    hero_eyebrow:"ICOC · คณะกรรมการนานาชาติออมนิโปกีฬาสมอง",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"หมากล้อม·หมากรุก·จังกิ·บิลเลียด·บริดจ์·สกรีนกอล์ฟ & อื่นๆ<br>การแข่งขันกีฬาสมองชิงแชมป์โลกหลายประเภทครั้งแรก",
+    cta_reg:"ติดต่อเรา", cta_play:"เล่นเลย",
+    s1:"กีฬาอย่างเป็นทางการ", s2:"ผู้เล่นทั่วโลก", s3:"ประเทศเป้าหมาย", s4:"โซล 2027",
+    sp_title:"66 กีฬาสมองอย่างเป็นทางการ",
+    sp_body:"66 ประเภทที่วัดความฉลาดของมนุษย์ การแข่งขันหลายประเภทครั้งแรกของโลก",
+    ab_title:"ทำไมต้อง Brain Sports Omnipo?",
+    ab_quote:'"66 กีฬาสมองบนเวทีเดียว"',
+    rm_title:"แผนที่นำทาง",
+    ct_title:"ติดต่อและผู้สนับสนุน",
+    fl_name:"ชื่อ", fl_email:"อีเมล", fl_type:"ประเภท", fl_msg:"ข้อความ", fl_send:"ส่ง",
+    ft:"© 2026 ICOC · Diather · กระทรวงวัฒนธรรม กีฬา และการท่องเที่ยวเกาหลี"
+  },
+  id:{
+    hero_eyebrow:"ICOC · Komite Internasional Omnipo Olahraga Otak",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Catur·Janggi·Biliar·Bridge·Golf Layar & lainnya<br>Kejuaraan Dunia Multi-Disiplin Olahraga Otak Pertama",
+    cta_reg:"Hubungi Kami", cta_play:"Main Sekarang",
+    s1:"Olahraga Resmi", s2:"Pemain Global", s3:"Target Negara", s4:"Seoul 2027",
+    sp_title:"66 Olahraga Otak Resmi",
+    sp_body:"66 disiplin di mana kecerdasan manusia diukur. Kejuaraan dunia multi-disiplin pertama.",
+    ab_title:"Mengapa Brain Sports Omnipo?",
+    ab_quote:'"66 olahraga otak dalam satu panggung."',
+    rm_title:"Peta Jalan",
+    ct_title:"Kontak & Sponsor",
+    fl_name:"Nama", fl_email:"Email", fl_type:"Tipe", fl_msg:"Pesan", fl_send:"Kirim",
+    ft:"© 2026 ICOC · Diather · Kementerian Kebudayaan, Olahraga dan Pariwisata Korea"
+  },
+  ms:{
+    hero_eyebrow:"ICOC · Jawatankuasa Antarabangsa Omnipo Sukan Minda",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Catur·Janggi·Biliard·Bridge·Golf Skrin & lain-lain<br>Kejohanan Dunia Pelbagai Disiplin Sukan Minda Pertama",
+    cta_reg:"Hubungi Kami", cta_play:"Main Sekarang",
+    s1:"Sukan Rasmi", s2:"Pemain Global", s3:"Negara Sasaran", s4:"Seoul 2027",
+    sp_title:"66 Sukan Minda Rasmi",
+    sp_body:"66 disiplin di mana kecerdasan manusia diukur. Kejohanan dunia pelbagai disiplin pertama.",
+    ab_title:"Mengapa Brain Sports Omnipo?",
+    ab_quote:'"66 sukan minda di satu pentas."',
+    rm_title:"Peta Jalan",
+    ct_title:"Hubungi & Penaja",
+    fl_name:"Nama", fl_email:"E-mel", fl_type:"Jenis", fl_msg:"Mesej", fl_send:"Hantar",
+    ft:"© 2026 ICOC · Diather · Kementerian Kebudayaan, Sukan dan Pelancongan Korea"
+  },
+  tr:{
+    hero_eyebrow:"ICOC · Uluslararası Omnipo Beyin Sporları Komitesi",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Satranç·Janggi·Bilardo·Bridge·Ekran Golf ve daha fazlası<br>Dünyanın İlk Çok Disiplinli Beyin Sporları Şampiyonası",
+    cta_reg:"İletişim", cta_play:"Şimdi Oyna",
+    s1:"Resmi Sporlar", s2:"Global Oyuncular", s3:"Hedef Ülkeler", s4:"Seul 2027",
+    sp_title:"66 Resmi Beyin Sporu",
+    sp_body:"İnsan zekasının ölçüldüğü 66 disiplin. Dünyanın ilk çok disiplinli şampiyonası.",
+    ab_title:"Neden Brain Sports Omnipo?",
+    ab_quote:'"Tek bir sahnede 66 beyin sporu."',
+    rm_title:"Yol Haritası",
+    ct_title:"İletişim ve Sponsorlar",
+    fl_name:"İsim", fl_email:"E-posta", fl_type:"Tür", fl_msg:"Mesaj", fl_send:"Gönder",
+    ft:"© 2026 ICOC · Diather · Kore Kültür, Spor ve Turizm Bakanlığı"
+  },
+  nl:{
+    hero_eyebrow:"ICOC · Internationaal Comité voor Omnipo Breinsport",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Schaken·Janggi·Biljart·Bridge·Schermgolf & meer<br>Het eerste multidisciplinaire breinsportkampioenschap ter wereld",
+    cta_reg:"Contact", cta_play:"Nu Spelen",
+    s1:"Officiële Sporten", s2:"Mondiale Spelers", s3:"Doellanden", s4:"Seoul 2027",
+    sp_title:"66 Officiële Breinsportdisciplines",
+    sp_body:"66 disciplines waarbij menselijke intelligentie wordt gemeten. Eerste multidisciplinair wereldkampioenschap.",
+    ab_title:"Waarom Brain Sports Omnipo?",
+    ab_quote:'"66 breinsportdisciplines op één podium."',
+    rm_title:"Routekaart",
+    ct_title:"Contact & Sponsoren",
+    fl_name:"Naam", fl_email:"E-mail", fl_type:"Type", fl_msg:"Bericht", fl_send:"Verzenden",
+    ft:"© 2026 ICOC · Diather · Koreaans Ministerie van Cultuur, Sport en Toerisme"
+  },
+  pl:{
+    hero_eyebrow:"ICOC · Międzynarodowy Komitet Omnipo Sportów Umysłowych",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Szachy·Janggi·Bilard·Brydż·Golf Ekranowy i inne<br>Pierwsze Wielodyscyplinarne Mistrzostwa Świata Sportów Umysłowych",
+    cta_reg:"Kontakt", cta_play:"Graj Teraz",
+    s1:"Oficjalne Dyscypliny", s2:"Gracze Globalni", s3:"Docelowe Kraje", s4:"Seul 2027",
+    sp_title:"66 Oficjalnych Dyscyplin Sportów Umysłowych",
+    sp_body:"66 dyscyplin, w których mierzona jest ludzka inteligencja. Pierwsze wielodyscyplinarne mistrzostwa świata.",
+    ab_title:"Dlaczego Brain Sports Omnipo?",
+    ab_quote:'"66 sportów umysłowych na jednej scenie."',
+    rm_title:"Plan Działania",
+    ct_title:"Kontakt i Sponsorzy",
+    fl_name:"Imię", fl_email:"E-mail", fl_type:"Typ", fl_msg:"Wiadomość", fl_send:"Wyślij",
+    ft:"© 2026 ICOC · Diather · Koreańskie Ministerstwo Kultury, Sportu i Turystyki"
+  },
+  sv:{
+    hero_eyebrow:"ICOC · Internationella Omnipo-kommittén för Hjärnsport",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Schack·Janggi·Biljard·Bridge·Skärmgolf & mer<br>Världens första multidisciplinära hjärnsportsmästerskap",
+    cta_reg:"Kontakta oss", cta_play:"Spela Nu",
+    s1:"Officiella Sporter", s2:"Globala Spelare", s3:"Målländer", s4:"Seoul 2027",
+    sp_title:"66 Officiella Hjärnsporter",
+    sp_body:"66 discipliner där mänsklig intelligens mäts. Världens första multidisciplinära mästerskap.",
+    ab_title:"Varför Brain Sports Omnipo?",
+    ab_quote:'"66 hjärnsporter på en scen."',
+    rm_title:"Färdplan",
+    ct_title:"Kontakt & Sponsorer",
+    fl_name:"Namn", fl_email:"E-post", fl_type:"Typ", fl_msg:"Meddelande", fl_send:"Skicka",
+    ft:"© 2026 ICOC · Diather · Koreas Ministerium för Kultur, Sport och Turism"
+  },
+  it:{
+    hero_eyebrow:"ICOC · Comitato Internazionale Omnipo per gli Sport Mentali",
+    hero_t1:"Brain Sports", hero_t2:"Omnipo",
+    hero_sub:"Go·Scacchi·Janggi·Biliardo·Bridge·Golf su Schermo & altro<br>Il Primo Campionato Mondiale Multidisciplinare degli Sport Mentali",
+    cta_reg:"Contattaci", cta_play:"Gioca Ora",
+    s1:"Sport Ufficiali", s2:"Giocatori Globali", s3:"Paesi Target", s4:"Seul 2027",
+    sp_title:"66 Sport Mentali Ufficiali",
+    sp_body:"66 discipline dove l'intelligenza umana viene misurata. Il primo campionato mondiale multidisciplinare.",
+    ab_title:"Perché Brain Sports Omnipo?",
+    ab_quote:'"66 sport mentali su un unico palco."',
+    rm_title:"Tabella di Marcia",
+    ct_title:"Contatti e Sponsor",
+    fl_name:"Nome", fl_email:"Email", fl_type:"Tipo", fl_msg:"Messaggio", fl_send:"Invia",
+    ft:"© 2026 ICOC · Diather · Ministero della Cultura, dello Sport e del Turismo della Corea"
   }
+
 };
 
 function updateSubject(sel) {
@@ -2201,8 +2443,12 @@ window.ICOC_BGM = (function() {
       d.addEventListener('click',function(){applyMain(l.c);wrap.classList.remove('open');});
       dd.appendChild(d);
     });
-    trigger.addEventListener('click',function(e){e.stopPropagation();wrap.classList.toggle('open');});
-    document.addEventListener('click',function(){wrap.classList.remove('open');});
+    trigger.addEventListener('click',function(e){
+      e.stopPropagation();
+      const isOpen = dd.style.display === 'grid';
+      dd.style.display = isOpen ? 'none' : 'grid';
+    });
+    document.addEventListener('click',function(){dd.style.display='none';});
     applyMain(saved);
   });
 })();
