@@ -357,7 +357,8 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
           <button class="age-chat-btn" onclick="openAgeChat('30대')">👨 30대</button>
           <button class="age-chat-btn" onclick="openAgeChat('40대')">🧔 40대</button>
           <button class="age-chat-btn" onclick="openAgeChat('50대')">👴 50대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('60대+')">👵 60대+</button>
+          <button class="age-chat-btn" onclick="openAgeChat('60대')">👵 60대</button>
+          <button class="age-chat-btn" onclick="openAgeChat('70대+')">🧓 70대+</button>
         </div>
       </div>
     </div>
@@ -446,7 +447,7 @@ if (window.mapboxgl) {
 } else {
   map = new maplibregl.Map({
     container:'map',
-    style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json', // changed by setVenueStyle
     center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
   });
   map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
@@ -508,6 +509,38 @@ function openAgeChat(age) {
   modal.classList.add('open');
 }
 
+
+// ── 지도 스타일 변경 ──
+function changeVenueStyle(style) {
+  if (!map) return;
+  const styles = {
+    dark:      'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    light:     'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    streets:   'https://tiles.openfreemap.org/styles/liberty',
+    outdoor:   'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+    satellite: 'https://tiles.openstreetmap.fr/toner/style.json',
+  };
+  const useMapbox = !!window.mapboxgl && map.setStyle && styles[style] && style !== 'satellite';
+  // MapLibre styles
+  const mlStyles = {
+    dark:     'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    light:    'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    streets:  'https://tiles.openfreemap.org/styles/liberty',
+    outdoor:  'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+    satellite:'https://tiles.openfreemap.org/styles/liberty',
+  };
+  const mbStyles = {
+    dark:     'mapbox://styles/mapbox/dark-v11',
+    light:    'mapbox://styles/mapbox/light-v11',
+    streets:  'mapbox://styles/mapbox/streets-v12',
+    outdoor:  'mapbox://styles/mapbox/outdoors-v12',
+    satellite:'mapbox://styles/mapbox/satellite-streets-v12',
+  };
+  const url = window.mapboxgl && map._maplibre !== true
+    ? mbStyles[style]
+    : mlStyles[style];
+  map.setStyle(url);
+}
 </script>
 </body>
 </html>
