@@ -352,6 +352,7 @@
     if (!awarded) {
       awarded = true;
       const res = window.ICOC_POINTS.addPoints(pts, 'shogi_' + result);
+      if(window.ICOC_AUTH) window.ICOC_AUTH.recordGameResult('쇼기', result==='win', pts);
       setPointsMsg(res.capped
         ? `+${res.added}P 적립 (오늘 획득 한도 도달, 보유 ${res.total.toLocaleString()}P)`
         : `+${res.added}P 적립 · 보유 ${res.total.toLocaleString()}P`);
