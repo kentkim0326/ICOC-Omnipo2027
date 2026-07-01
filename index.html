@@ -567,9 +567,10 @@ footer a { color:var(--gold); text-decoration:none; }
 .game-modal {
   position: fixed; inset: 0; z-index: 9000;
   background: rgba(0,0,0,0.85); backdrop-filter: blur(6px);
-  display: flex; align-items: center; justify-content: center;
+  display: none; align-items: center; justify-content: center;
   padding: 12px;
 }
+.game-modal.open, .game-modal[style*="flex"] { display: flex !important; }
 .game-modal-box {
   background: #0B1F3A; border-radius: 16px;
   border: 1px solid rgba(201,168,76,0.3);
