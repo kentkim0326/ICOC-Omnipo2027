@@ -352,6 +352,9 @@ function sfx(type) {
     }
   }
 
+
+  /* ── DOM 헬퍼 ── */
+
   function reset(){
     board=Array.from({length:SIZE},()=>Array(SIZE).fill(EMPTY));
     turn=BLACK; gameOver=false; passCount=0;
