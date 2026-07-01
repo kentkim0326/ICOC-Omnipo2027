@@ -207,7 +207,7 @@
         loginBtn.style.display = 'none';
         userArea.style.display = 'flex';
         document.getElementById('nav-nickname').textContent = profile.nickname;
-        document.getElementById('nav-flag').textContent = countryFlag(profile.country);
+        document.getElementById('nav-flag').innerHTML = countryFlag(profile.country);
       } else {
         loginBtn.style.display = '';
         userArea.style.display = 'none';
@@ -228,7 +228,7 @@
         const el = document.getElementById('hero-nickname');
         if (el) el.textContent = profile.nickname;
         const meta = document.getElementById('hero-user-meta');
-        if (meta) meta.textContent = countryFlag(profile.country) + ' ' + profile.country + ' · ' + profile.generation;
+        if (meta) meta.innerHTML = countryFlag(profile.country) + ' ' + profile.country + ' · ' + profile.generation;
       } else {
         heroAuth.style.display = 'flex';
         heroUser.style.display = 'none';
