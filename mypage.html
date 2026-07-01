@@ -363,30 +363,70 @@ function shareKakao() {
 }
 
 // ── 진입점 ──
-document.addEventListener('DOMContentLoaded', () => {
-  function tryRender() {
-    if(window.ICOC_AUTH) {
-      const user = ICOC_AUTH.getCurrentUser();
-      const profile = ICOC_AUTH.getCurrentProfile();
-      if(user && profile) {
-        // Fetch game records from Supabase
-        const supabaseCfg = window.ICOC_CONFIG;
-        if(supabaseCfg && supabaseCfg.SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
-          const sb = window.supabase.createClient(supabaseCfg.SUPABASE_URL, supabaseCfg.SUPABASE_ANON);
-          sb.from('icoc_game_records').select('*').eq('user_id', user.id)
-            .order('wins', {ascending:false})
-            .then(({data}) => renderMypage(profile, data||[]));
-        } else {
-          renderMypage(profile, []);
-        }
-      } else if(user && !profile) {
-        setTimeout(tryRender, 500);
-      }
-    } else {
-      setTimeout(tryRender, 300);
-    }
+document.addEventListener('DOMContentLoaded', async () => {
+  const mpBody = document.getElementById('mp-body');
+
+  // 로딩 스피너 표시
+  mpBody.innerHTML = `
+    <div style="text-align:center;padding:80px 20px;">
+      <div style="width:44px;height:44px;border:3px solid rgba(201,168,76,0.15);
+        border-top-color:#C9A84C;border-radius:50%;
+        animation:mpspin 0.8s linear infinite;margin:0 auto 16px;"></div>
+      <div style="font-size:13px;color:rgba(245,240,232,0.4);">마이페이지 로딩 중...</div>
+    </div>
+    <style>@keyframes mpspin{to{transform:rotate(360deg);}}</style>`;
+
+  // Supabase 직접 세션 확인
+  const cfg = window.ICOC_CONFIG;
+  if (!cfg || !window.supabase) {
+    setTimeout(() => window.location.reload(), 1500);
+    return;
   }
-  tryRender();
+
+  const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+
+  // 최대 5초 대기해서 세션 확인
+  let session = null;
+  for (let i = 0; i < 10; i++) {
+    const { data } = await sb.auth.getSession();
+    if (data?.session) { session = data.session; break; }
+    await new Promise(r => setTimeout(r, 500));
+  }
+
+  if (!session) {
+    mpBody.innerHTML = `
+      <div style="text-align:center;padding:80px 20px;">
+        <div style="font-size:48px;margin-bottom:16px;">🔒</div>
+        <div style="font-size:18px;font-weight:700;color:#F5F0E8;margin-bottom:8px;">로그인이 필요합니다</div>
+        <div style="font-size:13px;color:rgba(245,240,232,0.5);margin-bottom:28px;">구글 로그인으로 국가대표 등록 & 전적 관리</div>
+        <button onclick="window.location.href='index.html'"
+          style="padding:14px 32px;background:linear-gradient(135deg,#C9A84C,#E8C97A);
+          border:none;border-radius:12px;font-size:15px;font-weight:700;
+          color:#0B1F3A;cursor:pointer;font-family:inherit;">
+          🏠 홈에서 로그인하기
+        </button>
+      </div>`;
+    return;
+  }
+
+  const user = session.user;
+
+  // 프로필 로드
+  const { data: profile } = await sb
+    .from('icoc_profiles').select('*').eq('id', user.id).maybeSingle();
+
+  const finalProfile = profile || {
+    id: user.id, email: user.email,
+    nickname: user.user_metadata?.full_name || user.email.split('@')[0],
+    country: '', country_iso: '', generation: '', city: ''
+  };
+
+  // 게임 기록 로드
+  const { data: records } = await sb
+    .from('icoc_game_records').select('*').eq('user_id', user.id)
+    .order('wins', { ascending: false });
+
+  renderMypage(finalProfile, records || []);
 });
 </script>
 </body>
