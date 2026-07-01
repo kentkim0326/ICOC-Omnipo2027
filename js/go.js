@@ -200,22 +200,22 @@
   }
 
   function renderBoard(){
-    if(!boardUI) return;
+    if(!boardUI||!boardUI.cellEls) return;
     for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
-      const cell=boardUI.getCell(r,c);
+      const cell=boardUI.cellEls[r]?.[c];
       if(!cell) continue;
       const v=board[r][c];
-      if(v===BLACK) cell.innerHTML='<div class="go-stone go-black"></div>';
-      else if(v===WHITE) cell.innerHTML='<div class="go-stone go-white"></div>';
+      if(v===BLACK){ cell.innerHTML=''; const s=document.createElement('div'); s.className='go-stone go-black'; cell.appendChild(s); }
+      else if(v===WHITE){ cell.innerHTML=''; const s=document.createElement('div'); s.className='go-stone go-white'; cell.appendChild(s); }
       else cell.innerHTML='';
     }
     if(lastMoveEl){ lastMoveEl.classList.remove('last-move'); lastMoveEl=null; }
   }
 
   function markLastMove(r,c){
-    if(!boardUI) return;
-    const cell=boardUI.getCell(r,c);
-    if(cell){ cell.querySelector('.go-stone')?.classList.add('last-move'); lastMoveEl=cell.querySelector('.go-stone'); }
+    if(!boardUI||!boardUI.cellEls) return;
+    const cell=boardUI.cellEls[r]?.[c];
+    if(cell){ const st=cell.querySelector('.go-stone'); if(st){ st.classList.add('last-move'); lastMoveEl=st; } }
   }
 
   /* ── 게임 로직 ── */
