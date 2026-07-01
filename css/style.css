@@ -1363,3 +1363,48 @@
 /* 기존 hero-auth-area/user-area absolute 제거 */
 .hero-auth-area { position: static !important; }
 .hero-user-area  { position: static !important; }
+
+/* ── Hero Profile Bar (로고 위, 슬림) ── */
+.hero-profile-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px; margin-bottom: 16px;
+  position: relative; z-index: 10;
+}
+.hero-google-slim {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 20px; border-radius: 24px;
+  background: rgba(255,255,255,0.95); color: #222;
+  border: none; font-size: 13px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+  transition: all 0.2s; white-space: nowrap;
+}
+.hero-google-slim:hover { transform: translateY(-1px); box-shadow: 0 4px 18px rgba(0,0,0,0.4); }
+.hero-user-slim {
+  background: rgba(10,18,35,0.7);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 32px; padding: 5px 14px 5px 5px;
+  backdrop-filter: blur(14px);
+}
+.hero-avatar-sm {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1.5px solid var(--gold); object-fit: cover; flex-shrink: 0;
+}
+.hero-nick-sm  { font-size: 13px; font-weight: 700; color: var(--cream); }
+.hero-meta-sm  { font-size: 10px; color: rgba(201,168,76,0.7); }
+.hero-mypage-slim {
+  padding: 4px 12px; border-radius: 14px;
+  background: rgba(201,168,76,0.15);
+  border: 1px solid rgba(201,168,76,0.4);
+  color: var(--gold); font-size: 11px; font-weight:600;
+  cursor: pointer; white-space: nowrap;
+  transition: all 0.2s;
+}
+.hero-mypage-slim:hover { background: rgba(201,168,76,0.28); }
+
+/* ── Hero SNS Bottom (항상 표시, 하단 고정) ── */
+.hero-sns-bottom {
+  position: absolute; bottom: 24px; left: 0; right: 0;
+  display: flex; justify-content: center; gap: 10px;
+  z-index: 10;
+}
