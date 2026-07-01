@@ -235,10 +235,11 @@
   async function loadSupabaseVenues() {
     if (!window.ICOC_CONFIG || !window.supabase) return;
     try {
-      const sb = window.supabase.createClient(
-        window.ICOC_CONFIG.SUPABASE_URL,
-        window.ICOC_CONFIG.SUPABASE_ANON
-      );
+      const sb = window._ICOC_SB
+        || window.supabase.createClient(
+             window.ICOC_CONFIG.SUPABASE_URL,
+             window.ICOC_CONFIG.SUPABASE_ANON
+           );
       const { data } = await sb.from('icoc_venues').select('*').limit(200);
       if (data && data.length > 0) {
         loadVenues([...SAMPLE_VENUES, ...data]);
@@ -640,7 +641,8 @@
     if (window.supabase) {
       try {
         const cfg = window.ICOC_CONFIG;
-        const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+        const sb = window._ICOC_SB
+          || window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
         const { error } = await sb.from('icoc_venues').insert(venueData);
         if (error) throw error;
         // Show on map immediately
