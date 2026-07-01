@@ -1529,3 +1529,45 @@
 }
 /* hero-sns-bottom 비활성화 */
 .hero-sns-bottom { display: none !important; }
+
+/* ── Nav Music Player ── */
+.nav-music-player {
+  display: flex; align-items: center; gap: 6px;
+  margin-right: 6px; flex-shrink: 0;
+}
+.music-toggle {
+  width: 30px; height: 30px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(201,168,76,0.25);
+  border-radius: 50%; cursor: pointer;
+  font-size: 14px; display: flex;
+  align-items: center; justify-content: center;
+  transition: all 0.2s; padding: 0;
+}
+.music-toggle:hover {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--gold);
+}
+.music-volume {
+  -webkit-appearance: none; appearance: none;
+  width: 60px; height: 3px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px; outline: none; cursor: pointer;
+}
+.music-volume::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  box-shadow: 0 0 4px rgba(201,168,76,0.5);
+}
+.music-volume::-moz-range-thumb {
+  width: 12px; height: 12px;
+  border-radius: 50%; border: none;
+  background: var(--gold); cursor: pointer;
+}
+@media(max-width:640px) {
+  .music-volume { width: 44px; }
+  .music-toggle { width: 26px; height: 26px; font-size: 12px; }
+}
