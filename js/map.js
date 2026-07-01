@@ -272,6 +272,11 @@
             <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('60대+')">👵 60대+</button>
           </div>
         </div>
+        <!-- 날씨 티커 (지도 섹션에서만) -->
+        <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(201,168,76,0.08);margin-top:6px;overflow:hidden;">
+          <span style="font-size:10px;font-weight:700;color:#60a5fa;white-space:nowrap;flex-shrink:0;">🌍 세계 날씨</span>
+          <div style="flex:1;overflow:hidden;"><div id="map-wx-ticker" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.65);white-space:nowrap;animation:tickerScroll 50s linear infinite;">날씨 불러오는 중...</div></div>
+        </div>
         <!-- 연령대 채팅 모달 -->
         <div id="age-chat-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,12,24,0.85);align-items:center;justify-content:center;">
           <div style="background:rgba(10,28,55,0.98);border:1px solid rgba(201,168,76,0.28);border-radius:18px;padding:28px 24px;max-width:360px;width:90%;text-align:center;backdrop-filter:blur(20px);">
@@ -368,6 +373,34 @@
   }
 
 /* ── MAP STYLE BAR CSS (injected at runtime) ── */
+
+  // ── 지도 날씨 로딩 ──
+  const _WX_C=[{n:'서울',lat:37.57,lon:126.98},{n:'도쿄',lat:35.69,lon:139.69},
+    {n:'뉴욕',lat:40.71,lon:-74.00},{n:'런던',lat:51.51,lon:-0.13},
+    {n:'베이징',lat:39.91,lon:116.39},{n:'시드니',lat:-33.87,lon:151.21}];
+  const _WX_I={0:'☀️',1:'☀️',2:'⛅',3:'☁️',51:'🌦️',61:'🌧️',71:'❄️',80:'🌦️',95:'⛈️'};
+  async function loadMapWeather(){
+    const el=document.getElementById('map-wx-ticker');
+    if(!el) return;
+    const res=[];
+    for(const c of _WX_C){
+      const k='icoc_wx_'+c.n,cached=JSON.parse(localStorage.getItem(k)||'null');
+      if(cached&&Date.now()-cached.ts<1800000){res.push(cached.txt);continue;}
+      try{
+        const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lon}&current=temperature_2m,weathercode&timezone=auto`,{signal:AbortSignal.timeout(5000)});
+        const d=await r.json();
+        const t=Math.round(d.current.temperature_2m),code=d.current.weathercode;
+        const icon=_WX_I[code]||_WX_I[Math.floor(code/10)*10]||'🌡️';
+        const txt=c.n+' '+icon+' '+t+'°C';
+        localStorage.setItem(k,JSON.stringify({ts:Date.now(),txt}));
+        res.push(txt);
+        await new Promise(r=>setTimeout(r,600));
+      }catch(e){const cb=JSON.parse(localStorage.getItem('icoc_wx_'+c.n)||'null');if(cb)res.push(cb.txt);}
+    }
+    if(el&&res.length)el.textContent=res.join(' · ')+'  · '+res.join(' · ');
+  }
+  setTimeout(()=>{const el=document.getElementById('map-wx-ticker');if(el)loadMapWeather();},1500);
+
   const styleCSS = `
   .age-chat-bar{
     display:flex;align-items:center;flex-wrap:wrap;gap:10px;
