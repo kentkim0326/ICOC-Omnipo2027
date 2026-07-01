@@ -1331,3 +1331,35 @@
   object-fit: cover;
   opacity: 0.75;
 }
+
+/* ── Hero Topbar Area (네비바 바로 아래) ── */
+.hero-topbar-area {
+  position: absolute;
+  top: 58px; left: 0; right: 0;
+  display: flex; justify-content: center;
+  padding: 8px 16px;
+  z-index: 10;
+}
+.hero-login-bar {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; justify-content: center;
+}
+.hero-user-card-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(10,18,35,0.72);
+  border: 1px solid rgba(201,168,76,0.3);
+  border-radius: 40px;
+  padding: 6px 14px 6px 6px;
+  backdrop-filter: blur(16px);
+  flex-wrap: wrap; justify-content: center;
+}
+/* 66개 종목 강조 */
+.hero-sports-count {
+  color: var(--gold);
+  font-weight: 700;
+  font-size: 1.05em;
+}
+
+/* 기존 hero-auth-area/user-area absolute 제거 */
+.hero-auth-area { position: static !important; }
+.hero-user-area  { position: static !important; }
