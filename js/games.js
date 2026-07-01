@@ -150,7 +150,7 @@
     game.init();
 
     // 온라인 지원 종목: 자동 백그라운드 방 생성 (AI 플레이 중 상대 기다리기)
-    const _onlineGames = ['omok','go','chess','janggi','shogi'];
+    const _onlineGames = ['omok','go','chess','janggi','shogi','reversi','checkers','hex','quoridor'];
     if (_onlineGames.includes(key) && window.ICOC_AUTH?.getCurrentUser?.() && window.ICOC_ONLINE) {
       const _body = document.getElementById('game-modal-body');
       if (_body && !document.getElementById('online-btn-row')) {
@@ -178,11 +178,15 @@
           },
           onMove: (payload) => {
             const g = key;
-            if (g==='omok')   window.OmokGame?.applyOpponentMove?.(payload);
-            if (g==='go')     window.GoGame?.applyOpponentMove?.(payload);
-            if (g==='chess')  window.ChessGame?.applyOpponentMove?.(payload);
-            if (g==='janggi') window.JanggiGame?.applyOpponentMove?.(payload);
-            if (g==='shogi')  window.ShogiGame?.applyOpponentMove?.(payload);
+            if (g==='omok')    window.OmokGame?.applyOpponentMove?.(payload);
+            if (g==='go')      window.GoGame?.applyOpponentMove?.(payload);
+            if (g==='chess')   window.ChessGame?.applyOpponentMove?.(payload);
+            if (g==='janggi')  window.JanggiGame?.applyOpponentMove?.(payload);
+            if (g==='shogi')   window.ShogiGame?.applyOpponentMove?.(payload);
+            if (g==='reversi') window.ReversiGame?.applyOpponentMove?.(payload);
+            if (g==='checkers')window.CheckersGame?.applyOpponentMove?.(payload);
+            if (g==='hex')     window.HexGame?.applyOpponentMove?.(payload);
+            if (g==='quoridor')window.QuoridorGame?.applyOpponentMove?.(payload);
           },
           onEnd: (payload) => {
             const lbl = document.getElementById('online-auto-label');
