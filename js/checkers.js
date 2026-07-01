@@ -219,6 +219,10 @@
   }
 
   function onCellClick(r, c) {
+    if (window.ICOC_ONLINE?.active) {
+      if (!ICOC_ONLINE.isMyTurn || gameOver) return;
+      window._goingOnline = true;
+    }
     if (gameOver || turn !== PLAYER) return;
     const allMoves = allMovesFor(board, PLAYER);
     const piece = board[r][c];
@@ -233,7 +237,9 @@
         turn = AI;
         setTurnUI();
         if (allMovesFor(board, AI).length === 0) { endGame('win'); return; }
-        doAiTurn();
+        
+    if (window._goingOnline) { ICOC_ONLINE.sendMove({r,c}); ICOC_ONLINE.showTurnIndicator(false); window._goingOnline=false; return; }
+    doAiTurn();
         return;
       }
       if (isPlayerPiece(piece)) {
@@ -311,5 +317,12 @@
     reset();
   }
 
-  global.CheckersGame = { start };
+  
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    window._goingOnline = false;
+    onCellClick(payload.r, payload.c);
+    window.ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.CheckersGame = { start, applyOpponentMove };
 })(window);
