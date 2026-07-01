@@ -1294,12 +1294,14 @@
 
 /* 로그인 후 유저 카드 */
 .hero-user-card {
-  display: flex; align-items: center; gap: 14px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(201,168,76,0.3);
-  border-radius: 12px; padding: 14px 20px;
-  backdrop-filter: blur(12px);
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(10,18,35,0.75);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 40px; padding: 8px 16px 8px 8px;
+  backdrop-filter: blur(16px);
+  max-width: 340px; width: 100%;
 }
+.hero-user-info { flex: 1; min-width: 0; }
 .hero-avatar {
   width: 44px; height: 44px; border-radius: 50%;
   border: 2px solid var(--gold); object-fit: cover;
