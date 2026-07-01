@@ -286,6 +286,7 @@
   }
 
   function onCellClick(r, c) {
+    if(global.ICOC_SFX)global.ICOC_SFX.piece();
     if (turn !== PLAYER || gameOver) return;
     const p = board[r][c];
     if (selected) {
