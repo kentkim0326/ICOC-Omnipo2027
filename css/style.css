@@ -1408,3 +1408,49 @@
   display: flex; justify-content: center; gap: 10px;
   z-index: 10;
 }
+
+/* ── ICOC Map Section ── */
+.icoc-map-container {
+  width: 100%; height: 480px;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid var(--border);
+  margin-top: 20px;
+}
+@media(max-width:640px){ .icoc-map-container { height: 360px; } }
+
+.map-filter-bar {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  align-items: center; margin-top: 20px;
+}
+.map-filter-btn {
+  padding: 6px 14px; font-size: 12px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 20px; color: rgba(245,240,232,0.6);
+  cursor: pointer; transition: all 0.2s; font-family: inherit;
+}
+.map-filter-btn:hover { border-color: var(--gold); color: var(--cream); }
+.map-filter-btn.active {
+  background: rgba(201,168,76,0.15);
+  border-color: var(--gold); color: var(--gold); font-weight: 700;
+}
+.map-count {
+  margin-left: auto; font-size: 11px;
+  color: rgba(245,240,232,0.4);
+}
+.map-note {
+  font-size: 12px; color: rgba(245,240,232,0.35);
+  margin-top: 10px; text-align: center;
+}
+.map-register-link { color: var(--gold); text-decoration: none; }
+.map-register-link:hover { text-decoration: underline; }
+
+/* 팝업 스타일 */
+.map-popup { padding: 4px; min-width: 160px; }
+.map-popup-type { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+.map-popup-name { font-size: 14px; font-weight: 700; color: #111; margin-bottom: 4px; }
+.map-popup-addr { font-size: 11px; color: #555; margin-bottom: 2px; }
+.map-popup-city { font-size: 11px; color: #888; }
+
+/* MapLibre 기본 팝업 오버라이드 */
+.maplibregl-popup-content { padding: 12px 14px; border-radius: 8px; }
