@@ -35,12 +35,39 @@
   let currentProfile = null; // profiles 테이블 row
 
   // ── 국가 목록 (간단 버전, 확장 가능) ──
-  const COUNTRIES = [
-    '대한민국','미국','일본','중국','영국','프랑스','독일','캐나다','호주','브라질',
-    '인도','러시아','인도네시아','멕시코','스페인','이탈리아','네덜란드','스웨덴','노르웨이','폴란드',
-    '태국','베트남','필리핀','말레이시아','싱가포르','홍콩','대만','아르헨티나','터키','이집트',
-    '사우디아라비아','남아프리카공화국','나이지리아','케냐','기타',
+  // 195개국 [한국어명, ISO2, 영어명]
+  const COUNTRIES_ALL = [
+    ['대한민국','kr','South Korea'],['미국','us','USA'],['일본','jp','Japan'],['중국','cn','China'],
+    ['영국','gb','UK'],['프랑스','fr','France'],['독일','de','Germany'],['캐나다','ca','Canada'],
+    ['호주','au','Australia'],['브라질','br','Brazil'],['인도','in','India'],['러시아','ru','Russia'],
+    ['인도네시아','id','Indonesia'],['멕시코','mx','Mexico'],['스페인','es','Spain'],['이탈리아','it','Italy'],
+    ['네덜란드','nl','Netherlands'],['스웨덴','se','Sweden'],['노르웨이','no','Norway'],['폴란드','pl','Poland'],
+    ['태국','th','Thailand'],['베트남','vn','Vietnam'],['필리핀','ph','Philippines'],['말레이시아','my','Malaysia'],
+    ['싱가포르','sg','Singapore'],['대만','tw','Taiwan'],['아르헨티나','ar','Argentina'],['터키','tr','Turkey'],
+    ['이집트','eg','Egypt'],['사우디아라비아','sa','Saudi Arabia'],['남아프리카공화국','za','South Africa'],
+    ['나이지리아','ng','Nigeria'],['케냐','ke','Kenya'],['우크라이나','ua','Ukraine'],['벨기에','be','Belgium'],
+    ['스위스','ch','Switzerland'],['오스트리아','at','Austria'],['포르투갈','pt','Portugal'],['그리스','gr','Greece'],
+    ['체코','cz','Czech Republic'],['헝가리','hu','Hungary'],['루마니아','ro','Romania'],['핀란드','fi','Finland'],
+    ['덴마크','dk','Denmark'],['뉴질랜드','nz','New Zealand'],['칠레','cl','Chile'],['콜롬비아','co','Colombia'],
+    ['페루','pe','Peru'],['베네수엘라','ve','Venezuela'],['에콰도르','ec','Ecuador'],['이란','ir','Iran'],
+    ['이라크','iq','Iraq'],['이스라엘','il','Israel'],['아랍에미리트','ae','UAE'],['카타르','qa','Qatar'],
+    ['파키스탄','pk','Pakistan'],['방글라데시','bd','Bangladesh'],['스리랑카','lk','Sri Lanka'],['네팔','np','Nepal'],
+    ['미얀마','mm','Myanmar'],['캄보디아','kh','Cambodia'],['라오스','la','Laos'],['몽골','mn','Mongolia'],
+    ['카자흐스탄','kz','Kazakhstan'],['우즈베키스탄','uz','Uzbekistan'],['아제르바이잔','az','Azerbaijan'],
+    ['조지아','ge','Georgia'],['아르메니아','am','Armenia'],['벨라루스','by','Belarus'],['슬로바키아','sk','Slovakia'],
+    ['슬로베니아','si','Slovenia'],['크로아티아','hr','Croatia'],['세르비아','rs','Serbia'],['불가리아','bg','Bulgaria'],
+    ['에스토니아','ee','Estonia'],['라트비아','lv','Latvia'],['리투아니아','lt','Lithuania'],['아이슬란드','is','Iceland'],
+    ['아일랜드','ie','Ireland'],['룩셈부르크','lu','Luxembourg'],['몰타','mt','Malta'],['키프로스','cy','Cyprus'],
+    ['모로코','ma','Morocco'],['알제리','dz','Algeria'],['튀니지','tn','Tunisia'],['에티오피아','et','Ethiopia'],
+    ['가나','gh','Ghana'],['카메룬','cm','Cameroon'],['앙골라','ao','Angola'],['탄자니아','tz','Tanzania'],
+    ['우간다','ug','Uganda'],['르완다','rw','Rwanda'],['세네갈','sn','Senegal'],['코트디부아르','ci','Ivory Coast'],
+    ['파푸아뉴기니','pg','Papua New Guinea'],['피지','fj','Fiji'],['쿠바','cu','Cuba'],
+    ['도미니카공화국','do','Dominican Republic'],['과테말라','gt','Guatemala'],['온두라스','hn','Honduras'],
+    ['코스타리카','cr','Costa Rica'],['파나마','pa','Panama'],['자메이카','jm','Jamaica'],
+    ['브루나이','bn','Brunei'],['동티모르','tl','Timor-Leste'],['모리셔스','mu','Mauritius'],
+    ['기타','','Other'],
   ];
+  const COUNTRIES = COUNTRIES_ALL.map(c => c[0]);
 
   const GENERATIONS = ['10대','20대','30대','40대','50대','60대','70대 이상'];
 
@@ -209,13 +236,19 @@
     }
   }
 
+  function countryIso(country) {
+    const c = COUNTRIES_ALL.find(x => x[0] === country);
+    return c ? c[1] : '';
+  }
   function countryFlag(country) {
-    const flags = {
-      '대한민국':'🇰🇷','미국':'🇺🇸','일본':'🇯🇵','중국':'🇨🇳','영국':'🇬🇧',
-      '프랑스':'🇫🇷','독일':'🇩🇪','캐나다':'🇨🇦','호주':'🇦🇺','브라질':'🇧🇷',
-      '인도':'🇮🇳','러시아':'🇷🇺','태국':'🇹🇭','베트남':'🇻🇳','싱가포르':'🇸🇬',
-    };
-    return flags[country] || '🌍';
+    const iso = countryIso(country);
+    if (!iso) return '🌍';
+    return `<img src="https://flagcdn.com/w40/${iso}.png" style="width:22px;height:15px;object-fit:cover;border-radius:2px;vertical-align:middle;" alt="${country}">`;
+  }
+  function countryFlagImg(country, size) {
+    const iso = countryIso(country);
+    if (!iso) return '<span style="font-size:20px;">🌍</span>';
+    return `<img src="https://flagcdn.com/w${size||40}/${iso}.png" style="width:${size?size*1.5:30}px;height:${size?size:20}px;object-fit:cover;border-radius:3px;" alt="${country}" loading="lazy">`;
   }
 
   // ── 프로필 설정 모달 ──
@@ -234,11 +267,12 @@
           </div>
           <div id="ps-nick-msg" class="ps-msg"></div>
 
-          <label class="ps-label">국가 * <span class="ps-note">(이후 변경 불가)</span></label>
-          <select id="ps-country" class="ps-input ps-select">
-            <option value="">국가 선택...</option>
-            ${COUNTRIES.map(c => `<option value="${c}">${countryFlag(c)} ${c}</option>`).join('')}
-          </select>
+          <label class="ps-label">국가 * <span class="ps-note">(이후 변경 불가)</span> <span id="ps-country-selected" style="color:#E8C97A;font-size:12px;"></span></label>
+          <input type="hidden" id="ps-country" value="">
+          <input type="text" id="country-search-input" class="ps-input" placeholder="🔍 국가명 검색 (한국어 또는 영어)..." style="margin-bottom:6px;">
+          <div id="country-grid-wrap" style="max-height:220px;overflow-y:auto;border:1px solid rgba(201,168,76,0.2);border-radius:8px;background:rgba(0,0,0,0.2);padding:4px;scrollbar-width:thin;scrollbar-color:rgba(201,168,76,0.3) transparent;">
+            <div id="country-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:5px;"></div>
+          </div>
 
           <label class="ps-label">도시 / 지역</label>
           <input type="text" id="ps-city" class="ps-input" placeholder="예: 서울, Tokyo, New York">
@@ -271,6 +305,34 @@
       </div>
     `;
     document.body.appendChild(overlay);
+
+    // ── 195개국 그리드 ──
+    const cgrid = document.getElementById('country-grid');
+    const csearch = document.getElementById('country-search-input');
+    let _selCountry = '';
+    function buildCGrid(q) {
+      cgrid.innerHTML = '';
+      COUNTRIES_ALL.filter(([n,,en]) => !q || n.includes(q) || en.toLowerCase().includes(q.toLowerCase()))
+      .forEach(([name, iso]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:7px;border:1px solid transparent;background:rgba(255,255,255,0.04);cursor:pointer;font-size:10px;color:rgba(245,240,232,0.75);font-family:inherit;transition:all 0.15s;';
+        b.innerHTML = iso
+          ? `<img src="https://flagcdn.com/w40/${iso}.png" loading="lazy" style="width:30px;height:20px;object-fit:cover;border-radius:2px;" alt="${name}"><span>${name}</span>`
+          : `<span style="font-size:18px;">🌍</span><span>${name}</span>`;
+        b.addEventListener('click', () => {
+          _selCountry = name;
+          document.getElementById('ps-country').value = name;
+          document.getElementById('ps-country-selected').textContent = name;
+          cgrid.querySelectorAll('button').forEach(x => x.style.borderColor='transparent');
+          b.style.cssText = b.style.cssText.replace('transparent','#C9A84C') + ';background:rgba(201,168,76,0.18);color:#E8C97A;font-weight:700;';
+          b.scrollIntoView({behavior:'smooth',block:'nearest'});
+        });
+        cgrid.appendChild(b);
+      });
+    }
+    buildCGrid('');
+    csearch && csearch.addEventListener('input', () => buildCGrid(csearch.value.trim()));
 
     // 세대 선택
     let selectedSports = [];
@@ -372,6 +434,34 @@
       </div>
     `;
     document.body.appendChild(overlay);
+
+    // ── 195개국 그리드 ──
+    const cgrid = document.getElementById('country-grid');
+    const csearch = document.getElementById('country-search-input');
+    let _selCountry = '';
+    function buildCGrid(q) {
+      cgrid.innerHTML = '';
+      COUNTRIES_ALL.filter(([n,,en]) => !q || n.includes(q) || en.toLowerCase().includes(q.toLowerCase()))
+      .forEach(([name, iso]) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:7px;border:1px solid transparent;background:rgba(255,255,255,0.04);cursor:pointer;font-size:10px;color:rgba(245,240,232,0.75);font-family:inherit;transition:all 0.15s;';
+        b.innerHTML = iso
+          ? `<img src="https://flagcdn.com/w40/${iso}.png" loading="lazy" style="width:30px;height:20px;object-fit:cover;border-radius:2px;" alt="${name}"><span>${name}</span>`
+          : `<span style="font-size:18px;">🌍</span><span>${name}</span>`;
+        b.addEventListener('click', () => {
+          _selCountry = name;
+          document.getElementById('ps-country').value = name;
+          document.getElementById('ps-country-selected').textContent = name;
+          cgrid.querySelectorAll('button').forEach(x => x.style.borderColor='transparent');
+          b.style.cssText = b.style.cssText.replace('transparent','#C9A84C') + ';background:rgba(201,168,76,0.18);color:#E8C97A;font-weight:700;';
+          b.scrollIntoView({behavior:'smooth',block:'nearest'});
+        });
+        cgrid.appendChild(b);
+      });
+    }
+    buildCGrid('');
+    csearch && csearch.addEventListener('input', () => buildCGrid(csearch.value.trim()));
     overlay.addEventListener('click', e => { if (e.target===overlay) closeMyPage(); });
     document.getElementById('mp-close').addEventListener('click', closeMyPage);
     document.getElementById('mp-signout').addEventListener('click', signOut);
