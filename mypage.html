@@ -382,7 +382,12 @@ ${Object.keys(recMap).length>0?`
       <div class="wr-game">${sport}</div>
       <div class="wr-bar-bg"><div class="wr-bar-fill" style="width:${wr}%;background:${color};"></div></div>
       <div class="wr-pct" style="color:${color};">${wr}%</div>
-    </div>`;
+    </div>
+<div style="padding:4px 16px 6px;margin-top:4px;">
+  <div style="font-size:11px;font-weight:700;color:rgba(201,168,76,0.6);letter-spacing:.1em;margin-bottom:10px;">🎮 종목 카드</div>
+  <div id="game-cards-wrap" class="game-cards-grid"></div>
+</div>
+`;
   }).join('')}
 </div>
 `:''}
@@ -563,6 +568,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     .order('wins', { ascending: false });
 
   renderMypage(finalProfile, records || []);
+  // 게임 카드는 DOM 생성 후 채움
+  setTimeout(buildGameCards, 100);
 });
 </script>
 </body>
