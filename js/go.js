@@ -78,54 +78,104 @@
     const sim=res.bd;
     let score=0;
 
-    // ① 즉각 포획
-    score += res.captured * 800;
+    // ① 즉각 포획 (매우 중요)
+    score += res.captured * 1200;
 
-    // ② 내 단수 구출 (1활로 그룹 구하기)
+    // ② 내 돌 구하기 (단수/이단수 위기)
     for(const [nr,nc] of nbOf(r,c)){
       if(board[nr][nc]===WHITE){
         const g=getGroup(board,nr,nc);
-        if(g.liberties.size===1) score+=600; // 생사 위기 구출
-        else if(g.liberties.size===2) score+=80;
+        if(g.liberties.size===1) score+=1000; // 단수 구출
+        else if(g.liberties.size===2) score+=150;
       }
     }
 
-    // ③ 상대 단수(아타리) 위협
+    // ③ 상대 단수(아타리) - 포획 위협
     for(const [nr,nc] of nbOf(r,c)){
       if(sim[nr][nc]===BLACK){
         const g=getGroup(sim,nr,nc);
-        if(g.liberties.size===1) score+=400;
-        else if(g.liberties.size===2) score+=60;
+        if(g.liberties.size===1) score+=900; // 상대 단수
+        else if(g.liberties.size===2) score+=120;
       }
     }
 
-    // ④ 활로 수
-    score += res.ownLiberties * 12;
+    // ④ 자살수 방지
+    const myGroup=getGroup(sim,r,c);
+    if(myGroup.liberties.size===0) return null; // 자살수
+    if(myGroup.liberties.size===1) score-=300; // 즉각 단수 위험
 
-    // ⑤ 근처 돌 밀도 (3선 반경)
-    let prox=0;
-    for(let dr=-3;dr<=3;dr++) for(let dc=-3;dc<=3;dc++){
-      const nr=r+dr,nc=c+dc;
-      if(inB(nr,nc)&&board[nr][nc]!==EMPTY) prox++;
+    // ⑤ 연결성 (내 돌과 인접 = 연결 강화)
+    let myNeighbors=0, emptyNeighbors=0;
+    for(const [nr,nc] of nbOf(r,c)){
+      if(board[nr][nc]===WHITE) myNeighbors++;
+      else if(board[nr][nc]===EMPTY) emptyNeighbors++;
     }
-    score += prox * 8;
+    score += myNeighbors * 60;
+    score += emptyNeighbors * 20; // 활로 확보
 
-    // ⑥ 1선 감점, 2선 약감점
-    if(r===0||c===0||r===SIZE-1||c===SIZE-1) score-=30;
-    else if(r===1||c===1||r===SIZE-2||c===SIZE-2) score-=10;
+    // ⑥ 활로 수 (많을수록 좋음)
+    score += myGroup.liberties.size * 40;
 
-    // ⑦ 화점 근처 가산
-    for(const [sr,sc] of STAR_POINTS_19){
-      const d=Math.abs(r-sr)+Math.abs(c-sc);
-      if(d===0) score+=25;
-      else if(d<=2) score+=8;
+    // ⑦ 중앙 선호 (초반 포석)
+    const totalStones = countStones(board);
+    if(totalStones < 60){
+      const dr = Math.abs(r - (SIZE-1)/2);
+      const dc = Math.abs(c - (SIZE-1)/2);
+      const dist = Math.max(dr,dc);
+      score += Math.max(0, (SIZE/2 - dist)) * 25;
     }
 
-    score += Math.random()*12;
+    // ⑧ 화점(스타포인트) 선호 - 초반
+    const starPts = [[3,3],[3,9],[3,15],[9,3],[9,9],[9,15],[15,3],[15,9],[15,15]];
+    if(totalStones < 20 && starPts.some(([sr,sc])=>sr===r&&sc===c)) score+=200;
+
+    // ⑨ 패턴: 상대 눈 훼방 (상대 돌이 3개 이상 둘러싼 빈칸)
+    let blackNeighbors=0;
+    for(const [nr,nc] of nbOf(r,c)){
+      if(board[nr][nc]===BLACK) blackNeighbors++;
+    }
+    if(blackNeighbors>=2) score+=80;
+
     return score;
   }
 
-  // 경량 몬테카를로: candidate 위치에 대해 n번 랜덤 플레이아웃
+  function countStones(bd){
+    let n=0;
+    for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++) if(bd[r][c]!==EMPTY) n++;
+    return n;
+  }
+
+  // 롤아웃 정책: 휴리스틱 기반 랜덤 (완전 랜덤보다 강함)
+  function rolloutMove(bd,color,lastCaptures){
+    const empties=[];
+    const urgent=[];
+    for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
+      if(bd[r][c]!==EMPTY) continue;
+      const opp=color===BLACK?WHITE:BLACK;
+      // 즉각 포획 우선
+      let caps=0;
+      for(const [nr,nc] of nbOf(r,c)){
+        if(bd[nr][nc]===opp){
+          const g=getGroup(bd,nr,nc);
+          if(g.liberties.size===1) caps+=g.cells.size;
+        }
+      }
+      if(caps>0){ urgent.push([r,c,caps]); continue; }
+      // 눈(eye) 제외: 완전히 둘러싸인 빈 칸은 스킵
+      let ownNb=0;
+      for(const [nr,nc] of nbOf(r,c)) if(bd[nr][nc]===color) ownNb++;
+      if(ownNb===nbOf(r,c).length) continue;
+      empties.push([r,c]);
+    }
+    if(urgent.length){
+      urgent.sort((a,b)=>b[2]-a[2]);
+      return [urgent[0][0],urgent[0][1]];
+    }
+    if(!empties.length) return null;
+    return empties[Math.floor(Math.random()*empties.length)];
+  }
+
+
   function mcEval(r,c,n){
     let wins=0;
     for(let t=0;t<n;t++){
@@ -133,33 +183,42 @@
       const firstRes=tryMove(simBd,WHITE,r,c,koPoint,koColor);
       if(!firstRes.ok) return -Infinity;
       let bd2=firstRes.bd;
-      let curColor=BLACK, capB=capturedByBlack, capW=capturedByWhite+firstRes.captured;
+      let curColor=BLACK;
+      let capB=capturedByBlack, capW=capturedByWhite+firstRes.captured;
       let passes=0;
-      for(let step=0;step<30&&passes<2;step++){
-        const empties=[];
-        for(let rr=0;rr<SIZE;rr++) for(let cc=0;cc<SIZE;cc++){
-          if(bd2[rr][cc]===EMPTY) empties.push([rr,cc]);
-        }
-        if(!empties.length){ passes++; curColor=curColor===BLACK?WHITE:BLACK; continue; }
-        // 랜덤 후보 8개만 평가
-        const sample=empties.sort(()=>Math.random()-0.5).slice(0,8);
-        let moved=false;
-        for(const [rr,cc] of sample){
-          const res2=tryMove(bd2,curColor,rr,cc,null,null);
-          if(res2.ok){
-            bd2=res2.bd;
-            if(curColor===BLACK) capB+=res2.captured;
-            else capW+=res2.captured;
-            curColor=curColor===BLACK?WHITE:BLACK;
-            passes=0; moved=true; break;
-          }
-        }
-        if(!moved){ passes++; curColor=curColor===BLACK?WHITE:BLACK; }
+      // 더 긴 롤아웃: 60수 (기존 30수)
+      for(let step=0;step<60&&passes<2;step++){
+        const mv=rolloutMove(bd2,curColor,null);
+        if(!mv){ passes++; curColor=curColor===BLACK?WHITE:BLACK; continue; }
+        passes=0;
+        const res=tryMove(bd2,curColor,mv[0],mv[1],null,null);
+        if(!res.ok){ passes++; curColor=curColor===BLACK?WHITE:BLACK; continue; }
+        bd2=res.bd;
+        if(curColor===BLACK) capB+=res.captured;
+        else capW+=res.captured;
+        curColor=curColor===BLACK?WHITE:BLACK;
       }
-      if(capW>capB) wins++;
+      // 점수: 포획 + 영토 추정
+      let wScore=capW, bScore=capB;
+      for(let rr=0;rr<SIZE;rr++) for(let cc=0;cc<SIZE;cc++){
+        if(bd2[rr][cc]===WHITE) wScore+=1;
+        else if(bd2[rr][cc]===BLACK) bScore+=1;
+        else{
+          // 빈점 영토 추정: 주변 돌의 색
+          let wb=0,bb=0;
+          for(const [nr,nc] of nbOf(rr,cc)){
+            if(bd2[nr][nc]===WHITE) wb++;
+            else if(bd2[nr][nc]===BLACK) bb++;
+          }
+          if(wb>bb) wScore+=0.5;
+          else if(bb>wb) bScore+=0.5;
+        }
+      }
+      if(wScore>bScore) wins++;
     }
     return wins/n;
   }
+
 
   function aiPickMove(){
     // 1단계: 전체 휴리스틱 스코어
@@ -172,66 +231,23 @@
     if(!candidates.length) return null;
     candidates.sort((a,b)=>b.h-a.h);
 
-    // 2단계: 상위 20후보에 대해 몬테카를로 평가 (8 플레이아웃씩)
-    const top=candidates.slice(0,20);
+    // 긴급 수: 스코어가 압도적으로 높은 경우 즉시 선택
+    if(candidates[0].h >= 900 && candidates.length > 1){
+      // 포획/구출 수는 바로 실행
+      if(candidates[0].h >= 1000) return [candidates[0].r, candidates[0].c];
+    }
+
+    // 2단계: 상위 15후보에 대해 몬테카를로 평가 (50 플레이아웃씩)
+    const top=candidates.slice(0,15);
     let best=-Infinity, bestCell=null;
     for(const {r,c,h} of top){
-      const mc=mcEval(r,c,8);
-      const combined=h*0.4+mc*1000;
+      const mc=mcEval(r,c,50); // 8 → 50 플레이아웃
+      const combined=h*0.35 + mc*1500; // MC 가중치 높임
       if(combined>best){ best=combined; bestCell=[r,c]; }
     }
     return bestCell;
   }
 
-  /* ── UI helpers ── */
-  function sfx(name){ if(global.ICOC_SFX) global.ICOC_SFX[name]?.(); }
-  function setStatus(t){ const el=document.getElementById('go-status'); if(el) el.textContent=t; }
-  function setPointsMsg(t){ const el=document.getElementById('go-points-msg'); if(el) el.textContent=t; }
-
-  function setTurnUI(){
-    const bPill=document.getElementById('go-turn-black');
-    const wPill=document.getElementById('go-turn-white');
-    if(!bPill) return;
-    bPill.classList.toggle('active', turn===BLACK&&!gameOver);
-    wPill.classList.toggle('active', turn===WHITE&&!gameOver);
-    // 포획 수 업데이트
-    bPill.innerHTML=`⚫ 당신 (흑) · 포획 ${capturedByBlack}`;
-    wPill.innerHTML=`⚪ AI (백) · 포획 ${capturedByWhite}`;
-  }
-
-  function renderBoard(){
-    if(!boardUI||!boardUI.cellEls) return;
-    for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
-      const cell=boardUI.cellEls[r]?.[c];
-      if(!cell) continue;
-      const v=board[r][c];
-      if(v===BLACK){ cell.innerHTML=''; const s=document.createElement('div'); s.className='go-stone go-black'; cell.appendChild(s); }
-      else if(v===WHITE){ cell.innerHTML=''; const s=document.createElement('div'); s.className='go-stone go-white'; cell.appendChild(s); }
-      else cell.innerHTML='';
-    }
-    if(lastMoveEl){ lastMoveEl.classList.remove('last-move'); lastMoveEl=null; }
-  }
-
-  function markLastMove(r,c){
-    if(!boardUI||!boardUI.cellEls) return;
-    const cell=boardUI.cellEls[r]?.[c];
-    if(cell){ const st=cell.querySelector('.go-stone'); if(st){ st.classList.add('last-move'); lastMoveEl=st; } }
-  }
-
-  /* ── 게임 로직 ── */
-  function onCellClick(r,c){
-    if(gameOver||turn!==BLACK) return;
-    const res=tryMove(board,BLACK,r,c,koPoint,koColor);
-    if(!res.ok){ sfx('click'); return; }
-    board=res.bd;
-    capturedByBlack+=res.captured;
-    if(res.newKo){ koPoint=res.newKo.pt; koColor=res.newKo.col; } else { koPoint=null; koColor=null; }
-    if(res.captured>0) sfx('capture'); else sfx('stone');
-    passCount=0;
-    renderBoard(); markLastMove(r,c); setTurnUI();
-    turn=WHITE;
-    setTimeout(doAiTurn, 280);
-  }
 
   function doAiTurn(){
     setStatus('AI가 생각 중...');
