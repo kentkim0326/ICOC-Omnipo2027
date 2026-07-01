@@ -145,37 +145,47 @@ function sfx(type) {
     if(myGroup.liberties.size===0) return null; // 자살수
     if(myGroup.liberties.size===1) score-=300; // 즉각 단수 위험
 
-    // ⑤ 연결성 (내 돌과 인접 = 연결 강화)
-    let myNeighbors=0, emptyNeighbors=0;
+    // ⑤ 연결성 (균형: 연결+분산)
+    const totalStones = countStones(board);
+    let myNeighbors=0, emptyNeighbors=0, blackNeighbors=0;
     for(const [nr,nc] of nbOf(r,c)){
       if(board[nr][nc]===WHITE) myNeighbors++;
       else if(board[nr][nc]===EMPTY) emptyNeighbors++;
+      else if(board[nr][nc]===BLACK) blackNeighbors++;
     }
-    score += myNeighbors * 60;
-    score += emptyNeighbors * 20; // 활로 확보
+    // 클러스터 방지: 인접 내 돌 2개 이상이면 페널티 (뭉치지 않게)
+    if(myNeighbors === 1) score += 50;       // 한 개 연결: 좋음
+    else if(myNeighbors === 2) score += 20;  // 두 개 연결: 보통
+    else if(myNeighbors >= 3) score -= 80;   // 세 개 이상: 클러스터 페널티
+    score += emptyNeighbors * 25;
 
     // ⑥ 활로 수 (많을수록 좋음)
-    score += myGroup.liberties.size * 40;
+    score += myGroup.liberties.size * 45;
 
-    // ⑦ 중앙 선호 (초반 포석)
-    const totalStones = countStones(board);
-    if(totalStones < 60){
+    // ⑦ 포석 전략 (초반: 영역 확장, 후반: 국지전)
+    if(totalStones < 30){
+      // 초반: 분산 포석 선호 (넓게 퍼지기)
       const dr = Math.abs(r - (SIZE-1)/2);
       const dc = Math.abs(c - (SIZE-1)/2);
       const dist = Math.max(dr,dc);
-      score += Math.max(0, (SIZE/2 - dist)) * 25;
+      // 3~6선 선호 (너무 가장자리도, 너무 중앙도 아닌)
+      const idealDist = 5;
+      score += Math.max(0, 200 - Math.abs(dist - idealDist) * 40);
+    } else if(totalStones < 80) {
+      // 중반: 상대 돌에 압박
+      score += blackNeighbors * 50;
     }
 
-    // ⑧ 화점(스타포인트) 선호 - 초반
+    // ⑧ 화점(스타포인트) 선호 - 초반 20수 이내
     const starPts = [[3,3],[3,9],[3,15],[9,3],[9,9],[9,15],[15,3],[15,9],[15,15]];
-    if(totalStones < 20 && starPts.some(([sr,sc])=>sr===r&&sc===c)) score+=200;
+    if(totalStones < 20 && starPts.some(([sr,sc])=>sr===r&&sc===c)) score+=250;
 
-    // ⑨ 패턴: 상대 눈 훼방 (상대 돌이 3개 이상 둘러싼 빈칸)
-    let blackNeighbors=0;
-    for(const [nr,nc] of nbOf(r,c)){
-      if(board[nr][nc]===BLACK) blackNeighbors++;
-    }
-    if(blackNeighbors>=2) score+=80;
+    // ⑨ 양쪽 끝(1선) 회피 - 초반
+    if(totalStones < 40 && (r===0||r===SIZE-1||c===0||c===SIZE-1)) score -= 120;
+    if(totalStones < 20 && (r<=1||r>=SIZE-2||c<=1||c>=SIZE-2)) score -= 80;
+
+    // ⑩ 상대 눈 훼방
+    if(blackNeighbors>=2) score+=100;
 
     return score;
   }
