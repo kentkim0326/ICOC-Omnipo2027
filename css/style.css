@@ -1242,53 +1242,55 @@
 
 /* ── Hero Auth Area ── */
 .hero-auth-area {
-  margin-top: 32px;
+  margin-top: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+}
+.hero-auth-row {
+  display: flex; align-items: center; gap: 8px;
+  flex-wrap: wrap; justify-content: center;
 }
 .hero-google-btn {
-  display: flex; align-items: center; gap: 12px;
-  padding: 14px 32px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 22px;
   background: #fff; color: #1a1a1a;
   border: none; border-radius: 8px;
-  font-size: 16px; font-weight: 600;
+  font-size: 14px; font-weight: 600;
   cursor: pointer; font-family: inherit;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.35);
   transition: all 0.2s;
-  min-width: 260px; justify-content: center;
+  white-space: nowrap;
 }
 .hero-google-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 28px rgba(0,0,0,0.4);
+  box-shadow: 0 6px 24px rgba(0,0,0,0.4);
 }
 .hero-auth-note {
-  font-size: 11px; color: rgba(245,240,232,0.4);
+  font-size: 10px; color: rgba(245,240,232,0.35);
   text-align: center;
 }
-.hero-terms-link { color: rgba(201,168,76,0.6); text-decoration: none; }
+.hero-terms-link { color: rgba(201,168,76,0.5); text-decoration: none; }
 .hero-terms-link:hover { color: var(--gold); }
-
-.hero-social-row {
-  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
-  margin-top: 4px;
+.hero-social-below {
+  display: flex; gap: 8px; margin-top: 8px; justify-content: center;
 }
 .hero-social-btn {
-  display: flex; align-items: center; gap: 8px;
-  padding: 9px 20px; border-radius: 6px;
+  display: flex; align-items: center; gap: 7px;
+  padding: 9px 16px; border-radius: 6px;
   font-size: 13px; font-weight: 600;
   text-decoration: none; transition: all 0.2s;
-  border: 1px solid rgba(255,255,255,0.15);
+  border: none;
 }
-.hero-yt {
-  background: rgba(255,0,0,0.85); color: #fff;
-}
+.hero-yt { background: rgba(255,0,0,0.9); color: #fff; }
 .hero-yt:hover { background: #ff0000; transform: translateY(-1px); }
-.hero-fb {
-  background: rgba(24,119,242,0.85); color: #fff;
-}
+.hero-fb { background: rgba(24,119,242,0.9); color: #fff; }
 .hero-fb:hover { background: #1877f2; transform: translateY(-1px); }
+/* 소셜 아이콘 전용 버튼 (로그인 옆) */
+.hero-auth-row .hero-social-btn {
+  padding: 10px 12px; border-radius: 8px;
+}
 
 /* 로그인 후 유저 카드 */
 .hero-user-card {
