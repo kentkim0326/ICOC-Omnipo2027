@@ -1,0 +1,320 @@
+/* ============================================================
+   ICOC ONLINE — Supabase Realtime 1:1 멀티플레이어
+   오목 / 바둑 / 체스 / 장기 / 쇼기 지원
+   ============================================================ */
+(function(global) {
+  'use strict';
+
+  let channel = null;
+  let roomId  = null;
+  let myRole  = null; // 'host' | 'guest'
+  let myColor = null; // 'black' | 'white' (or piece color)
+  let gameKey = null; // 'omok' | 'go' | 'chess' | 'janggi' | 'shogi'
+  let sb      = null;
+  let onMoveCallback  = null;
+  let onStartCallback = null;
+  let onEndCallback   = null;
+  let isMyTurn        = false;
+  let active          = false;
+  let opponentNick    = '상대방';
+
+  // ── 초기화 ──
+  function init() {
+    const cfg = window.ICOC_CONFIG;
+    if (!cfg || cfg.SUPABASE_URL === 'YOUR_SUPABASE_URL') return false;
+    sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+    return true;
+  }
+
+  // ── 방 생성 (Host) ──
+  async function createRoom(game, callbacks) {
+    if (!init()) return alert('Supabase 연결 필요');
+    gameKey = game;
+    onMoveCallback  = callbacks.onMove;
+    onStartCallback = callbacks.onStart;
+    onEndCallback   = callbacks.onEnd;
+
+    roomId = Math.random().toString(36).slice(2, 8).toUpperCase();
+    myRole = 'host';
+    myColor = 'black'; // host = 흑/선공
+
+    // DB에 방 저장
+    const user = window.ICOC_AUTH?.getCurrentUser();
+    await sb.from('icoc_game_rooms').insert({
+      id: roomId, game: gameKey,
+      host_id: user?.id,
+      host_nick: user?.email?.split('@')[0] || 'Player1',
+      status: 'waiting',
+      created_at: new Date().toISOString()
+    });
+
+    _subscribeChannel();
+    return roomId;
+  }
+
+  // ── 방 참가 (Guest) ──
+  async function joinRoom(code, callbacks) {
+    if (!init()) return alert('Supabase 연결 필요');
+    onMoveCallback  = callbacks.onMove;
+    onStartCallback = callbacks.onStart;
+    onEndCallback   = callbacks.onEnd;
+
+    // DB에서 방 찾기
+    const { data: room, error } = await sb.from('icoc_game_rooms')
+      .select('*').eq('id', code.toUpperCase()).eq('status','waiting').maybeSingle();
+    if (!room) return '방을 찾을 수 없습니다. 코드를 다시 확인하세요.';
+
+    roomId  = room.id;
+    gameKey = room.game;
+    myRole  = 'guest';
+    myColor = 'white'; // guest = 백/후공
+    opponentNick = room.host_nick;
+
+    // 방 상태 업데이트
+    const user = window.ICOC_AUTH?.getCurrentUser();
+    await sb.from('icoc_game_rooms').update({
+      guest_id:   user?.id,
+      guest_nick: user?.email?.split('@')[0] || 'Player2',
+      status: 'playing'
+    }).eq('id', roomId);
+
+    _subscribeChannel();
+    return null; // null = 성공
+  }
+
+  // ── 채널 구독 ──
+  function _subscribeChannel() {
+    channel = sb.channel('icoc-game-' + roomId, {
+      config: { presence: { key: myRole } }
+    });
+
+    // Presence: 상대 입장 감지
+    channel.on('presence', { event: 'join' }, ({ newPresences }) => {
+      const others = newPresences.filter(p => p.phx_ref !== undefined);
+      if (myRole === 'host' && others.length > 0) {
+        // 게임 시작!
+        isMyTurn = true; // host가 먼저
+        active   = true;
+        if (onStartCallback) onStartCallback({ myColor, myRole, roomId });
+        _showStatus('게임 시작! 당신의 차례 (흑)');
+      } else if (myRole === 'guest') {
+        isMyTurn = false;
+        active   = true;
+        if (onStartCallback) onStartCallback({ myColor, myRole, roomId });
+        _showStatus('게임 시작! 상대 차례 기다리는 중...');
+      }
+    });
+
+    // Broadcast: 상대 수 수신
+    channel.on('broadcast', { event: 'move' }, ({ payload }) => {
+      isMyTurn = true;
+      if (onMoveCallback) onMoveCallback(payload);
+      _showStatus('당신의 차례!');
+    });
+
+    // Broadcast: 게임 종료
+    channel.on('broadcast', { event: 'end' }, ({ payload }) => {
+      active = false;
+      if (onEndCallback) onEndCallback(payload);
+      _cleanup();
+    });
+
+    // Broadcast: 상대 연결 끊김
+    channel.on('presence', { event: 'leave' }, () => {
+      if (active) {
+        _showStatus('⚠️ 상대방이 연결을 끊었습니다.');
+        active = false;
+        if (onEndCallback) onEndCallback({ winner: myRole, reason: 'disconnect' });
+      }
+    });
+
+    channel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        await channel.track({ role: myRole, game: gameKey });
+      }
+    });
+  }
+
+  // ── 수 전송 ──
+  function sendMove(payload) {
+    if (!channel || !active) return;
+    isMyTurn = false;
+    channel.send({ type: 'broadcast', event: 'move', payload });
+    _showStatus('상대방 차례...');
+  }
+
+  // ── 게임 종료 전송 ──
+  function sendEnd(winner) {
+    if (!channel) return;
+    active = false;
+    channel.send({ type: 'broadcast', event: 'end', payload: { winner, game: gameKey } });
+    _cleanup();
+  }
+
+  // ── 방 목록 조회 ──
+  async function listRooms(game) {
+    if (!sb && !init()) return [];
+    const { data } = await sb.from('icoc_game_rooms')
+      .select('*').eq('game', game).eq('status','waiting')
+      .order('created_at', { ascending: false }).limit(10);
+    return data || [];
+  }
+
+  // ── 정리 ──
+  function _cleanup() {
+    if (channel) { sb.removeChannel(channel); channel = null; }
+    if (roomId) {
+      sb.from('icoc_game_rooms').update({ status:'finished' }).eq('id', roomId);
+      roomId = null;
+    }
+    active = false;
+  }
+
+  function _showStatus(msg) {
+    const el = document.getElementById('online-status-bar');
+    if (el) {
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+  }
+
+  // ── 매치메이킹 UI 주입 ──
+  function injectMatchmakingUI(gameModal, gameKey) {
+    const existing = document.getElementById('online-panel');
+    if (existing) existing.remove();
+
+    const panel = document.createElement('div');
+    panel.id = 'online-panel';
+    panel.style.cssText = `
+      position:absolute; top:0; left:0; right:0; bottom:0;
+      background:rgba(8,20,44,0.97); z-index:100;
+      display:flex; flex-direction:column; align-items:center; justify-content:center;
+      gap:16px; padding:24px; border-radius:16px;
+    `;
+    panel.innerHTML = `
+      <div style="font-size:24px;">🌐</div>
+      <h3 style="color:#E8C97A;font-size:18px;margin:0;">온라인 1:1 대전</h3>
+      <p style="color:rgba(245,240,232,0.6);font-size:13px;text-align:center;margin:0;">
+        친구에게 방 코드를 알려주거나,<br>코드를 입력해서 입장하세요.
+      </p>
+
+      <div style="display:flex;gap:10px;width:100%;max-width:320px;">
+        <button id="btn-create-room" style="flex:1;padding:12px;background:rgba(201,168,76,0.12);border:1px solid rgba(201,168,76,0.4);border-radius:10px;color:#E8C97A;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+          🏠 방 만들기
+        </button>
+        <button id="btn-join-panel" style="flex:1;padding:12px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:10px;color:#4ade80;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+          🚪 입장하기
+        </button>
+      </div>
+
+      <div id="join-code-area" style="display:none;flex-direction:column;gap:8px;width:100%;max-width:320px;">
+        <input id="room-code-input" type="text" placeholder="방 코드 입력 (예: AB12CD)"
+          style="padding:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.3);border-radius:10px;color:#F5F0E8;font-size:16px;text-align:center;letter-spacing:.2em;font-family:monospace;text-transform:uppercase;outline:none;width:100%;box-sizing:border-box;">
+        <button id="btn-join-room" style="padding:12px;background:rgba(74,222,128,0.15);border:1px solid rgba(74,222,128,0.4);border-radius:10px;color:#4ade80;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;">
+          입장 →
+        </button>
+      </div>
+
+      <div id="room-created-area" style="display:none;flex-direction:column;align-items:center;gap:8px;">
+        <p style="color:rgba(245,240,232,0.6);font-size:12px;margin:0;">방 코드를 친구에게 알려주세요</p>
+        <div id="room-code-display" style="font-size:32px;font-weight:900;letter-spacing:.3em;color:#C9A84C;font-family:monospace;background:rgba(201,168,76,0.08);padding:12px 24px;border-radius:12px;border:1px solid rgba(201,168,76,0.3);cursor:pointer;" title="클릭해서 복사"></div>
+        <p style="color:rgba(245,240,232,0.4);font-size:11px;margin:0;">상대방 기다리는 중... ⏳</p>
+      </div>
+
+      <div id="online-status-bar" style="display:none;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:8px 16px;color:#4ade80;font-size:13px;font-weight:600;"></div>
+
+      <div style="display:flex;gap:8px;">
+        <button onclick="document.getElementById('online-panel').remove()" style="padding:8px 16px;background:none;border:1px solid rgba(245,240,232,0.15);border-radius:8px;color:rgba(245,240,232,0.4);font-size:12px;cursor:pointer;font-family:inherit;">취소</button>
+      </div>
+    `;
+
+    gameModal.style.position = 'relative';
+    gameModal.appendChild(panel);
+
+    // 이벤트
+    panel.querySelector('#btn-create-room').addEventListener('click', async () => {
+      panel.querySelector('#btn-create-room').disabled = true;
+      panel.querySelector('#btn-join-panel').style.display = 'none';
+      const code = await ICOC_ONLINE.createRoom(gameKey, _getGameCallbacks(gameKey));
+      if (code) {
+        panel.querySelector('#room-created-area').style.display = 'flex';
+        const disp = panel.querySelector('#room-code-display');
+        disp.textContent = code;
+        disp.onclick = () => {
+          navigator.clipboard.writeText(code);
+          disp.style.color = '#4ade80';
+          setTimeout(() => disp.style.color = '#C9A84C', 800);
+        };
+      }
+    });
+
+    panel.querySelector('#btn-join-panel').addEventListener('click', () => {
+      panel.querySelector('#join-code-area').style.display = 'flex';
+    });
+
+    panel.querySelector('#btn-join-room').addEventListener('click', async () => {
+      const code = panel.querySelector('#room-code-input').value.trim().toUpperCase();
+      if (!code || code.length < 4) return alert('방 코드를 입력하세요');
+      const err = await ICOC_ONLINE.joinRoom(code, _getGameCallbacks(gameKey));
+      if (err) return alert(err);
+      _showStatus('연결 중...');
+    });
+  }
+
+  // ── 각 게임별 콜백 반환 ──
+  function _getGameCallbacks(key) {
+    return {
+      onStart: ({ myColor, myRole, roomId }) => {
+        const panel = document.getElementById('online-panel');
+        if (panel) {
+          panel.style.opacity = '0';
+          panel.style.pointerEvents = 'none';
+          setTimeout(() => panel.remove(), 600);
+        }
+        _showTurnIndicator(myRole === 'host');
+      },
+      onMove: (payload) => {
+        // 각 게임 전역 함수 호출
+        const fns = {
+          omok:   () => window.OmokGame?.applyOpponentMove?.(payload),
+          go:     () => window.GoGame?.applyOpponentMove?.(payload),
+          chess:  () => window.ChessGame?.applyOpponentMove?.(payload),
+          janggi: () => window.JanggiGame?.applyOpponentMove?.(payload),
+          shogi:  () => window.ShogiGame?.applyOpponentMove?.(payload),
+        };
+        if (fns[key]) fns[key]();
+      },
+      onEnd: (payload) => {
+        const msg = payload.reason === 'disconnect'
+          ? '상대방 연결 끊김 — 부전승!'
+          : payload.winner === myRole ? '🎉 승리!' : '😔 패배';
+        alert(msg);
+      }
+    };
+  }
+
+  function _showTurnIndicator(isMyTurn) {
+    let bar = document.getElementById('online-turn-bar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'online-turn-bar';
+      bar.style.cssText = 'position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:2000;padding:6px 18px;border-radius:20px;font-size:12px;font-weight:700;transition:all .3s;';
+      document.body.appendChild(bar);
+    }
+    bar.style.background = isMyTurn ? 'rgba(74,222,128,0.15)' : 'rgba(248,113,113,0.12)';
+    bar.style.border = isMyTurn ? '1px solid rgba(74,222,128,0.4)' : '1px solid rgba(248,113,113,0.3)';
+    bar.style.color  = isMyTurn ? '#4ade80' : '#f87171';
+    bar.textContent  = isMyTurn ? '🟢 당신의 차례' : '🔴 상대방 차례';
+  }
+
+  global.ICOC_ONLINE = {
+    createRoom, joinRoom, sendMove, sendEnd,
+    listRooms, injectMatchmakingUI,
+    get active()   { return active; },
+    get isMyTurn() { return isMyTurn; },
+    get myColor()  { return myColor; },
+    get myRole()   { return myRole; },
+    showTurnIndicator: _showTurnIndicator,
+  };
+
+})(window);
