@@ -157,6 +157,10 @@
   }
 
   function onCellClick(r, c) {
+    if (window.ICOC_ONLINE?.active) {
+      if (!ICOC_ONLINE.isMyTurn || gameOver) return;
+      window._goingOnline = true;
+    }
     if (gameOver || turn !== PLAYER) return;
     const flips = flipsFor(board, r, c, PLAYER);
     if (flips.length === 0) { global.ICOC_POINTS.showToast('그 자리에는 둘 수 없습니다.'); return; }
@@ -167,7 +171,9 @@
     nextTurnAfter(PLAYER);
     setTurnUI();
     renderBoard();
-    if (!gameOver && turn === AI) doAiTurn();
+    if (!gameOver && turn === AI) 
+    if (window._goingOnline) { ICOC_ONLINE.sendMove({r,c}); ICOC_ONLINE.showTurnIndicator(false); window._goingOnline=false; return; }
+    doAiTurn();
   }
 
   function buildBoardDOM(container) {
@@ -221,5 +227,12 @@
     reset();
   }
 
-  global.ReversiGame = { start };
+  
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    window._goingOnline = false;
+    onCellClick(payload.r, payload.c);
+    window.ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.ReversiGame = { start, applyOpponentMove };
 })(window);
