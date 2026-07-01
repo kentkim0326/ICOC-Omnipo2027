@@ -256,6 +256,67 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 .age-chat-btns{display:flex;gap:5px;}
 .age-chat-btn{flex:1;padding:7px 2px;border:1px solid rgba(201,168,76,0.22);border-radius:10px;background:rgba(201,168,76,0.06);color:rgba(245,240,232,0.75);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;font-family:inherit;}
 .age-chat-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);color:var(--gold-l);}
+
+/* ── NEW TOP-BAR ACTIONS ── */
+.top-bar {
+  position:fixed; top:0; left:0; right:0; z-index:300;
+  display:flex; align-items:center; gap:8px;
+  padding:0 10px; height:52px;
+  background:rgba(8,20,44,0.96); backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(201,168,76,0.15);
+}
+.top-bar-actions {
+  display:flex; align-items:center; gap:5px;
+  margin-left:auto; flex-shrink:0;
+}
+.map-style-pills {
+  display:flex; gap:3px; align-items:center;
+}
+.style-pill {
+  width:28px; height:28px; border-radius:8px;
+  background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2);
+  color:#E8C97A; font-size:13px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+.style-pill:hover, .style-pill.active {
+  background:rgba(201,168,76,0.18); border-color:rgba(201,168,76,0.5);
+}
+.tb-btn {
+  display:flex; align-items:center; gap:4px;
+  padding:5px 9px; border-radius:16px;
+  background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.22);
+  color:#E8C97A; font-size:12px; font-weight:600;
+  cursor:pointer; font-family:inherit; text-decoration:none;
+  white-space:nowrap; transition:all .15s;
+}
+.tb-btn:hover { background:rgba(201,168,76,0.16); }
+.tb-play-btn { background:rgba(74,222,128,0.08); border-color:rgba(74,222,128,0.25); color:#4ade80; }
+.tb-play-btn:hover { background:rgba(74,222,128,0.18); }
+.tb-chat-wrap { position:relative; }
+.tb-chat-dropdown {
+  display:none; position:absolute; top:calc(100% + 6px); right:0;
+  background:rgba(8,20,44,0.97); border:1px solid rgba(201,168,76,0.25);
+  border-radius:12px; padding:10px 8px; min-width:130px; z-index:400;
+  backdrop-filter:blur(20px); box-shadow:0 8px 32px rgba(0,0,0,0.5);
+}
+.tb-chat-dropdown.open { display:block; }
+.tb-chat-dropdown button {
+  display:block; width:100%; padding:7px 10px; text-align:left;
+  background:none; border:none; color:rgba(245,240,232,0.75);
+  font-size:12px; font-weight:500; cursor:pointer; border-radius:8px;
+  font-family:inherit; transition:background .15s;
+}
+.tb-chat-dropdown button:hover { background:rgba(201,168,76,0.12); color:#E8C97A; }
+.tb-label { display:inline; }
+@media(max-width:400px) { .tb-label { display:none; } }
+
+/* ── MAP fills full screen ── */
+#map { position:fixed; top:0; left:0; right:0; bottom:0; z-index:0; }
+.bottom-sheet { z-index:200; }
+.mapboxgl-ctrl-top-left { top:56px !important; }
+.maplibregl-ctrl-top-left { top:56px !important; }
+
 </style>
 </head>
 <body>
@@ -263,26 +324,51 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 <div id="map"></div>
 
 <!-- TOP BAR -->
-<div class="top-bar">
+<div class="top-bar" id="top-bar">
   <a href="index.html" class="btn-back">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
     목록
   </a>
   <div class="top-venue-name" id="top-name">경기장</div>
-  <div class="top-type-badge" id="top-type">ICOC</div>
+  <div class="top-bar-actions">
+    <!-- 지도 스타일 -->
+    <div class="map-style-pills" id="map-style-pills">
+      <button class="style-pill active" onclick="changeVenueStyle('dark')">🌑</button>
+      <button class="style-pill" onclick="changeVenueStyle('light')">☀️</button>
+      <button class="style-pill" onclick="changeVenueStyle('streets')">🏙️</button>
+      <button class="style-pill" onclick="changeVenueStyle('outdoor')">🌿</button>
+      <button class="style-pill" onclick="toggle3D()" id="btn-3d-top" title="3D 전환">🏢</button>
+    </div>
+    <!-- 채팅 토글 -->
+    <div class="tb-chat-wrap" id="tb-chat-wrap">
+      <button class="tb-btn tb-chat-btn" id="tb-chat-btn" onclick="toggleChatPanel()">
+        💬 <span class="tb-label">채팅</span>
+      </button>
+      <div class="tb-chat-dropdown" id="tb-chat-dropdown">
+        <div style="font-size:11px;color:rgba(245,240,232,0.5);padding:4px 0 6px;font-weight:600;">연령대별 채팅방</div>
+        <button onclick="openAgeChat('10대');toggleChatPanel()">🧒 10대</button>
+        <button onclick="openAgeChat('20대');toggleChatPanel()">🧑 20대</button>
+        <button onclick="openAgeChat('30대');toggleChatPanel()">👨 30대</button>
+        <button onclick="openAgeChat('40대');toggleChatPanel()">🧔 40대</button>
+        <button onclick="openAgeChat('50대');toggleChatPanel()">👴 50대</button>
+        <button onclick="openAgeChat('60대');toggleChatPanel()">👵 60대</button>
+        <button onclick="openAgeChat('70대+');toggleChatPanel()">🧓 70대+</button>
+      </div>
+    </div>
+    <!-- 경기장 등록 -->
+    <button class="tb-btn tb-reg-btn" id="tb-reg-btn" onclick="openVenueRegModal()" style="display:none;">
+      📍 <span class="tb-label">등록</span>
+    </button>
+    <!-- 게임하기 -->
+    <a href="games.html" class="tb-btn tb-play-btn">
+      🎮 <span class="tb-label">게임</span>
+    </a>
+  </div>
 </div>
 
-<!-- FLOATING BUTTONS -->
-<div class="float-btns">
-  <button class="float-btn" id="btn-3d" title="3D/평면 전환">🧭</button>
-  <a href="index.html" class="float-btn" title="홈" style="text-decoration:none;font-size:16px;">🏠</a>
-</div>
 
-<!-- CHAT FAB -->
-<button class="chat-fab" id="chat-fab" title="경기장 채팅">
-  💬
-  <div class="chat-dot"></div>
-</button>
+
+
 
 <!-- CHAT MODAL -->
 <div class="chat-modal" id="chat-modal">
@@ -310,13 +396,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 </div>
 
 <!-- BOTTOM SHEET -->
-<!-- 지도 스타일 버튼 (플로팅) -->
-<div style="position:fixed;top:64px;right:8px;z-index:200;display:flex;flex-direction:column;gap:4px;">
-  <button onclick="changeVenueStyle('dark')"   style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">🌑 다크</button>
-  <button onclick="changeVenueStyle('light')"  style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">☀️ 라이트</button>
-  <button onclick="changeVenueStyle('streets')"style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">🏙️ 도시</button>
-  <button onclick="changeVenueStyle('outdoor')"style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">🌿 아웃도어</button>
-</div>
+
 
 <div class="bottom-sheet" id="bottom-sheet">
   <div class="sheet-handle-area" id="sheet-handle"><div class="sheet-handle"></div></div>
@@ -356,31 +436,10 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
         <div class="venue-slide"><img src="assets/hero-slide-4.jpg" alt=""></div>
       </div>
 
-      <!-- 연령대별 채팅방 버튼 -->
-      <div class="age-chat-wrap">
-        <div class="age-chat-label">💬 연령대별 채팅방</div>
-        <div class="age-chat-btns">
-          <button class="age-chat-btn" onclick="openAgeChat('10대')">🧒 10대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('20대')">🧑 20대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('30대')">👨 30대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('40대')">🧔 40대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('50대')">👴 50대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('60대')">👵 60대</button>
-          <button class="age-chat-btn" onclick="openAgeChat('70대+')">🧓 70대+</button>
-        </div>
-      </div>
+
     </div>
 
-    <div class="action-row">
-      <a class="btn-play" id="btn-games" href="games.html">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        온라인으로 지금 플레이
-      </a>
-      <a class="btn-route" id="btn-route" href="#" target="_blank">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 0 1 8 8c0 5.25-8 14-8 14S4 15.25 4 10a8 8 0 0 1 8-8z"/></svg>
-        길찾기
-      </a>
-    </div>
+
   </div>
 </div>
 
@@ -569,6 +628,41 @@ function changeVenueStyle(style) {
   const url = useMapbox ? (mbStyles[style]||mbStyles.dark) : (mlStyles[style]||mlStyles.dark);
   map.setStyle(url);
 }
+
+function toggle3D() {
+  if (!map) return;
+  const btn = document.getElementById('btn-3d-top');
+  const currentPitch = map.getPitch();
+  if (currentPitch < 30) {
+    map.easeTo({ pitch: 60, bearing: -20, duration: 800 });
+    if (btn) { btn.textContent = '2️⃣D'; btn.title = '2D로 전환'; }
+  } else {
+    map.easeTo({ pitch: 0, bearing: 0, duration: 600 });
+    if (btn) { btn.textContent = '🏢'; btn.title = '3D로 전환'; }
+  }
+}
+
+function toggleChatPanel() {
+  const dd = document.getElementById('tb-chat-dropdown');
+  if (dd) dd.classList.toggle('open');
+}
+// 외부 클릭 시 채팅 드롭다운 닫기
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#tb-chat-wrap')) {
+    const dd = document.getElementById('tb-chat-dropdown');
+    if (dd) dd.classList.remove('open');
+  }
+});
+// 경기장 등록 버튼 - 로그인 시 표시
+function checkShowVenueRegBtn() {
+  const btn = document.getElementById('tb-reg-btn');
+  if (!btn) return;
+  const loggedIn = !!(window.ICOC_AUTH && ICOC_AUTH.getCurrentUser && ICOC_AUTH.getCurrentUser());
+  btn.style.display = loggedIn ? 'flex' : 'none';
+}
+setTimeout(checkShowVenueRegBtn, 1500);
+setInterval(checkShowVenueRegBtn, 5000);
+
 </script>
 </body>
 </html>
