@@ -6,378 +6,78 @@
 <title>ICOC 경기장 — Brain Sports Omnipo 2027</title>
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
-<!-- Mapbox GL JS (primary) -->
+<!-- Mapbox GL JS -->
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <!-- MapLibre GL JS (fallback) -->
 <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.css" rel="stylesheet">
-
-function showBsTab(tab, btn) {
-  document.querySelectorAll('.bs-panel').forEach(function(p){ p.style.display='none'; });
-  document.querySelectorAll('.bs-tab').forEach(function(b){ b.classList.remove('active'); });
-  var panel = document.getElementById('bsp-'+tab);
-  if(panel) panel.style.display='block';
-  if(btn) btn.classList.add('active');
-  if(tab==='route'){
-    var kk=document.getElementById('link-kakao');
-    var nv=document.getElementById('link-naver');
-    var gg=document.getElementById('link-google');
-    var q=encodeURIComponent(VENUE.name+' '+VENUE.addr);
-    if(kk) kk.href='https://map.kakao.com/?q='+encodeURIComponent(VENUE.name);
-    if(nv) nv.href='https://map.naver.com/v5/search/'+q;
-    if(gg) gg.href='https://www.google.com/maps/search/?api=1&query='+q;
-  }
-}
-
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.js"></script>
 <style>
-:root {
-  --navy:#0B1F3A; --navy2:#0e2847; --gold:#C9A84C; --gold-l:#E8C97A;
-  --cream:#F5F0E8; --glass:rgba(11,31,58,0.88); --glass2:rgba(10,26,52,0.97);
-}
+:root { --navy:#0B1F3A;--gold:#C9A84C;--gold-l:#E8C97A;--cream:#F5F0E8; }
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans-serif;background:var(--navy);}
-
-/* ── MAP ── */
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans-serif;background:#0B1F3A;}
 #map{position:fixed;inset:0;width:100vw;height:100vh;z-index:0;}
-
-/* ── TOP BAR ── */
-.top-bar{
-  position:fixed;top:0;left:0;right:0;height:56px;
-  display:flex;align-items:center;gap:10px;padding:0 16px;
-  background:var(--glass);backdrop-filter:blur(18px);
-  border-bottom:1px solid rgba(201,168,76,0.18);z-index:100;
-}
-.btn-back{
-  display:flex;align-items:center;gap:5px;padding:6px 14px;
-  border:1px solid rgba(201,168,76,0.3);border-radius:24px;
-  background:rgba(201,168,76,0.07);color:var(--gold-l);
-  font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;
-  transition:all .2s;white-space:nowrap;
-}
-.btn-back:hover{background:rgba(201,168,76,0.16);border-color:var(--gold);}
-.top-venue-name{flex:1;min-width:0;font-size:15px;font-weight:700;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.top-type-badge{font-size:11px;font-weight:600;color:var(--gold);padding:3px 10px;border:1px solid rgba(201,168,76,0.28);border-radius:12px;white-space:nowrap;}
-
-/* ── FLOATING BUTTONS (right side) ── */
-.float-btns{
-  position:fixed;right:14px;top:50%;transform:translateY(-50%);
-  display:flex;flex-direction:column;gap:10px;z-index:90;
-}
-.float-btn{
-  width:44px;height:44px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--glass);border:1px solid rgba(201,168,76,0.28);
-  cursor:pointer;font-size:18px;backdrop-filter:blur(12px);
-  transition:all .2s;color:var(--cream);
-}
-.float-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);}
-
-/* ── BOTTOM SHEET ── */
-.bottom-sheet{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  transition:transform .4s cubic-bezier(.32,.72,0,1);
-  max-height:40vh; /* sheet 전체 최대 높이 */
-  display:flex;flex-direction:column;
-}
-.sheet-handle-area{
-  width:100%;display:flex;justify-content:center;
-  padding:8px 0 0;cursor:pointer;flex-shrink:0;
-}
-.sheet-handle{width:36px;height:4px;background:rgba(201,168,76,0.35);border-radius:2px;}
-.sheet-body{
-  background:var(--glass2);backdrop-filter:blur(24px);
-  border-top:1px solid rgba(201,168,76,0.2);
-  padding:0 16px 10px;
-  display:flex;flex-direction:column;flex:1;overflow:hidden;
-}
-/* 스크롤 영역 - 최대 높이 제한 */
-.sheet-scroll{
-  overflow-y:auto;flex:1;
-  max-height:calc(40vh - 100px); /* action-row 높이 제외 */
-}
-.sheet-scroll::-webkit-scrollbar{width:3px;}
-.sheet-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.25);border-radius:2px;}
-
-/* 모바일: 더 작게 */
-@media(max-width:640px){
-  .bottom-sheet{ max-height:38vh; }
-  .sheet-scroll{ max-height:calc(38vh - 90px); }
-}
-/* 접힌 상태 */
-.bottom-sheet.collapsed .sheet-scroll{ max-height:0;overflow:hidden; }
-.bottom-sheet.collapsed .sheet-expand-hint{ display:block; }
-.sheet-expand-hint{ display:none;text-align:center;font-size:11px;color:rgba(201,168,76,0.5);padding:4px 0 8px; }
-
-/* venue header */
-.venue-header{
-  display:flex;align-items:center;gap:12px;
-  padding:10px 0 10px;border-bottom:1px solid rgba(201,168,76,0.1);
-}
-.venue-icon-box{
-  width:52px;height:52px;flex-shrink:0;border-radius:14px;
-  display:flex;align-items:center;justify-content:center;font-size:26px;
-  border:1px solid rgba(201,168,76,0.22);background:rgba(201,168,76,0.06);
-}
-.venue-meta{flex:1;min-width:0;}
-.venue-meta h1{font-size:18px;font-weight:700;color:var(--cream);line-height:1.3;margin-bottom:5px;}
-.badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:5px;}
-.badge{font-size:10px;font-weight:600;letter-spacing:.05em;padding:2px 9px;border-radius:10px;}
-.badge-icoc{background:rgba(201,168,76,0.15);color:var(--gold);border:1px solid rgba(201,168,76,0.28);}
-.badge-type{background:rgba(255,255,255,0.06);color:rgba(245,240,232,0.65);border:1px solid rgba(255,255,255,0.1);}
-.venue-addr{font-size:12px;color:rgba(245,240,232,0.45);}
-
-/* stats */
-.stats-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,0.1);}
-.stat-item{flex:1;text-align:center;padding:12px 0;border-right:1px solid rgba(201,168,76,0.08);}
-.stat-item:last-child{border-right:none;}
-.stat-val{font-size:15px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif;}
-.stat-lbl{font-size:10px;color:rgba(245,240,232,0.4);margin-top:2px;letter-spacing:.04em;}
-
-/* sports tags */
-.sports-section{padding:12px 0 10px;}
-.sports-title{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(245,240,232,0.35);margin-bottom:10px;}
-.sports-tags{display:flex;flex-wrap:wrap;gap:6px;}
-.sport-tag{
-  display:flex;align-items:center;gap:5px;padding:5px 11px;
-  border:1px solid rgba(201,168,76,0.18);border-radius:20px;
-  font-size:12px;color:var(--cream);background:rgba(255,255,255,0.03);
-  cursor:pointer;transition:all .2s;text-decoration:none;
-}
-.sport-tag:hover{border-color:var(--gold);background:rgba(201,168,76,0.1);color:var(--gold-l);}
-
-/* action buttons */
-.action-row{display:flex;gap:8px;padding-top:10px;padding-bottom:4px;flex-shrink:0;}
-.btn-play{
-  flex:2;display:flex;align-items:center;justify-content:center;gap:7px;
-  padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold-l));
-  border:none;border-radius:12px;font-size:13px;font-weight:700;
-  color:var(--navy);cursor:pointer;text-decoration:none;
-  transition:all .2s;font-family:'Noto Sans KR',sans-serif;
-  box-shadow:0 4px 16px rgba(201,168,76,0.28);
-}
-.btn-play:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(201,168,76,0.4);}
-.btn-route{
-  flex:1;display:flex;align-items:center;justify-content:center;gap:5px;
-  padding:13px;border:1px solid rgba(201,168,76,0.28);border-radius:12px;
-  background:rgba(201,168,76,0.05);font-size:13px;font-weight:600;
-  color:var(--gold-l);cursor:pointer;text-decoration:none;
-  transition:all .2s;font-family:'Noto Sans KR',sans-serif;
-}
-.btn-route:hover{background:rgba(201,168,76,0.14);border-color:var(--gold);}
-
-/* collapsed */
-.bottom-sheet.collapsed{transform:translateY(calc(100% - 72px));}
-
-/* venue pulse marker */
-.my-venue-marker{
-  width:50px;height:50px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;font-size:22px;
-  border:3px solid var(--gold);
-  box-shadow:0 0 0 6px rgba(201,168,76,0.22),0 4px 16px rgba(0,0,0,0.5);
-  animation:vpulse 2.2s ease-in-out infinite;
-}
-@keyframes vpulse{
-  0%,100%{box-shadow:0 0 0 6px rgba(201,168,76,0.22),0 4px 16px rgba(0,0,0,0.5);}
-  50%{box-shadow:0 0 0 14px rgba(201,168,76,0.06),0 4px 16px rgba(0,0,0,0.5);}
-}
-
-/* ── CHAT BUTTON (floating, bottom-right) ── */
-.chat-fab{
-  position:fixed;right:14px;bottom:calc(52vh + 80px);
-  width:52px;height:52px;border-radius:50%;
-  background:linear-gradient(135deg,var(--gold),var(--gold-l));
-  border:none;cursor:pointer;z-index:200;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 4px 18px rgba(201,168,76,0.45);
-  transition:all .25s;font-size:22px;
-}
-.chat-fab:hover{transform:scale(1.1);box-shadow:0 6px 24px rgba(201,168,76,0.6);}
-.chat-dot{
-  position:absolute;top:2px;right:2px;
-  width:14px;height:14px;border-radius:50%;
-  background:#4ade80;border:2px solid var(--navy);
-  animation:chatdot 2s infinite;
-}
-@keyframes chatdot{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-/* chat modal */
-.chat-modal{
-  position:fixed;right:16px;z-index:300;
-  width:320px;max-height:420px;
-  background:var(--glass2);border:1px solid rgba(201,168,76,0.25);
-  border-radius:18px;backdrop-filter:blur(24px);
-  box-shadow:0 16px 48px rgba(0,0,0,0.5);
-  display:none;flex-direction:column;overflow:hidden;
-}
+/* TOP BAR */
+.top-bar{position:fixed;top:0;left:0;right:0;height:52px;display:flex;align-items:center;gap:8px;padding:0 10px;background:rgba(8,20,44,0.96);backdrop-filter:blur(16px);border-bottom:1px solid rgba(201,168,76,0.15);z-index:300;}
+.btn-back{display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:16px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);color:#E8C97A;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;}
+.top-venue-name{font-size:13px;font-weight:700;color:#F5F0E8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;}
+.top-bar-actions{display:flex;align-items:center;gap:5px;margin-left:auto;flex-shrink:0;}
+.map-style-pills{display:flex;gap:3px;}
+.style-pill{width:28px;height:28px;border-radius:8px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);color:#E8C97A;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;}
+.style-pill:hover,.style-pill.active{background:rgba(201,168,76,0.18);border-color:rgba(201,168,76,0.5);}
+.tb-btn{display:flex;align-items:center;gap:4px;padding:5px 9px;border-radius:16px;background:rgba(201,168,76,0.07);border:1px solid rgba(201,168,76,0.22);color:#E8C97A;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:none;white-space:nowrap;transition:all .15s;}
+.tb-chat-wrap{position:relative;}
+.tb-chat-dropdown{display:none;position:absolute;top:calc(100% + 6px);right:0;background:rgba(8,20,44,0.97);border:1px solid rgba(201,168,76,0.25);border-radius:12px;padding:10px 8px;min-width:130px;z-index:400;backdrop-filter:blur(20px);box-shadow:0 8px 32px rgba(0,0,0,.5);}
+.tb-chat-dropdown.open{display:block;}
+.tb-chat-dropdown button{display:block;width:100%;padding:7px 10px;text-align:left;background:none;border:none;color:rgba(245,240,232,0.75);font-size:12px;font-weight:500;cursor:pointer;border-radius:8px;font-family:inherit;transition:background .15s;}
+.tb-chat-dropdown button:hover{background:rgba(201,168,76,0.12);color:#E8C97A;}
+.tb-play-btn{background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.25);color:#4ade80;}
+.tb-label{display:inline;}
+@media(max-width:400px){.tb-label{display:none;}}
+/* BADGE */
+.badge{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;}
+.badge-icoc{background:rgba(201,168,76,0.12);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);}
+.badge-type{background:rgba(255,255,255,0.06);color:rgba(245,240,232,0.6);border:1px solid rgba(255,255,255,0.12);}
+/* BOTTOM SHEET */
+.bottom-sheet{position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(8,20,44,0.97);backdrop-filter:blur(20px);border-top:1px solid rgba(201,168,76,0.2);border-radius:16px 16px 0 0;max-height:65vh;overflow:hidden;transition:transform .3s;}
+.bs-mini{display:flex;align-items:center;gap:10px;padding:10px 14px 6px;}
+.bs-icon{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);}
+.bs-info{flex:1;min-width:0;}
+.bs-name{font-size:14px;font-weight:700;color:#F5F0E8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bs-addr{font-size:10px;color:rgba(245,240,232,0.4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.bs-badges{display:flex;gap:4px;flex-wrap:wrap;}
+.bs-tabs{display:flex;border-bottom:1px solid rgba(201,168,76,0.12);padding:0 10px;gap:2px;}
+.bs-tab{flex:1;padding:8px 4px;background:none;border:none;color:rgba(245,240,232,0.4);font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;transition:all .15s;}
+.bs-tab.active{color:#E8C97A;border-bottom-color:#C9A84C;}
+.bs-panel{padding:10px 14px 16px;overflow-y:auto;max-height:calc(65vh - 110px);}
+.bs-stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px;}
+.bs-stat{text-align:center;background:rgba(201,168,76,0.06);border-radius:8px;padding:8px 4px;border:1px solid rgba(201,168,76,0.1);}
+.bs-stat-n{font-size:16px;font-weight:700;color:#E8C97A;}
+.bs-stat-l{font-size:9px;color:rgba(245,240,232,0.4);margin-top:2px;}
+.bs-play-btn{width:100%;padding:12px;border-radius:12px;background:linear-gradient(135deg,#C9A84C,#E8C97A);border:none;color:#08143C;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;}
+.bs-sports-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.sport-tag{font-size:11px;background:rgba(201,168,76,0.08);color:rgba(245,240,232,0.7);border:1px solid rgba(201,168,76,0.18);border-radius:8px;padding:3px 9px;text-decoration:none;}
+.bs-age-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.bs-age-btns button{padding:8px 4px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:#E8C97A;font-size:11px;cursor:pointer;font-family:inherit;}
+.bs-map-btn{padding:10px 16px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:#F5F0E8;font-size:12px;text-decoration:none;font-weight:600;display:inline-block;}
+.sheet-handle-area{cursor:pointer;padding:8px 0 4px;text-align:center;}
+.sheet-handle{width:36px;height:4px;background:rgba(201,168,76,0.3);border-radius:2px;display:inline-block;}
+/* CHAT MODAL */
+.chat-modal{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);align-items:flex-end;justify-content:center;}
 .chat-modal.open{display:flex;}
-.chat-header{
-  display:flex;align-items:center;gap:10px;
-  padding:14px 16px;border-bottom:1px solid rgba(201,168,76,0.12);
-}
+.chat-box{background:#0B1F3A;border-radius:16px 16px 0 0;border:1px solid rgba(201,168,76,0.2);width:100%;max-width:480px;max-height:70vh;display:flex;flex-direction:column;}
+.chat-header{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(201,168,76,0.1);}
 .chat-header-icon{font-size:20px;}
-.chat-header-text{flex:1;}
-.chat-header-text h3{font-size:14px;font-weight:700;color:var(--cream);}
-.chat-header-text p{font-size:11px;color:rgba(245,240,232,0.45);}
-.chat-close{background:none;border:none;color:rgba(245,240,232,0.4);font-size:18px;cursor:pointer;padding:4px;}
-.chat-close:hover{color:var(--cream);}
-.chat-messages{flex:1;overflow-y:auto;padding:14px 14px 8px;display:flex;flex-direction:column;gap:10px;min-height:160px;}
-.chat-msg{font-size:12px;line-height:1.5;}
-.chat-msg.system{color:rgba(245,240,232,0.4);text-align:center;font-size:11px;}
-.chat-msg .bubble{
-  display:inline-block;padding:8px 12px;border-radius:12px;max-width:80%;
-  background:rgba(201,168,76,0.1);color:var(--cream);border:1px solid rgba(201,168,76,0.15);
-}
-.chat-coming-soon{
-  padding:20px 16px;text-align:center;
-  color:rgba(245,240,232,0.45);font-size:12px;line-height:1.8;
-}
-.chat-coming-soon .icon{font-size:32px;display:block;margin-bottom:8px;}
-.chat-coming-soon strong{color:var(--gold);display:block;margin-bottom:4px;}
-.chat-input-row{
-  display:flex;gap:8px;padding:10px 12px;
-  border-top:1px solid rgba(201,168,76,0.1);
-}
-.chat-input{
-  flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);
-  border-radius:20px;padding:8px 14px;font-size:12px;
-  color:var(--cream);outline:none;font-family:'Noto Sans KR',sans-serif;
-}
-.chat-input::placeholder{color:rgba(245,240,232,0.25);}
-.chat-send{
-  background:var(--gold);border:none;border-radius:50%;
-  width:34px;height:34px;cursor:pointer;font-size:14px;
-  transition:all .2s;flex-shrink:0;
-}
-.chat-send:hover{background:var(--gold-l);}
-
-/* desktop sidebar */
-@media(min-width:640px){
-  .bottom-sheet{left:auto;right:0;top:56px;bottom:0;width:380px;transform:none !important;border-top:none;border-left:1px solid rgba(201,168,76,0.15);}
-  .sheet-handle-area{display:none;}
-  .sheet-scroll{max-height:calc(100vh - 210px);}
-  .float-btns{right:396px;}
-  .chat-fab{right:396px;bottom:24px;}
-  .chat-modal{right:396px;bottom:88px;}
-}
-
-/* ── 슬라이드쇼 ── */
-/* 슬라이드쇼: PC에서만 표시 */
-@media(max-width:767px){ .venue-slides-wrap{ display:none !important; } }
-.venue-slides-wrap{position:relative;height:90px;border-radius:10px;overflow:hidden;margin:8px 0 6px;}
-.venue-slide{position:absolute;inset:0;opacity:0;transition:opacity 0.7s;}
-.venue-slide.vs-active{opacity:1;}
-.venue-slide img{width:100%;height:100%;object-fit:cover;filter:brightness(.65);}
-/* ── 연령대 채팅 ── */
-.age-chat-wrap{margin:8px 0 12px;}
-.age-chat-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,0.38);margin-bottom:7px;}
-.age-chat-btns{display:flex;gap:5px;}
-.age-chat-btn{flex:1;padding:7px 2px;border:1px solid rgba(201,168,76,0.22);border-radius:10px;background:rgba(201,168,76,0.06);color:rgba(245,240,232,0.75);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;font-family:inherit;}
-.age-chat-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);color:var(--gold-l);}
-
-/* ── NEW TOP-BAR ACTIONS ── */
-.top-bar {
-  position:fixed; top:0; left:0; right:0; z-index:300;
-  display:flex; align-items:center; gap:8px;
-  padding:0 10px; height:52px;
-  background:rgba(8,20,44,0.96); backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(201,168,76,0.15);
-}
-.top-bar-actions {
-  display:flex; align-items:center; gap:5px;
-  margin-left:auto; flex-shrink:0;
-}
-.map-style-pills {
-  display:flex; gap:3px; align-items:center;
-}
-.style-pill {
-  width:28px; height:28px; border-radius:8px;
-  background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2);
-  color:#E8C97A; font-size:13px; cursor:pointer;
-  display:flex; align-items:center; justify-content:center;
-  transition:all .15s;
-}
-.style-pill:hover, .style-pill.active {
-  background:rgba(201,168,76,0.18); border-color:rgba(201,168,76,0.5);
-}
-.tb-btn {
-  display:flex; align-items:center; gap:4px;
-  padding:5px 9px; border-radius:16px;
-  background:rgba(201,168,76,0.07); border:1px solid rgba(201,168,76,0.22);
-  color:#E8C97A; font-size:12px; font-weight:600;
-  cursor:pointer; font-family:inherit; text-decoration:none;
-  white-space:nowrap; transition:all .15s;
-}
-.tb-btn:hover { background:rgba(201,168,76,0.16); }
-.tb-play-btn { background:rgba(74,222,128,0.08); border-color:rgba(74,222,128,0.25); color:#4ade80; }
-.tb-play-btn:hover { background:rgba(74,222,128,0.18); }
-.tb-chat-wrap { position:relative; }
-.tb-chat-dropdown {
-  display:none; position:absolute; top:calc(100% + 6px); right:0;
-  background:rgba(8,20,44,0.97); border:1px solid rgba(201,168,76,0.25);
-  border-radius:12px; padding:10px 8px; min-width:130px; z-index:400;
-  backdrop-filter:blur(20px); box-shadow:0 8px 32px rgba(0,0,0,0.5);
-}
-.tb-chat-dropdown.open { display:block; }
-.tb-chat-dropdown button {
-  display:block; width:100%; padding:7px 10px; text-align:left;
-  background:none; border:none; color:rgba(245,240,232,0.75);
-  font-size:12px; font-weight:500; cursor:pointer; border-radius:8px;
-  font-family:inherit; transition:background .15s;
-}
-.tb-chat-dropdown button:hover { background:rgba(201,168,76,0.12); color:#E8C97A; }
-.tb-label { display:inline; }
-@media(max-width:400px) { .tb-label { display:none; } }
-
-/* ── MAP fills full screen ── */
-html,body{height:100%;margin:0;overflow:hidden;}
-#map{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
-.bottom-sheet { z-index:200; }
-.mapboxgl-ctrl-top-left { top:56px !important; }
-.maplibregl-ctrl-top-left { top:56px !important; }
-
-
-@keyframes tickerScroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-@keyframes tickerFade {
-  0%,100% { opacity:0.6; }
-  50%      { opacity:1; }
-}
-
-
-/* ── 컴팩트 바텀시트 ── */
-.bottom-sheet { position:fixed; bottom:0; left:0; right:0; z-index:200; background:rgba(8,20,44,0.97); backdrop-filter:blur(20px); border-top:1px solid rgba(201,168,76,0.2); border-radius:16px 16px 0 0; max-height:65vh; overflow:hidden; transition:transform .3s; }
-.bs-mini { display:flex; align-items:center; gap:10px; padding:10px 14px 6px; }
-.bs-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); }
-.bs-info { flex:1; min-width:0; }
-.bs-name { font-size:14px; font-weight:700; color:#F5F0E8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.bs-addr { font-size:10px; color:rgba(245,240,232,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.bs-badges { display:flex; gap:4px; flex-wrap:wrap; }
-.bs-tabs { display:flex; border-bottom:1px solid rgba(201,168,76,0.12); padding:0 10px; gap:2px; }
-.bs-tab { flex:1; padding:8px 4px; background:none; border:none; color:rgba(245,240,232,0.4); font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; border-bottom:2px solid transparent; transition:all .15s; }
-.bs-tab.active { color:#E8C97A; border-bottom-color:#C9A84C; }
-.bs-panel { padding:10px 14px 16px; overflow-y:auto; max-height:calc(65vh - 110px); }
-.bs-panel-title { font-size:11px; color:rgba(245,240,232,0.4); margin-bottom:8px; font-weight:600; letter-spacing:.06em; }
-.bs-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
-.bs-stat { text-align:center; background:rgba(201,168,76,0.06); border-radius:8px; padding:8px 4px; border:1px solid rgba(201,168,76,0.1); }
-.bs-stat-n { font-size:16px; font-weight:700; color:#E8C97A; }
-.bs-stat-l { font-size:9px; color:rgba(245,240,232,0.4); margin-top:2px; }
-.bs-play-btn { width:100%; padding:12px; border-radius:12px; background:linear-gradient(135deg,#C9A84C,#E8C97A); border:none; color:#08143C; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
-.bs-sports-tags { display:flex; flex-wrap:wrap; gap:6px; }
-.bs-age-btns { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
-.bs-age-btns button { padding:8px 4px; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:8px; color:#E8C97A; font-size:11px; cursor:pointer; font-family:inherit; }
-.bs-age-btns button:hover { background:rgba(201,168,76,0.2); }
-.bs-map-btn { padding:10px 16px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#F5F0E8; font-size:12px; text-decoration:none; font-weight:600; }
-.sheet-handle-area { cursor:pointer; padding:8px 0 4px; text-align:center; }
-.sheet-handle { width:36px; height:4px; background:rgba(201,168,76,0.3); border-radius:2px; display:inline-block; }
-
+.chat-header-text h3{font-size:14px;font-weight:700;color:#F5F0E8;}
+.chat-header-text p{font-size:11px;color:rgba(245,240,232,0.4);}
+.chat-close{margin-left:auto;background:rgba(255,255,255,0.08);border:none;color:#F5F0E8;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;}
+.chat-coming-soon{text-align:center;padding:20px;color:rgba(245,240,232,0.5);font-size:13px;}
+/* WEATHER TICKER */
+@keyframes tickerScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
 </style>
 </head>
 <body>
-
-<div id="map"></div>
 
 <!-- TOP BAR -->
 <div class="top-bar" id="top-bar">
@@ -387,19 +87,15 @@ html,body{height:100%;margin:0;overflow:hidden;}
   </a>
   <div class="top-venue-name" id="top-name">경기장</div>
   <div class="top-bar-actions">
-    <!-- 지도 스타일 -->
-    <div class="map-style-pills" id="map-style-pills">
-      <button class="style-pill active" onclick="changeVenueStyle('dark')">🌑</button>
-      <button class="style-pill" onclick="changeVenueStyle('light')">☀️</button>
-      <button class="style-pill" onclick="changeVenueStyle('streets')">🏙️</button>
-      <button class="style-pill" onclick="changeVenueStyle('outdoor')">🌿</button>
+    <div class="map-style-pills">
+      <button class="style-pill active" onclick="changeVenueStyle('dark')" title="다크">🌑</button>
+      <button class="style-pill" onclick="changeVenueStyle('light')" title="라이트">☀️</button>
+      <button class="style-pill" onclick="changeVenueStyle('streets')" title="도시">🏙️</button>
+      <button class="style-pill" onclick="changeVenueStyle('outdoor')" title="아웃도어">🌿</button>
       <button class="style-pill" onclick="toggle3D()" id="btn-3d-top" title="3D 전환">🏢</button>
     </div>
-    <!-- 채팅 토글 -->
     <div class="tb-chat-wrap" id="tb-chat-wrap">
-      <button class="tb-btn tb-chat-btn" id="tb-chat-btn" onclick="toggleChatPanel()">
-        💬 <span class="tb-label">채팅</span>
-      </button>
+      <button class="tb-btn" onclick="toggleChatPanel()">💬 <span class="tb-label">채팅</span></button>
       <div class="tb-chat-dropdown" id="tb-chat-dropdown">
         <div style="font-size:11px;color:rgba(245,240,232,0.5);padding:4px 0 6px;font-weight:600;">연령대별 채팅방</div>
         <button onclick="openAgeChat('10대');toggleChatPanel()">🧒 10대</button>
@@ -411,53 +107,17 @@ html,body{height:100%;margin:0;overflow:hidden;}
         <button onclick="openAgeChat('70대+');toggleChatPanel()">🧓 70대+</button>
       </div>
     </div>
-    <!-- 경기장 등록 -->
-    <button class="tb-btn tb-reg-btn" id="tb-reg-btn" onclick="openVenueRegModal()" style="display:none;">
-      📍 <span class="tb-label">등록</span>
-    </button>
-    <!-- 게임하기 -->
-    <a href="games.html" class="tb-btn tb-play-btn">
-      🎮 <span class="tb-label">게임</span>
-    </a>
+    <button class="tb-btn" id="tb-reg-btn" onclick="openVenueRegModal()" style="display:none;">📍 <span class="tb-label">등록</span></button>
+    <a href="games.html" class="tb-btn tb-play-btn">🎮 <span class="tb-label">게임</span></a>
   </div>
 </div>
 
-
-
-
-
-<!-- CHAT MODAL -->
-<div class="chat-modal" id="chat-modal" style="display:none;">
-  <div class="chat-header">
-    <div class="chat-header-icon">💬</div>
-    <div class="chat-header-text">
-      <h3 id="chat-venue-name">경기장 채팅</h3>
-      <p>이 경기장 유저들과 소통하세요</p>
-    </div>
-    <button class="chat-close" id="chat-close" onclick="closeAgeChat()">✕</button>
-  </div>
-  <div class="chat-messages" id="chat-messages">
-    <div class="chat-coming-soon">
-      <span class="icon">🔔</span>
-      <strong>채팅 기능 준비 중</strong>
-      경기장 채팅은 곧 오픈됩니다!<br>
-      오목·체스 대결 신청, 정모 약속,<br>
-      국가대표 팀 빌딩까지 가능해져요.
-    </div>
-  </div>
-  <div class="chat-input-row">
-    <input class="chat-input" placeholder="메시지 입력 (준비 중)..." disabled>
-    <button class="chat-send" disabled>➤</button>
-  </div>
-</div>
+<!-- MAP -->
+<div id="map"></div>
 
 <!-- BOTTOM SHEET -->
-
-
 <div class="bottom-sheet" id="bottom-sheet">
   <div class="sheet-handle-area" id="sheet-handle"><div class="sheet-handle"></div></div>
-
-  <!-- 항상 보이는 미니 헤더 -->
   <div class="bs-mini">
     <div class="bs-icon" id="v-icon">🏢</div>
     <div class="bs-info">
@@ -469,16 +129,12 @@ html,body{height:100%;margin:0;overflow:hidden;}
       <span class="badge badge-type" id="v-type-badge">보드카페</span>
     </div>
   </div>
-
-  <!-- 토글 버튼 탭바 -->
   <div class="bs-tabs">
-    <button class="bs-tab active" onclick="showBsTab('info', this)">📊 정보</button>
-    <button class="bs-tab" onclick="showBsTab('sports', this)">🎮 종목</button>
-    <button class="bs-tab" onclick="showBsTab('chat', this)">💬 채팅</button>
-    <button class="bs-tab" onclick="showBsTab('route', this)">📍 길찾기</button>
+    <button class="bs-tab active" onclick="showBsTab('info',this)">📊 정보</button>
+    <button class="bs-tab" onclick="showBsTab('sports',this)">🎮 종목</button>
+    <button class="bs-tab" onclick="showBsTab('chat',this)">💬 채팅</button>
+    <button class="bs-tab" onclick="showBsTab('route',this)">📍 길찾기</button>
   </div>
-
-  <!-- 정보 탭 -->
   <div class="bs-panel" id="bsp-info">
     <div class="bs-stats-row">
       <div class="bs-stat"><div class="bs-stat-n" id="v-rank">-</div><div class="bs-stat-l">지역 랭킹</div></div>
@@ -488,16 +144,12 @@ html,body{height:100%;margin:0;overflow:hidden;}
     </div>
     <button class="bs-play-btn" onclick="window.location.href='games.html'">▶ 온라인으로 지금 플레이</button>
   </div>
-
-  <!-- 종목 탭 -->
   <div class="bs-panel" id="bsp-sports" style="display:none;">
-    <div class="bs-panel-title">플레이 가능 종목</div>
+    <div style="font-size:11px;color:rgba(245,240,232,0.4);margin-bottom:8px;">플레이 가능 종목</div>
     <div class="bs-sports-tags" id="v-sports-tags"></div>
   </div>
-
-  <!-- 채팅 탭 -->
   <div class="bs-panel" id="bsp-chat" style="display:none;">
-    <div class="bs-panel-title">연령대별 채팅방</div>
+    <div style="font-size:11px;color:rgba(245,240,232,0.4);margin-bottom:8px;">연령대별 채팅방</div>
     <div class="bs-age-btns">
       <button onclick="openAgeChat('10대')">🧒 10대</button>
       <button onclick="openAgeChat('20대')">🧑 20대</button>
@@ -508,11 +160,9 @@ html,body{height:100%;margin:0;overflow:hidden;}
       <button onclick="openAgeChat('70대+')">🧓 70대+</button>
     </div>
   </div>
-
-  <!-- 길찾기 탭 -->
   <div class="bs-panel" id="bsp-route" style="display:none;">
-    <div class="bs-panel-title">길찾기</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+    <div style="font-size:11px;color:rgba(245,240,232,0.4);margin-bottom:8px;">길찾기</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
       <a id="link-kakao" href="#" target="_blank" class="bs-map-btn">🟡 카카오맵</a>
       <a id="link-naver" href="#" target="_blank" class="bs-map-btn">🟢 네이버맵</a>
       <a id="link-google" href="#" target="_blank" class="bs-map-btn">🔵 구글맵</a>
@@ -520,4 +170,278 @@ html,body{height:100%;margin:0;overflow:hidden;}
   </div>
 </div>
 
->
+<!-- CHAT MODAL -->
+<div class="chat-modal" id="chat-modal">
+  <div class="chat-box">
+    <div class="chat-header">
+      <div class="chat-header-icon">💬</div>
+      <div class="chat-header-text">
+        <h3 id="chat-venue-name">경기장 채팅</h3>
+        <p>이 경기장 유저들과 소통하세요</p>
+      </div>
+      <button class="chat-close" id="chat-close" onclick="closeAgeChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-coming-soon">💬 채팅 기능 준비 중</div>
+    </div>
+  </div>
+</div>
+
+<script src="js/points.js"></script>
+<script>
+const p = new URLSearchParams(location.search);
+const VENUE = {
+  id:   p.get('id')   || '1',
+  name: p.get('name') || '경기장',
+  type: p.get('type') || 'board',
+  lat:  parseFloat(p.get('lat'))  || 37.5665,
+  lng:  parseFloat(p.get('lng'))  || 126.9780,
+  addr: p.get('addr') || '주소 정보 없음',
+  city: p.get('city') || '',
+};
+const TYPES = {
+  go:         { label:'기원',       icon:'⚫', sports:['바둑','오목'] },
+  billiards:  { label:'당구장',     icon:'🎱', sports:['당구(3구)','포켓볼','스누커'] },
+  bowling:    { label:'볼링장',     icon:'🎳', sports:['볼링'] },
+  screengolf: { label:'스크린골프', icon:'⛳', sports:['스크린골프','파크골프'] },
+  board:      { label:'보드카페',   icon:'🎯', sports:['오목','체스','장기','체커','루미큐브'] },
+  chess:      { label:'체스클럽',   icon:'♟️', sports:['체스','장기','바둑','오목'] },
+  holdem:     { label:'홀덤펍',     icon:'🃏', sports:['홀덤','진러미','블랙잭','브릿지','마작'] },
+  mahjong:    { label:'마작클럽',   icon:'🀄', sports:['마작','홀덤','블랙잭'] },
+};
+const T = TYPES[VENUE.type] || { label:'보드카페', icon:'📍', sports:[] };
+const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
+const MAPBOX_TOKEN = 'pk.eyJ1IjoibWlsaXZlcnNlMTAwNCIsImEiOiJjbXF0NmltcjYwMWprMnpzaGFrdjF5YnA3In0.yqIA5e6OePYT65r-xZShLA';
+var map;
+
+// DOM 채우기
+document.title = VENUE.name + ' — ICOC 2027';
+var _tn=document.getElementById('top-name'); if(_tn) _tn.textContent=VENUE.name;
+var _tt=document.getElementById('top-type'); if(_tt) _tt.textContent=T.label;
+var _vi=document.getElementById('v-icon');   if(_vi) _vi.textContent=T.icon;
+var _vn=document.getElementById('v-name');   if(_vn) _vn.textContent=VENUE.name;
+var _vt=document.getElementById('v-type-badge'); if(_vt) _vt.textContent=T.label;
+var _va=document.getElementById('v-addr');   if(_va) _va.textContent='📍 '+VENUE.addr+(VENUE.city?' · '+VENUE.city:'');
+var _vr=document.getElementById('v-rank');   if(_vr) _vr.textContent='#'+rnd(1,30);
+var _vp=document.getElementById('v-players');if(_vp) _vp.textContent=rnd(12,280);
+var _vm=document.getElementById('v-matches');if(_vm) _vm.textContent=rnd(40,310);
+var _vg=document.getElementById('v-rating'); if(_vg) _vg.textContent='★ '+(3.8+Math.random()*1.2).toFixed(1);
+var _vcn=document.getElementById('chat-venue-name'); if(_vcn) _vcn.textContent=VENUE.name+' 채팅';
+var tagsEl=document.getElementById('v-sports-tags');
+if(tagsEl) T.sports.forEach(function(s){
+  var a=document.createElement('a');
+  a.href='games.html?game='+encodeURIComponent(s);
+  a.className='sport-tag'; a.textContent=s;
+  tagsEl.appendChild(a);
+});
+
+// ── 전역 함수 ──
+
+function showBsTab(tab, btn) {
+  document.querySelectorAll('.bs-panel').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.bs-tab').forEach(function(b){ b.classList.remove('active'); });
+  var panel=document.getElementById('bsp-'+tab);
+  if(panel) panel.style.display='block';
+  if(btn) btn.classList.add('active');
+  if(tab==='route'){
+    var q=encodeURIComponent(VENUE.name+' '+VENUE.addr);
+    var kk=document.getElementById('link-kakao');
+    var nv=document.getElementById('link-naver');
+    var gg=document.getElementById('link-google');
+    if(kk) kk.href='https://map.kakao.com/?q='+encodeURIComponent(VENUE.name);
+    if(nv) nv.href='https://map.naver.com/v5/search/'+q;
+    if(gg) gg.href='https://www.google.com/maps/search/?api=1&query='+q;
+  }
+}
+
+function changeVenueStyle(style) {
+  if(!map) return;
+  document.querySelectorAll('.style-pill').forEach(function(b){ b.classList.remove('active'); });
+  var order=['dark','light','streets','outdoor'];
+  var pills=document.querySelectorAll('.style-pill');
+  var idx=order.indexOf(style);
+  if(pills[idx]) pills[idx].classList.add('active');
+  try {
+    if(window.mapboxgl) {
+      var presets={dark:'night',light:'day',streets:'day',outdoor:'dawn'};
+      try {
+        map.setConfigProperty('basemap','lightPreset',presets[style]||'night');
+        setTimeout(function(){ add3DBuildings(); applyKoreanLabels(); },500);
+      } catch(e) {
+        var mb={dark:'mapbox://styles/mapbox/dark-v11',light:'mapbox://styles/mapbox/light-v11',streets:'mapbox://styles/mapbox/streets-v12',outdoor:'mapbox://styles/mapbox/outdoors-v12'};
+        map.setStyle(mb[style]||mb.dark);
+        map.once('style.load',function(){ add3DBuildings(); applyKoreanLabels(); });
+      }
+    } else {
+      var ml={dark:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',light:'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',streets:'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json'};
+      map.setStyle(ml[style]||ml.dark);
+      map.once('style.load',applyKoreanLabels);
+    }
+  } catch(e){ console.warn('Style change:',e); }
+}
+
+function toggle3D() {
+  if(!map) return;
+  var btn=document.getElementById('btn-3d-top');
+  try {
+    var pitch=map.getPitch();
+    if(pitch<30){ map.easeTo({pitch:60,bearing:-20,duration:800}); if(btn){btn.textContent='2D';btn.title='2D로';} }
+    else { map.easeTo({pitch:0,bearing:0,duration:600}); if(btn){btn.textContent='🏢';btn.title='3D로';} }
+  } catch(e){}
+}
+
+function toggleChatPanel() {
+  var dd=document.getElementById('tb-chat-dropdown');
+  if(dd) dd.classList.toggle('open');
+}
+
+function closeAgeChat() {
+  var modal=document.getElementById('chat-modal');
+  if(modal) modal.style.display='none';
+  var dd=document.getElementById('tb-chat-dropdown');
+  if(dd) dd.classList.add('open');
+}
+
+function openAgeChat(age) {
+  var modal=document.getElementById('chat-modal');
+  if(!modal) return;
+  modal.style.display='flex';
+  var sub=modal.querySelector('.chat-header-text p');
+  if(sub) sub.innerHTML='<button onclick="closeAgeChat()" style="background:none;border:none;color:#C9A84C;font-size:12px;cursor:pointer;font-family:inherit;padding:0;">← 연령대 선택</button>';
+  var nameEl=document.getElementById('chat-venue-name');
+  if(nameEl) nameEl.textContent=VENUE.name+' · '+age+' 채팅방';
+  var msgs=document.getElementById('chat-messages');
+  if(msgs) msgs.innerHTML='<div class="chat-coming-soon">💬 <strong style="color:#C9A84C;">'+age+'</strong> 채팅방<br><br>채팅 기능 오픈 준비 중...<br>경기 신청, 정모, 팀 빌딩 등을 나눠보세요!</div>';
+  modal.classList.add('open');
+}
+
+function checkShowVenueRegBtn() {
+  var btn=document.getElementById('tb-reg-btn');
+  if(!btn) return;
+  var loggedIn=!!(window.ICOC_AUTH&&ICOC_AUTH.getCurrentUser&&ICOC_AUTH.getCurrentUser());
+  btn.style.display=loggedIn?'flex':'none';
+}
+
+function add3DBuildings() {
+  if(!window.mapboxgl||!map.getSource('composite')) return;
+  try {
+    if(map.getLayer('3d-buildings')) map.removeLayer('3d-buildings');
+    map.addLayer({
+      id:'3d-buildings',source:'composite','source-layer':'building',
+      filter:['==','extrude','true'],type:'fill-extrusion',minzoom:14,
+      paint:{
+        'fill-extrusion-color':['interpolate',['linear'],['get','height'],0,'#C9A84C',50,'#E8C97A',100,'#F5F0E8'],
+        'fill-extrusion-height':['interpolate',['linear'],['zoom'],14,0,14.5,['get','height']],
+        'fill-extrusion-base':['interpolate',['linear'],['zoom'],14,0,14.5,['get','min_height']],
+        'fill-extrusion-opacity':0.75
+      }
+    });
+  } catch(e){ console.warn('3D buildings:',e); }
+}
+
+function applyKoreanLabels() {
+  try {
+    map.getStyle().layers.forEach(function(layer){
+      if(layer.layout&&layer.layout['text-field']){
+        map.setLayoutProperty(layer.id,'text-field',['coalesce',['get','name_ko'],['get','name:ko'],['get','name']]);
+      }
+    });
+  } catch(e){}
+}
+
+function showWeatherTicker() {
+  if(document.getElementById('venue-weather-ticker')) return;
+  var ticker=document.createElement('div');
+  ticker.id='venue-weather-ticker';
+  ticker.style.cssText='position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(8,20,44,0.92);backdrop-filter:blur(10px);border-top:1px solid rgba(201,168,76,0.15);height:28px;overflow:hidden;display:flex;align-items:center;';
+  ticker.innerHTML='<div style="flex-shrink:0;padding:0 8px;"><span style="font-size:9px;font-weight:700;color:#C9A84C;">🌤 날씨</span></div><div style="flex:1;overflow:hidden;"><div id="venue-weather-text" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.7);white-space:nowrap;animation:tickerScroll 35s linear infinite;padding:0 10px;line-height:28px;">날씨 불러오는 중...</div></div>';
+  document.body.appendChild(ticker);
+  var cities=[{name:'서울',lat:37.5665,lng:126.9780},{name:'도쿄',lat:35.6762,lng:139.6503},{name:'뉴욕',lat:40.7128,lng:-74.0060},{name:'런던',lat:51.5074,lng:-0.1278},{name:'베이징',lat:39.9042,lng:116.4074},{name:'시드니',lat:-33.8688,lng:151.2093}];
+  var WMO={0:'맑음',1:'맑음',2:'흐릿',3:'흐림',45:'안개',61:'비',71:'눈',80:'소나기',95:'뇌우'};
+  Promise.all(cities.map(function(c){
+    return fetch('https://api.open-meteo.com/v1/forecast?latitude='+c.lat+'&longitude='+c.lng+'&current_weather=true')
+      .then(function(r){return r.json();})
+      .then(function(d){return {name:c.name,temp:Math.round(d.current_weather.temperature),code:d.current_weather.weathercode};})
+      .catch(function(){return {name:c.name,temp:'?',code:0};});
+  })).then(function(results){
+    var text=results.map(function(r){return '🌍 '+r.name+' '+r.temp+'°C '+(WMO[r.code]||'');}).join(' · ');
+    var el=document.getElementById('venue-weather-text');
+    if(el) el.textContent=text+' · '+text;
+  });
+}
+
+function showNewsTicker() {
+  if(document.getElementById('venue-news-ticker')) return;
+  var ticker=document.createElement('div');
+  ticker.id='venue-news-ticker';
+  ticker.style.cssText='position:fixed;bottom:28px;left:0;right:0;z-index:149;background:rgba(201,168,76,0.08);backdrop-filter:blur(8px);border-top:1px solid rgba(201,168,76,0.1);height:22px;overflow:hidden;display:flex;align-items:center;';
+  ticker.innerHTML='<div style="flex-shrink:0;padding:0 8px;font-size:9px;font-weight:700;color:#C9A84C;white-space:nowrap;">📰 뉴스</div><div style="flex:1;overflow:hidden;"><div id="venue-news-text" style="display:inline-block;font-size:10px;color:rgba(245,240,232,0.6);white-space:nowrap;animation:tickerScroll 50s linear infinite;padding:0 10px;line-height:22px;">뉴스 로딩 중...</div></div>';
+  document.body.appendChild(ticker);
+  var RSS=encodeURIComponent('https://news.google.com/rss/search?q=브레인스포츠+바둑+체스&hl=ko&gl=KR&ceid=KR:ko');
+  fetch('https://api.rss2json.com/v1/api.json?rss_url='+RSS+'&count=10')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.items&&d.items.length){
+        var text=d.items.map(function(i){return '📌 '+i.title;}).join(' · ');
+        var el=document.getElementById('venue-news-text');
+        if(el) el.textContent=text+' · '+text;
+      }
+    }).catch(function(){
+      var el=document.getElementById('venue-news-text');
+      if(el) el.textContent='📌 ICOC Brain Sports Omnipo 2027 오픈 · 195개국 온라인 두뇌스포츠 플랫폼 · 바둑·체스·장기·당구·볼링 온라인 대전 · 지금 국가대표에 도전하세요 · ICOC Brain Sports Omnipo 2027 오픈 · 195개국 온라인';
+    });
+}
+
+function addVenueMarker() {
+  var el=document.createElement('div');
+  el.className='my-venue-marker';
+  el.style.cssText='width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:3px solid rgba(201,168,76,0.8);box-shadow:0 4px 16px rgba(0,0,0,0.5);cursor:pointer;background:rgba(74,118,201,0.8);';
+  el.textContent=T.icon;
+  var Lib=window.mapboxgl||window.maplibregl;
+  if(!Lib) return;
+  new Lib.Marker({element:el,anchor:'bottom'}).setLngLat([VENUE.lng,VENUE.lat]).addTo(map);
+  applyKoreanLabels();
+  add3DBuildings();
+  showWeatherTicker();
+  showNewsTicker();
+  checkShowVenueRegBtn();
+}
+
+function initVenueMap() {
+  var container=document.getElementById('map');
+  if(!container||container.offsetWidth===0){ setTimeout(initVenueMap,150); return; }
+  if(window.mapboxgl) {
+    mapboxgl.accessToken=MAPBOX_TOKEN;
+    map=new mapboxgl.Map({container:'map',style:'mapbox://styles/mapbox/standard',center:[VENUE.lng,VENUE.lat],zoom:16,pitch:55,bearing:-15,antialias:true,language:'ko'});
+    map.on('style.load',function(){ try{map.setConfigProperty('basemap','lightPreset','night');}catch(e){} });
+    map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}),'top-left');
+    map.on('load',addVenueMarker);
+    map.on('error',function(e){console.warn('Mapbox:',e.error);});
+  } else if(window.maplibregl) {
+    map=new maplibregl.Map({container:'map',style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',center:[VENUE.lng,VENUE.lat],zoom:16,pitch:55,bearing:-15});
+    map.addControl(new maplibregl.NavigationControl(),'top-left');
+    map.on('load',addVenueMarker);
+  }
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  initVenueMap();
+  var handle=document.getElementById('sheet-handle');
+  var sheet=document.getElementById('bottom-sheet');
+  var collapsed=false;
+  if(handle) handle.addEventListener('click',function(){
+    collapsed=!collapsed;
+    if(sheet) sheet.style.transform=collapsed?'translateY(calc(100% - 52px))':'';
+  });
+  document.addEventListener('click',function(e){
+    if(!e.target.closest('#tb-chat-wrap')){
+      var dd=document.getElementById('tb-chat-dropdown');
+      if(dd) dd.classList.remove('open');
+    }
+  });
+  setTimeout(checkShowVenueRegBtn,1500);
+  setInterval(checkShowVenueRegBtn,5000);
+});
+</script>
+</body>
+</html>
