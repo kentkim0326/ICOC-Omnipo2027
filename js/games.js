@@ -149,18 +149,47 @@
     document.body.style.overflow = 'hidden';
     game.init();
 
-    // 온라인 1:1 대전 버튼 (로그인 + 지원 종목만)
+    // 온라인 지원 종목: 자동 백그라운드 방 생성 (AI 플레이 중 상대 기다리기)
     const _onlineGames = ['omok','go','chess','janggi','shogi'];
-    if (_onlineGames.includes(key) && window.ICOC_AUTH?.getCurrentUser?.()) {
+    if (_onlineGames.includes(key) && window.ICOC_AUTH?.getCurrentUser?.() && window.ICOC_ONLINE) {
       const _body = document.getElementById('game-modal-body');
       if (_body && !document.getElementById('online-btn-row')) {
         const _row = document.createElement('div');
         _row.id = 'online-btn-row';
-        _row.style.cssText = 'padding:8px 12px;border-top:1px solid rgba(201,168,76,0.1);display:flex;align-items:center;gap:8px;justify-content:flex-end;';
-        _row.innerHTML = '<span style="font-size:11px;color:rgba(245,240,232,0.35);">사람과 대전:</span>'
-          + '<button onclick="if(window.ICOC_ONLINE)ICOC_ONLINE.injectMatchmakingUI(document.getElementById(\'game-modal\'),\''+key+'\')" '
-          + 'style="padding:5px 14px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:16px;color:#4ade80;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">🌐 온라인 1:1</button>';
+        _row.style.cssText = 'padding:8px 14px;border-top:1px solid rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;';
+        _row.innerHTML = `
+          <div style="display:flex;align-items:center;gap:6px;">
+            <div id="online-auto-dot" style="width:8px;height:8px;border-radius:50%;background:#E8C97A;animation:blink 1.5s infinite;"></div>
+            <span style="font-size:11px;color:rgba(245,240,232,0.45);" id="online-auto-label">AI 대전 중 · 상대 기다리는 중...</span>
+          </div>
+          <button onclick="ICOC_ONLINE.injectMatchmakingUI(document.getElementById('game-modal'),'${key}')"
+            style="padding:5px 14px;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);border-radius:16px;color:#4ade80;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;">
+            🌐 코드로 초대
+          </button>`;
         _body.appendChild(_row);
+
+        // 자동 방 생성 (백그라운드)
+        const _gameCallbacks = {
+          onStart: ({ roomId, handoff }) => {
+            const dot = document.getElementById('online-auto-dot');
+            const lbl = document.getElementById('online-auto-label');
+            if (dot) dot.style.background = '#4ade80';
+            if (lbl) lbl.textContent = '🎉 상대 입장! 1:1 대전 시작';
+          },
+          onMove: (payload) => {
+            const g = key;
+            if (g==='omok')   window.OmokGame?.applyOpponentMove?.(payload);
+            if (g==='go')     window.GoGame?.applyOpponentMove?.(payload);
+            if (g==='chess')  window.ChessGame?.applyOpponentMove?.(payload);
+            if (g==='janggi') window.JanggiGame?.applyOpponentMove?.(payload);
+            if (g==='shogi')  window.ShogiGame?.applyOpponentMove?.(payload);
+          },
+          onEnd: (payload) => {
+            const lbl = document.getElementById('online-auto-label');
+            if (lbl) lbl.textContent = payload.reason==='disconnect' ? '상대 연결 끊김' : '대전 종료';
+          }
+        };
+        setTimeout(() => ICOC_ONLINE.createRoomInBackground(key, _gameCallbacks), 1000);
       }
     }
   }
