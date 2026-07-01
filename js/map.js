@@ -269,7 +269,8 @@
             <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('30대')">👨 30대</button>
             <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('40대')">🧔 40대</button>
             <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('50대')">👴 50대</button>
-            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('60대+')">👵 60대+</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('60대')">👵 60대</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('70대+')">🧓 70대+</button>
           </div>
         </div>
         <!-- 날씨 티커 (지도 섹션에서만) -->
