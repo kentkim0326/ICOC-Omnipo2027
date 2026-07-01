@@ -92,14 +92,13 @@
     channel.on('presence', { event: 'join' }, ({ newPresences }) => {
       const others = newPresences.filter(p => p.phx_ref !== undefined);
       if (myRole === 'host' && others.length > 0) {
-        // 게임 시작!
-        isMyTurn = true; // host가 먼저
-        active   = true;
+        isMyTurn = true; active = true;
+        injectSurrenderBtn(); _setupAbandonDetection();
         if (onStartCallback) onStartCallback({ myColor, myRole, roomId });
         _showStatus('게임 시작! 당신의 차례 (흑)');
       } else if (myRole === 'guest') {
-        isMyTurn = false;
-        active   = true;
+        isMyTurn = false; active = true;
+        injectSurrenderBtn(); _setupAbandonDetection();
         if (onStartCallback) onStartCallback({ myColor, myRole, roomId });
         _showStatus('게임 시작! 상대 차례 기다리는 중...');
       }
@@ -112,9 +111,27 @@
       _showStatus('당신의 차례!');
     });
 
+    // Broadcast: 항복
+    channel.on('broadcast', { event: 'surrender' }, ({ payload }) => {
+      active = false;
+      applyPoints('SURRENDER_WIN', '상대 항복');
+      document.getElementById('surrender-btn')?.remove();
+      document.getElementById('online-turn-bar')?.remove();
+      alert(`상대방이 항복했습니다! +${PTS.SURRENDER_WIN}P`);
+      if (onEndCallback) onEndCallback({ winner: myRole, reason: 'surrender' });
+      _cleanup();
+    });
+
     // Broadcast: 게임 종료
     channel.on('broadcast', { event: 'end' }, ({ payload }) => {
       active = false;
+      // 결과에 따라 포인트
+      if (payload.reason !== 'abandon') {
+        const won = payload.winner === myRole;
+        applyPoints(won ? 'WIN' : 'LOSE', won ? '승리' : '패배');
+      }
+      document.getElementById('surrender-btn')?.remove();
+      document.getElementById('online-turn-bar')?.remove();
       if (onEndCallback) onEndCallback(payload);
       _cleanup();
     });
@@ -141,6 +158,71 @@
     isMyTurn = false;
     channel.send({ type: 'broadcast', event: 'move', payload });
     _showStatus('상대방 차례...');
+  }
+
+
+  // ── 포인트 룰 ──
+  const PTS = {
+    WIN:       200,  // 승리
+    LOSE:     -100,  // 패배
+    SURRENDER_WIN:  200,  // 상대 항복 시 승리자
+    SURRENDER_LOSE: -100, // 항복한 쪽
+    ABANDON:  -100,  // 도망/연결끊김 (도망간 쪽)
+  };
+
+  // 포인트 적용 함수
+  function applyPoints(result, reason) {
+    const pts = PTS[result] || 0;
+    if (pts === 0) return;
+    if (window.ICOC_POINTS) {
+      ICOC_POINTS.changePoints(pts, `[온라인 1:1] ${gameKey} ${reason}`);
+    }
+    // localStorage 기록
+    try {
+      const hist = JSON.parse(localStorage.getItem('icoc_history') || '[]');
+      hist.unshift({
+        sport: gameKey, icon:'🌐', won: pts > 0,
+        pts, time: Date.now(), online: true, reason
+      });
+      localStorage.setItem('icoc_history', JSON.stringify(hist.slice(0, 50)));
+    } catch(e) {}
+    // Supabase 기록
+    if (window.ICOC_AUTH?.recordGameResult) {
+      ICOC_AUTH.recordGameResult(gameKey, pts > 0, Math.abs(pts));
+    }
+  }
+
+  // ── 항복 버튼 주입 ──
+  function injectSurrenderBtn() {
+    if (document.getElementById('surrender-btn')) return;
+    const btn = document.createElement('button');
+    btn.id = 'surrender-btn';
+    btn.textContent = '🏳️ 항복';
+    btn.title = `항복: 상대 +${PTS.SURRENDER_WIN}P / 나 ${PTS.SURRENDER_LOSE}P`;
+    btn.style.cssText = 'position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:1000;padding:8px 20px;background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);border-radius:20px;color:#f87171;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);';
+    btn.onclick = () => {
+      if (!confirm('정말 항복하시겠습니까? 상대에게 +200P, 나에게 -100P')) return;
+      channel?.send({ type:'broadcast', event:'surrender', payload:{ by: myRole } });
+      applyPoints('SURRENDER_LOSE', '항복');
+      active = false;
+      btn.remove();
+      document.getElementById('online-turn-bar')?.remove();
+      alert(`항복했습니다. ${PTS.SURRENDER_LOSE}P`);
+      _cleanup();
+    };
+    document.body.appendChild(btn);
+  }
+
+  // ── 페이지 이탈 감지 (도망 패널티) ──
+  function _setupAbandonDetection() {
+    const handleLeave = (e) => {
+      if (!active) return;
+      // 도망: 즉시 -100P (비동기로 Supabase에 저장)
+      applyPoints('ABANDON', '연결끊김/도망');
+      channel?.send({ type:'broadcast', event:'end', payload:{ winner: myRole==='host'?'guest':'host', reason:'abandon' } });
+    };
+    window.addEventListener('beforeunload', handleLeave);
+    window.addEventListener('pagehide', handleLeave);
   }
 
   // ── 게임 종료 전송 ──
