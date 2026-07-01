@@ -239,6 +239,53 @@ footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;fo
 
 <div class="divider"></div>
 
+
+<!-- ── 공식 인증 섹션 ── -->
+<div class="divider"></div>
+<div class="sec">
+  <p class="sec-label">공식 인증</p>
+  <h2 class="sec-title">법적 근거 & 상표권</h2>
+  <p class="sec-body">ICOC는 대한민국 특허청 등록 상표(제40-2069695호)와 서울특별시 문화체육관광부 소관 사단법인 설립 허가(제2022-53호)를 보유한 정식 법인입니다. 대표자 KIM KENT가 이끄는 국제브레인스포츠협회가 운영합니다.</p>
+  <div class="cert-grid">
+    <div class="cert-card">
+      <div class="cert-badge">🏅 상표등록</div>
+      <div class="cert-meta">제 40-2069695 호</div>
+      <div class="cert-sub">Korean Intellectual Property Office<br>등록일: 2023년 08월 21일 · 제41류 스포츠 교육</div>
+      <a href="assets/trademark.png" target="_blank" rel="noopener" class="cert-img-wrap">
+        <img src="assets/trademark.png" alt="ICOC 상표등록증" class="cert-img" loading="lazy">
+        <div class="cert-overlay">🔍 원본 보기</div>
+      </a>
+    </div>
+    <div class="cert-card">
+      <div class="cert-badge">🏛️ 사단법인 설립 허가</div>
+      <div class="cert-meta">제 2022-53 호</div>
+      <div class="cert-sub">서울특별시장 · 문화체육관광부 소관<br>설립일: 2022년 3월 · 대표: KIM KENT</div>
+      <a href="assets/corporate-license.png" target="_blank" rel="noopener" class="cert-img-wrap">
+        <img src="assets/corporate-license.png" alt="사단법인 국제브레인스포츠협회 설립 허가증" class="cert-img" loading="lazy">
+        <div class="cert-overlay">🔍 원본 보기</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<style>
+.cert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px;}
+.cert-card{background:rgba(14,40,71,0.7);border:1px solid rgba(201,168,76,0.25);border-radius:16px;padding:24px;transition:all .25s;}
+.cert-card:hover{border-color:rgba(201,168,76,0.5);transform:translateY(-3px);}
+.cert-badge{font-size:13px;font-weight:700;color:#E8C97A;margin-bottom:8px;}
+.cert-meta{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--cream);margin-bottom:6px;}
+.cert-sub{font-size:12px;color:rgba(245,240,232,0.5);line-height:1.6;margin-bottom:16px;}
+.cert-img-wrap{display:block;position:relative;border-radius:10px;overflow:hidden;border:1px solid rgba(201,168,76,0.2);cursor:pointer;}
+.cert-img{width:100%;display:block;filter:brightness(.92);}
+.cert-overlay{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(11,31,58,0.5);color:var(--cream);font-size:13px;font-weight:600;
+  opacity:0;transition:opacity .2s;
+}
+.cert-img-wrap:hover .cert-overlay{opacity:1;}
+.cert-img-wrap:hover .cert-img{filter:brightness(1);}
+</style>
+
 <!-- CTA -->
 <div class="cta-band">
   <h2 class="cta-title">지금 바로 국가대표에 도전하세요</h2>
