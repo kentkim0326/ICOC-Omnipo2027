@@ -11,6 +11,24 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
 <!-- MapLibre GL JS (fallback) -->
 <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.css" rel="stylesheet">
+
+function showBsTab(tab, btn) {
+  document.querySelectorAll('.bs-panel').forEach(function(p){ p.style.display='none'; });
+  document.querySelectorAll('.bs-tab').forEach(function(b){ b.classList.remove('active'); });
+  var panel = document.getElementById('bsp-'+tab);
+  if(panel) panel.style.display='block';
+  if(btn) btn.classList.add('active');
+  if(tab==='route'){
+    var kk=document.getElementById('link-kakao');
+    var nv=document.getElementById('link-naver');
+    var gg=document.getElementById('link-google');
+    var q=encodeURIComponent(VENUE.name+' '+VENUE.addr);
+    if(kk) kk.href='https://map.kakao.com/?q='+encodeURIComponent(VENUE.name);
+    if(nv) nv.href='https://map.naver.com/v5/search/'+q;
+    if(gg) gg.href='https://www.google.com/maps/search/?api=1&query='+q;
+  }
+}
+
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.js"></script>
 <style>
 :root {
