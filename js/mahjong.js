@@ -213,17 +213,24 @@
 
     wrap.appendChild(board);
 
-    // 모바일: 보드 폭이 컨테이너보다 넓으면 축소
-    requestAnimationFrame(() => {
-      const avail = wrap.clientWidth - 8;
+    // 모바일: 화면 크기에 맞게 자동 축소
+    function scaleMjBoard() {
+      const availW = wrap.clientWidth - 4;
+      const availH = window.innerHeight * 0.55;
       const bw = parseFloat(board.style.width);
-      if (bw > avail && avail > 0) {
-        const scale = avail / bw;
-        board.style.transform = `scale(${scale})`;
-        board.style.transformOrigin = 'top left';
-        board.style.marginBottom = (parseFloat(board.style.height) * (scale - 1)) + 'px';
-      }
-    });
+      const bh = parseFloat(board.style.height);
+      if (!bw || !bh) return;
+      const scaleW = bw > availW ? availW / bw : 1;
+      const scale = Math.min(scaleW, bh * scaleW > availH ? availH / bh : 1);
+      if (scale < 1) {
+        board.style.transform = 'scale(' + scale + ')';
+        board.style.transformOrigin = 'top center';
+        wrap.style.height = Math.ceil(bh * scale + 8) + 'px';
+        wrap.style.overflow = 'hidden';
+      } else { board.style.transform = ''; wrap.style.height = ''; }
+    }
+    requestAnimationFrame(scaleMjBoard);
+    window.addEventListener('resize', scaleMjBoard);
   }
 
   function reset() {
@@ -242,7 +249,7 @@
         <span id="mj-status" class="mj-status-text">남은 타일 144개</span>
         <button class="game-btn ghost mj-hint-btn" id="mj-hint-btn">💡 힌트</button>
       </div>
-      <div id="mj-board-wrap" class="mj-board-wrap"></div>
+      <div id="mj-board-wrap" class="mj-board-wrap" style="overflow:hidden;"></div>
       <div id="mj-result" class="game-result-msg"></div>
       <div id="mj-points-msg" class="game-points-earned"></div>
       <div class="game-actions">
