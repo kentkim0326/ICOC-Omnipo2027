@@ -264,9 +264,13 @@
   }
 
   function doMove(m) {
+    const isCapture = board[m.to[0]][m.to[1]] !== null;
     board[m.to[0]][m.to[1]] = board[m.from[0]][m.from[1]];
     board[m.from[0]][m.from[1]] = null;
     selected = null; legalForSelected = [];
+    if (typeof _SFX !== 'undefined') {
+      if (isCapture) _SFX.capture(); else _SFX.move();
+    }
   }
 
   function doAiTurn() {
