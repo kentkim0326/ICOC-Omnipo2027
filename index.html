@@ -634,6 +634,124 @@ footer a { color:var(--gold); text-decoration:none; }
   </div>
 </nav>
 
+<!-- ── 날씨 + ICOC 이중 티커 ── -->
+<div id="dual-ticker" style="
+  position:fixed; top:var(--nav-h,96px); left:0; right:0; z-index:999;
+  background:rgba(8,20,44,0.95); backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(201,168,76,0.12);
+  display:flex; height:28px; overflow:hidden;
+">
+  <!-- 왼쪽: ICOC 뉴스 -->
+  <div style="display:flex;align-items:center;flex-shrink:0;padding:0 10px;
+    border-right:1px solid rgba(201,168,76,0.15);gap:5px;">
+    <span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--gold,#C9A84C);white-space:nowrap;">📢 ICOC</span>
+  </div>
+  <div style="flex:1;overflow:hidden;position:relative;">
+    <div id="icoc-news-ticker" style="
+      display:flex;align-items:center;height:28px;
+      font-size:11px;color:rgba(245,240,232,0.75);
+      white-space:nowrap;padding:0 12px;
+      animation:tickerScroll 35s linear infinite;
+    "></div>
+  </div>
+  <!-- 구분선 -->
+  <div style="width:1px;background:rgba(201,168,76,0.15);flex-shrink:0;"></div>
+  <!-- 오른쪽: 날씨 -->
+  <div style="display:flex;align-items:center;flex-shrink:0;padding:0 10px;
+    border-left:0;gap:5px;">
+    <span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:#60a5fa;white-space:nowrap;">🌍 날씨</span>
+  </div>
+  <div style="flex:1;overflow:hidden;position:relative;min-width:200px;max-width:380px;">
+    <div id="weather-ticker" style="
+      display:flex;align-items:center;height:28px;
+      font-size:11px;color:rgba(245,240,232,0.7);
+      white-space:nowrap;padding:0 12px;
+      animation:tickerScroll 40s linear infinite;
+    "></div>
+  </div>
+</div>
+
+<style>
+@keyframes tickerScroll {
+  0%   { transform:translateX(100%); }
+  100% { transform:translateX(-100%); }
+}
+/* Nav height variable for sticky positioning */
+:root { --nav-h: 96px; }
+/* Push hero content down for dual-ticker */
+.hero { padding-top:calc(var(--nav-h) + 28px + 16px) !important; }
+</style>
+
+<script>
+(function(){
+  const ICOC_MSGS = [
+    '🎉 ICOC Brain Sports Omnipo 2027 공식 사이트 오픈!',
+    '🌐 전 세계 195개국 온라인 예선 진행 중',
+    '⚫ 오목 국가대표 선발전 — 지금 AI와 대전하세요',
+    '🎁 친구 초대 이벤트 — 추천인·피추천인 각 10,000P',
+    '🏆 글로벌 리더보드 — 국가·도시·동네 실시간 랭킹',
+    '⚡ 매 시간 체크인 보너스 — 평일 1,000P / 주말 2,000P',
+    '🇰🇷 2027 서울 본선 — 50개국 1,000명 초청 목표',
+    '🎮 66개 브레인스포츠 AI 대전 순차 오픈 예정',
+    '🃏 텍사스 홀덤·브릿지·진러미 공식 선발 종목 채택',
+    '🪅 윷놀이·마작·고스톱 전통 종목 정식 등록 완료',
+  ];
+
+  const CITIES = [
+    {name:'서울',  lat:37.57, lon:126.98},
+    {name:'도쿄',  lat:35.69, lon:139.69},
+    {name:'뉴욕',  lat:40.71, lon:-74.00},
+    {name:'런던',  lat:51.51, lon:-0.13},
+    {name:'파리',  lat:48.85, lon:2.35},
+    {name:'베이징',lat:39.91, lon:116.39},
+    {name:'두바이', lat:25.20, lon:55.27},
+    {name:'시드니', lat:-33.87,lon:151.21},
+    {name:'상파울루',lat:-23.55,lon:-46.63},
+    {name:'모스크바',lat:55.75, lon:37.62},
+  ];
+
+  const WX_ICONS = {0:'☀️',1:'☀️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
+    51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
+    71:'❄️',73:'❄️',75:'❄️',80:'🌦️',81:'🌦️',82:'⛈️',
+    95:'⛈️',96:'⛈️',99:'⛈️'};
+
+  async function fetchWeather(city) {
+    try {
+      const r = await fetch(
+        `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weathercode&timezone=auto`,
+        {signal: AbortSignal.timeout(4000)}
+      );
+      const d = await r.json();
+      const t = Math.round(d.current.temperature_2m);
+      const icon = WX_ICONS[d.current.weathercode] || '🌡️';
+      return `${city.name} ${icon} ${t}°C`;
+    } catch { return `${city.name} —`; }
+  }
+
+  async function loadWeather() {
+    const el = document.getElementById('weather-ticker');
+    if (!el) return;
+    const results = await Promise.all(CITIES.map(fetchWeather));
+    // Repeat for seamless loop
+    el.textContent = results.join('  ·  ') + '  ·  ' + results.join('  ·  ');
+  }
+
+  function setupIcocTicker() {
+    const el = document.getElementById('icoc-news-ticker');
+    if (!el) return;
+    const txt = ICOC_MSGS.join('  ✦  ') + '  ✦  ' + ICOC_MSGS.join('  ✦  ');
+    el.textContent = txt;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    setupIcocTicker();
+    loadWeather();
+    // Reload weather every 10 min
+    setInterval(loadWeather, 600000);
+  });
+})();
+</script>
+
 <!-- HERO -->
 <header class="hero">
   <!-- Hero Slideshow: 기존 배경 + 4장 추가 슬라이드 -->
