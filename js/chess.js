@@ -304,8 +304,8 @@
     gameOver = true;
     setTurnUI();
     let pts;
-    if (result === 'win') { setStatus('🎉 체크메이트! 승리했습니다.'); pts = 30; }
-    else if (result === 'lose') { setStatus('체크메이트. AI가 승리했습니다.'); pts = 10; }
+    if (result === 'win') { setStatus('🎉 체크메이트! 승리했습니다.'); pts = 30; if(global.ICOC_SFX) setTimeout(()=>global.ICOC_SFX.win(),100); }
+    else if (result === 'lose') { setStatus('체크메이트. AI가 승리했습니다.'); pts = 10; if(global.ICOC_SFX) setTimeout(()=>global.ICOC_SFX.lose(),100); }
     else { setStatus('스테일메이트. 무승부입니다.'); pts = 15; }
 
     if (!awarded) {
@@ -335,6 +335,7 @@
     castleRights = rights; enPassantTarget = ep;
     lastMove = move;
     selected = null; legalTargets = null;
+    if (global.ICOC_SFX) global.ICOC_SFX.piece();
     renderBoard();
   }
 
