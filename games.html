@@ -186,6 +186,22 @@ body{
   .hero-strip{ padding:48px 32px 36px; }
   .filter-bar{ padding:18px 32px 12px; }
 }
+
+.gc-img {
+  width: calc(100% + 28px);
+  height: 90px;
+  margin: -18px -14px 10px;
+  overflow: hidden;
+  border-radius: 14px 14px 0 0;
+}
+.gc-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  transition: transform 0.3s;
+}
+.game-card:hover .gc-img img { transform: scale(1.05); }
+
 </style>
 
 <style>
@@ -295,6 +311,25 @@ const CATS = {
   sport:   { label:'실내 스포츠',     emoji:'🎳' },
 };
 
+const GAME_IMGS = {
+  go:'assets/game-cards/go.jpg',
+  chess:'assets/game-cards/chess.jpg',
+  janggi:'assets/game-cards/janggi.jpg',
+  omok:'assets/game-cards/omok.jpg',
+  shogi:'assets/game-cards/shogi.jpg',
+  checkers:'assets/game-cards/checkers.jpg',
+  reversi:'assets/game-cards/reversi.jpg',
+  hex:'assets/game-cards/hex.jpg',
+  quoridor:'assets/game-cards/quoridor.jpg',
+  billiards:'assets/game-cards/billiards.jpg',
+  bowling:'assets/game-cards/bowling.jpg',
+  holdem:'assets/game-cards/holdem.jpg',
+  blackjack:'assets/game-cards/blackjack.jpg',
+  mahjong:'assets/game-cards/mahjong.jpg',
+  bridge:'assets/game-cards/bridge.jpg',
+  screengolf:'assets/game-cards/speedcube.jpg',
+};
+
 let activeCat = 'all';
 
 // URL 파라미터로 게임/타입 하이라이트
@@ -326,9 +361,11 @@ function buildGrid(cat){
       a.href = g.play ? `index.html?game=${g.id}` : '#';
       if(!g.play) a.addEventListener('click', e => { e.preventDefault(); showComingSoon(g.name); });
 
+      const imgSrc = GAME_IMGS[g.id];
       a.innerHTML = `
+        ${imgSrc ? `<div class="gc-img"><img src="${imgSrc}" alt="${g.name}" loading="lazy"></div>` : ''}
         <span class="play-badge">${g.play ? '▶ PLAY' : 'SOON'}</span>
-        <div class="game-emoji">${g.emoji}</div>
+        <div class="game-emoji"${imgSrc ? ' style="display:none"' : ''}>${g.emoji}</div>
         <div class="game-name">${g.name}${g.featured ? ' <span style="color:var(--gold);font-size:9px;">✦</span>' : ''}</div>
         <div class="game-name-en">${g.nameEn}</div>
         <div class="game-desc">${g.desc}</div>
@@ -373,58 +410,7 @@ function showComingSoon(name){
 buildGrid('all');
 </script>
 
-<script>
-// 게임 카드에 AI 아트워크 이미지 추가
-(function() {
-  var IMGS = {
-    '바둑':'assets/game-cards/go.jpg',
-    '체스':'assets/game-cards/chess.jpg',
-    '장기':'assets/game-cards/janggi.jpg',
-    '오목':'assets/game-cards/omok.jpg',
-    '쇼기':'assets/game-cards/shogi.jpg',
-    '체커':'assets/game-cards/checkers.jpg',
-    '리버시':'assets/game-cards/reversi.jpg',
-    '헥스':'assets/game-cards/hex.jpg',
-    '쿼리도':'assets/game-cards/quoridor.jpg',
-    '당구':'assets/game-cards/billiards.jpg',
-    '볼링':'assets/game-cards/bowling.jpg',
-    '홀덤':'assets/game-cards/holdem.jpg',
-    '블랙잭':'assets/game-cards/blackjack.jpg',
-    '마작':'assets/game-cards/mahjong.jpg',
-    '브릿지':'assets/game-cards/bridge.jpg',
-    '스크린골프':'assets/game-cards/speedcube.jpg',
-  };
-  document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.game-card').forEach(function(card) {
-      var nameEl = card.querySelector('.gc-name, .game-card-name, h3, [class*="name"]');
-      if (!nameEl) return;
-      var name = nameEl.textContent.trim().split('(')[0].trim();
-      // 매칭 시도
-      var imgSrc = IMGS[name];
-      if (!imgSrc) {
-        // 부분 매칭
-        for (var k in IMGS) {
-          if (name.includes(k) || k.includes(name)) { imgSrc = IMGS[k]; break; }
-        }
-      }
-      if (!imgSrc) return;
-      // 기존 icon 위에 이미지 추가
-      var iconEl = card.querySelector('.gc-icon, [class*="icon"]');
-      if (!iconEl) return;
-      // 카드에 이미지 컨테이너 추가
-      var imgWrap = document.createElement('div');
-      imgWrap.style.cssText = 'width:100%;height:80px;overflow:hidden;border-radius:10px 10px 0 0;margin:-18px -14px 8px;width:calc(100% + 28px);';
-      var img = document.createElement('img');
-      img.src = imgSrc;
-      img.alt = name;
-      img.loading = 'lazy';
-      img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:center top;';
-      imgWrap.appendChild(img);
-      card.insertBefore(imgWrap, card.firstChild);
-    });
-  });
-})();
-</script>
+
 
 </body>
 </html>
