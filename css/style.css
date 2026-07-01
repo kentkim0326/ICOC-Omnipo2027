@@ -1454,3 +1454,64 @@
 
 /* MapLibre 기본 팝업 오버라이드 */
 .maplibregl-popup-content { padding: 12px 14px; border-radius: 8px; }
+
+/* ── News Ticker ── */
+.news-ticker-wrap {
+  display: flex; align-items: center;
+  background: rgba(5,12,28,0.95);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+  border-top: 1px solid rgba(201,168,76,0.1);
+  height: 38px; overflow: hidden;
+  position: sticky; top: 46px; z-index: 90;
+}
+.ticker-label {
+  flex-shrink: 0;
+  padding: 0 14px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  border-right: 1px solid rgba(201,168,76,0.2);
+  white-space: nowrap; height: 100%;
+  display: flex; align-items: center;
+  background: rgba(201,168,76,0.06);
+}
+.ticker-viewport {
+  flex: 1; overflow: hidden; height: 100%;
+  display: flex; align-items: center;
+  mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+}
+.ticker-track {
+  display: flex; align-items: center;
+  white-space: nowrap;
+  will-change: transform;
+}
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+.ticker-item {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 0 28px;
+  font-size: 12px; color: rgba(245,240,232,0.75);
+  text-decoration: none; white-space: nowrap;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  transition: color 0.2s;
+}
+.ticker-item:hover { color: var(--gold); }
+.ticker-bullet { color: var(--gold); font-size: 8px; flex-shrink: 0; }
+.ticker-text { max-width: 420px; overflow: hidden; text-overflow: ellipsis; }
+.ticker-reload {
+  flex-shrink: 0; padding: 0 12px;
+  background: none; border: none;
+  color: rgba(245,240,232,0.3); font-size: 14px;
+  cursor: pointer; height: 100%;
+  border-left: 1px solid rgba(201,168,76,0.15);
+  transition: color 0.2s;
+}
+.ticker-reload:hover { color: var(--gold); }
+
+@media(max-width:640px) {
+  .ticker-label { padding: 0 10px; font-size: 9px; }
+  .ticker-item  { padding: 0 18px; font-size: 11px; }
+  .ticker-text  { max-width: 260px; }
+}
