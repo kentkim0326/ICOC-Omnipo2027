@@ -830,30 +830,48 @@ render();
 
 <script>
 const LB_T = {
-  ko: { title:'🏆 글로벌 리더보드', tab_country:'🌐 국가별', tab_city:'🏙️ 도시별', tab_district:'📍 동네별', tab_personal:'👤 개인', top3:'🥇 TOP 3 국가', allrank:'전체 국가 랭킹', search:'종목 검색...' },
-  en: { title:'🏆 Global Leaderboard', tab_country:'🌐 Country', tab_city:'🏙️ City', tab_district:'📍 District', tab_personal:'👤 Personal', top3:'🥇 TOP 3 Countries', allrank:'All Country Rankings', search:'Search sport...' },
-  zh: { title:'🏆 全球排行榜', tab_country:'🌐 国家', tab_city:'🏙️ 城市', tab_district:'📍 地区', tab_personal:'👤 个人', top3:'🥇 TOP 3 国家', allrank:'国家排名', search:'搜索项目...' },
-  ja: { title:'🏆 グローバルランキング', tab_country:'🌐 国別', tab_city:'🏙️ 都市別', tab_district:'📍 地区別', tab_personal:'👤 個人', top3:'🥇 TOP 3 国', allrank:'全国ランキング', search:'種目検索...' },
-  es: { title:'🏆 Ranking Global', tab_country:'🌐 País', tab_city:'🏙️ Ciudad', tab_district:'📍 Distrito', tab_personal:'👤 Personal', top3:'🥇 TOP 3 Países', allrank:'Ranking de Países', search:'Buscar deporte...' },
-  fr: { title:'🏆 Classement Mondial', tab_country:'🌐 Pays', tab_city:'🏙️ Ville', tab_district:'📍 Quartier', tab_personal:'👤 Individuel', top3:'🥇 TOP 3 Pays', allrank:'Classement des Pays', search:'Chercher sport...' },
-  de: { title:'🏆 Globale Rangliste', tab_country:'🌐 Land', tab_city:'🏙️ Stadt', tab_district:'📍 Bezirk', tab_personal:'👤 Persönlich', top3:'🥇 TOP 3 Länder', allrank:'Länder-Ranking', search:'Sport suchen...' },
+  ko: { title:'🏆 글로벌 리더보드', tab_country:'🌐 국가별', tab_city:'🏙️ 도시별', tab_district:'📍 동네별', tab_personal:'👤 개인', tab_gen:'👥 세대별', top3:'🥇 TOP 3 국가', allrank:'전체 국가 랭킹', search:'종목 검색...' },
+  en: { title:'🏆 Global Leaderboard', tab_country:'🌐 Country', tab_city:'🏙️ City', tab_district:'📍 District', tab_personal:'👤 Personal', tab_gen:'👥 Generation', top3:'🥇 TOP 3 Countries', allrank:'All Country Rankings', search:'Search sport...' },
+  zh: { title:'🏆 全球排行榜', tab_country:'🌐 国家', tab_city:'🏙️ 城市', tab_district:'📍 地区', tab_personal:'👤 个人', tab_gen:'👥 世代', top3:'🥇 TOP 3 国家', allrank:'国家排名', search:'搜索项目...' },
+  ja: { title:'🏆 グローバルランキング', tab_country:'🌐 国別', tab_city:'🏙️ 都市別', tab_district:'📍 地区別', tab_personal:'👤 個人', tab_gen:'👥 世代別', top3:'🥇 TOP 3 国', allrank:'全国ランキング', search:'種目検索...' },
+  es: { title:'🏆 Ranking Global', tab_gen:'👥 Generación', tab_country:'🌐 País', tab_city:'🏙️ Ciudad', tab_district:'📍 Distrito', tab_personal:'👤 Personal', top3:'🥇 TOP 3 Países', allrank:'Ranking de Países', search:'Buscar deporte...' },
+  fr: { title:'🏆 Classement Mondial', tab_gen:'👥 Génération', tab_country:'🌐 Pays', tab_city:'🏙️ Ville', tab_district:'📍 Quartier', tab_personal:'👤 Individuel', top3:'🥇 TOP 3 Pays', allrank:'Classement des Pays', search:'Chercher sport...' },
+  de: { title:'🏆 Globale Rangliste', tab_gen:'👥 Generation', tab_country:'🌐 Land', tab_city:'🏙️ Stadt', tab_district:'📍 Bezirk', tab_personal:'👤 Persönlich', top3:'🥇 TOP 3 Länder', allrank:'Länder-Ranking', search:'Sport suchen...' },
   pt: { title:'🏆 Placar Global', tab_country:'🌐 País', tab_city:'🏙️ Cidade', tab_district:'📍 Bairro', tab_personal:'👤 Individual', top3:'🥇 TOP 3 Países', allrank:'Ranking de Países', search:'Buscar esporte...' },
   ar: { title:'🏆 لوحة المتصدرين', tab_country:'🌐 الدولة', tab_city:'🏙️ المدينة', tab_district:'📍 الحي', tab_personal:'👤 فردي', top3:'🥇 أفضل 3 دول', allrank:'ترتيب الدول', search:'بحث رياضة...' },
-  hi: { title:'🏆 वैश्विक लीडरबोर्ड', tab_country:'🌐 देश', tab_city:'🏙️ शहर', tab_district:'📍 जिला', tab_personal:'👤 व्यक्तिगत', top3:'🥇 शीर्ष 3 देश', allrank:'सभी देश रैंकिंग', search:'खेल खोजें...' },
+  hi: { title:'🏆 वैश्विक लीडरबोर्ड', tab_gen:'👥 पीढ़ी', tab_country:'🌐 देश', tab_city:'🏙️ शहर', tab_district:'📍 जिला', tab_personal:'👤 व्यक्तिगत', top3:'🥇 शीर्ष 3 देश', allrank:'सभी देश रैंकिंग', search:'खेल खोजें...' },
 };
 
 function changeLbLang(lang) {
   const t = LB_T[lang] || LB_T.ko;
   const el = (id) => document.getElementById(id);
+
+  // 제목
   if(el('lb-title')) el('lb-title').textContent = t.title;
-  document.querySelectorAll('.tab-btn').forEach((btn,i) => {
-    const keys = ['tab_country','tab_city','tab_district','tab_personal'];
-    if(keys[i]) btn.textContent = t[keys[i]];
+
+  // 탭 (실제 클래스: .scope-tab, 5개: 국가/도시/동네/개인/세대별)
+  const tabKeys = ['tab_country','tab_city','tab_district','tab_personal','tab_gen'];
+  document.querySelectorAll('.scope-tab').forEach(function(btn, i) {
+    if(tabKeys[i] && t[tabKeys[i]]) btn.textContent = t[tabKeys[i]];
   });
-  if(el('lb-search-input')) el('lb-search-input').placeholder = t.search;
-  document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+
+  // 검색창
+  if(el('lb-search-input')) el('lb-search-input').placeholder = t.search || '검색...';
+
+  // 헤더 텍스트 (있으면)
+  const top3El = el('top3-label') || document.querySelector('.top3-title,.section-title');
+  if(top3El && t.top3) top3El.textContent = t.top3;
+
+  // RTL 처리
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+
+  // 저장
   localStorage.setItem('lb_lang', lang);
+
+  // 현재 탭 내용 다시 렌더 (국가명 등 번역용 현재 scope 유지)
+  if(typeof render === 'function') render();
 }
+
 
 // Auto-apply saved language on load
 document.addEventListener('DOMContentLoaded', () => {
