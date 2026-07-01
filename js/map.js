@@ -259,6 +259,30 @@
           📌 데이터는 지속 업데이트 중입니다.
           내 동네 경기장을 <a href="#" class="map-register-link">등록하기 →</a>
         </p>
+
+        <!-- 연령대별 채팅방 (WiseMom 스타일 얇은 바) -->
+        <div class="age-chat-bar">
+          <span class="age-bar-label">💬 연령대별 커뮤니티</span>
+          <div class="age-bar-btns">
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('10대')">🧒 10대</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('20대')">🧑 20대</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('30대')">👨 30대</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('40대')">🧔 40대</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('50대')">👴 50대</button>
+            <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('60대+')">👵 60대+</button>
+          </div>
+        </div>
+        <!-- 연령대 채팅 모달 -->
+        <div id="age-chat-modal" style="display:none;position:fixed;inset:0;z-index:5000;background:rgba(5,12,24,0.85);align-items:center;justify-content:center;">
+          <div style="background:rgba(10,28,55,0.98);border:1px solid rgba(201,168,76,0.28);border-radius:18px;padding:28px 24px;max-width:360px;width:90%;text-align:center;backdrop-filter:blur(20px);">
+            <div id="age-modal-title" style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#C9A84C;margin-bottom:10px;"></div>
+            <div style="font-size:14px;color:rgba(245,240,232,0.65);line-height:1.8;margin-bottom:20px;">
+              같은 연령대 ICOC 플레이어들과<br>경기 신청 · 정모 약속 · 팀 빌딩!<br>
+              <span style="font-size:12px;color:rgba(245,240,232,0.4);">🔔 채팅 기능 곧 오픈</span>
+            </div>
+            <button onclick="document.getElementById('age-chat-modal').style.display='none'" style="padding:10px 28px;background:linear-gradient(135deg,#C9A84C,#E8C97A);border:none;border-radius:8px;font-size:13px;font-weight:700;color:#0B1F3A;cursor:pointer;">닫기</button>
+          </div>
+        </div>
         <button id="map-chat-btn" onclick="document.getElementById('map-chat-modal').classList.toggle('open')" style="
           position:absolute; bottom:60px; right:20px;
           width:52px; height:52px; border-radius:50%;
@@ -344,7 +368,21 @@
   }
 
 /* ── MAP STYLE BAR CSS (injected at runtime) ── */
-  const styleCSS = `.map-style-bar{
+  const styleCSS = `
+  .age-chat-bar{
+    display:flex;align-items:center;flex-wrap:wrap;gap:10px;
+    padding:12px 0 4px;margin-top:4px;
+    border-top:1px solid rgba(201,168,76,0.12);
+  }
+  .age-bar-label{font-size:11px;font-weight:700;color:rgba(201,168,76,0.7);white-space:nowrap;}
+  .age-bar-btns{display:flex;gap:5px;flex-wrap:wrap;}
+  .age-bar-btn{
+    padding:5px 11px;border:1px solid rgba(201,168,76,0.2);border-radius:16px;
+    background:rgba(201,168,76,0.06);color:rgba(245,240,232,0.7);
+    font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;font-family:inherit;
+  }
+  .age-bar-btn:hover{background:rgba(201,168,76,0.18);border-color:#C9A84C;color:#E8C97A;}
+.map-style-bar{
     display:flex;align-items:center;flex-wrap:wrap;gap:6px;
     padding:10px 0 12px;margin-top:6px;
   }
@@ -360,10 +398,20 @@
     const s = document.createElement('style'); s.id='map-style-css';
     s.textContent = styleCSS; document.head.appendChild(s);
   }
+  function openAgeChat(age) {
+    const modal = document.getElementById('age-chat-modal');
+    const title = document.getElementById('age-modal-title');
+    if(modal && title) {
+      title.textContent = age + ' 연령대 채팅방';
+      modal.style.display = 'flex';
+    }
+  }
+
   window.ICOC_MAP = {
     filter: filterType,
     init: renderMapSection,
     setStyle: setMapStyle,
+    openAgeChat: openAgeChat,
   };
 
   // DOM 준비 후 초기화 — Mapbox GL JS 로드 기다리기
