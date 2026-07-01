@@ -246,6 +246,14 @@
         <div style="position:relative;"><div id="icoc-map" class="icoc-map-container"></div>
       </div>
 
+        <div class="map-style-bar">
+          <span style="font-size:11px;color:rgba(245,240,232,0.45);margin-right:8px;">🗺️ 지도 스타일:</span>
+          <button class="map-style-btn active" onclick="ICOC_MAP.setStyle('dark')" data-style="dark">🌑 다크</button>
+          <button class="map-style-btn" onclick="ICOC_MAP.setStyle('streets')" data-style="streets">🏙️ 도시</button>
+          <button class="map-style-btn" onclick="ICOC_MAP.setStyle('satellite')" data-style="satellite">🛰️ 위성</button>
+          <button class="map-style-btn" onclick="ICOC_MAP.setStyle('light')" data-style="light">☀️ 라이트</button>
+          <button class="map-style-btn" onclick="ICOC_MAP.setStyle('outdoors')" data-style="outdoors">🌲 아웃도어</button>
+        </div>
         <p class="map-note">
           📌 데이터는 지속 업데이트 중입니다.
           내 동네 경기장을 <a href="#" class="map-register-link">등록하기 →</a>
@@ -295,12 +303,90 @@
   }
 
   // 전역 노출
+  const MAPBOX_STYLES = {
+    dark:      'mapbox://styles/mapbox/dark-v11',
+    streets:   'mapbox://styles/mapbox/streets-v12',
+    satellite: 'mapbox://styles/mapbox/satellite-streets-v12',
+    light:     'mapbox://styles/mapbox/light-v11',
+    outdoors:  'mapbox://styles/mapbox/outdoors-v12',
+  };
+
+  function setMapStyle(styleName) {
+    if (!map) return;
+    const url = MAPBOX_STYLES[styleName];
+    if (!url) return;
+    // Update active button
+    document.querySelectorAll('.map-style-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.style === styleName);
+    });
+    if (window.mapboxgl && map.setStyle) {
+      map.setStyle(url);
+      map.once('styledata', () => {
+        loadVenues(SAMPLE_VENUES);
+        try {
+          const layers = map.getStyle().layers;
+          const bldLayer = layers.find(l => l['source-layer']==='building');
+          if (bldLayer && styleName === 'dark') {
+            map.addLayer({
+              id:'icoc-3d-buildings', type:'fill-extrusion',
+              source: bldLayer.source || 'composite', 'source-layer': 'building',
+              minzoom:11, filter:['==','extrude','true'],
+              paint:{ 'fill-extrusion-color':'#0d2244',
+                'fill-extrusion-height':['interpolate',['linear'],['zoom'],11,0,11.5,['get','height']],
+                'fill-extrusion-base':['interpolate',['linear'],['zoom'],11,0,11.5,['get','min_height']],
+                'fill-extrusion-opacity':0.82 }
+            });
+          }
+        } catch(e){}
+      });
+    }
+  }
+
+/* ── MAP STYLE BAR CSS (injected at runtime) ── */
+  const styleCSS = `.map-style-bar{
+    display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+    padding:10px 0 12px;margin-top:6px;
+  }
+  .map-style-btn{
+    padding:5px 12px;border-radius:20px;border:1px solid rgba(201,168,76,0.22);
+    background:rgba(255,255,255,0.04);color:rgba(245,240,232,0.65);
+    font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .2s;
+  }
+  .map-style-btn:hover{border-color:rgba(201,168,76,0.45);color:#E8C97A;}
+  .map-style-btn.active{background:rgba(201,168,76,0.15);border-color:var(--gold,#C9A84C);color:#E8C97A;font-weight:700;}
+  `;
+  if (!document.getElementById('map-style-css')) {
+    const s = document.createElement('style'); s.id='map-style-css';
+    s.textContent = styleCSS; document.head.appendChild(s);
+  }
   window.ICOC_MAP = {
     filter: filterType,
     init: renderMapSection,
+    setStyle: setMapStyle,
   };
 
-  // DOM 준비 후 초기화
-  document.addEventListener('DOMContentLoaded', renderMapSection);
+  // DOM 준비 후 초기화 — Mapbox GL JS 로드 기다리기
+  function waitAndInit() {
+    if (window.mapboxgl) {
+      renderMapSection();
+    } else if (window.maplibregl) {
+      renderMapSection();
+    } else {
+      // 스크립트 로드 대기 (최대 5초)
+      let attempts = 0;
+      const poll = setInterval(() => {
+        attempts++;
+        if (window.mapboxgl || window.maplibregl || attempts > 50) {
+          clearInterval(poll);
+          renderMapSection();
+        }
+      }, 100);
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', waitAndInit);
+  } else {
+    waitAndInit();
+  }
 
 })();
