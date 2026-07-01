@@ -85,7 +85,7 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   display:flex; flex-direction:column;
   justify-content:center; align-items:center;
   text-align:center;
-  padding:80px 40px 160px;
+  padding:80px 40px 80px;
   position:relative; overflow:hidden;
 }
 .hero::before {
@@ -197,7 +197,7 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 .hero-sub {
   font-size:clamp(13px,1.8vw,17px);
   font-weight:300; color:rgba(245,240,232,0.65);
-  max-width:580px; margin-bottom:52px;
+  max-width:580px; margin-bottom:28px;
   line-height:1.85;
   opacity:0; animation:fadeUp 0.7s 0.7s ease forwards;
 }
@@ -500,7 +500,7 @@ footer a { color:var(--gold); text-decoration:none; }
   .lang-btns { flex-wrap:nowrap; gap:3px; flex:1; justify-content:flex-end; order:2; }
   .lang-btn { padding:3px 7px; font-size:9.5px; white-space:nowrap; overflow:hidden; }
 
-  .hero { padding:70px 20px 150px; }
+  .hero { padding:70px 20px 90px; }
   .section-wrap { padding:72px 24px; }
   .stats-band { padding:56px 24px; }
   .stats-grid { gap:24px; }
@@ -674,8 +674,8 @@ footer a { color:var(--gold); text-decoration:none; }
 <div class="section-wrap" id="sports">
   <div class="reveal">
     <p class="section-label">Official Brain Sports · Open Division</p>
-    <h2 class="section-title" data-i18n="sp_title">23개 공식 종목</h2>
-    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 스물세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.</p>
+    <h2 class="section-title" data-i18n="sp_title">24개 공식 종목</h2>
+    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 스물네 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.</p>
   </div>
   <div class="sports-grid reveal">
 
@@ -1191,7 +1191,7 @@ footer a { color:var(--gold); text-decoration:none; }
   </div>
   <div class="about-grid">
     <div class="reveal">
-      <blockquote class="about-quote" data-i18n="ab_quote">"세계 최초.<br>23개 브레인스포츠를<br>하나의 무대에서."</blockquote>
+      <blockquote class="about-quote" data-i18n="ab_quote">"세계 최초.<br>66개 브레인스포츠를<br>하나의 무대에서."</blockquote>
       <p style="font-size:14px;color:rgba(245,240,232,0.62);line-height:1.95;" data-i18n="ab_body">
         바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 종목들을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.
       </p>
@@ -1224,7 +1224,7 @@ footer a { color:var(--gold); text-decoration:none; }
     <div class="timeline-item">
       <div class="timeline-date" data-i18n="t2d">2027 · 서울</div>
       <div class="timeline-title" data-i18n="t2t">제1회 Brain Sports Omnipo 2027</div>
-      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 15개국 · 해외 참가자 200명+ · 23개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
+      <div class="timeline-desc" data-i18n="t2b">서울 개최 · 15개국 · 해외 참가자 200명+ · 24개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍</div>
     </div>
     <div class="timeline-item">
       <div class="timeline-date" data-i18n="t3d">2028</div>
@@ -1348,8 +1348,8 @@ const T = {
     hero_sub:"바둑·체스·장기·당구·브릿지·스크린골프<br>세계 최초 멀티종목 국제 브레인스포츠 대회",
     cta_reg:"참가 문의", cta_play:"지금 플레이하기",
     s1:"공식 종목", s2:"글로벌 플레이어", s3:"참가국 목표", s4:"서울 개최",
-    sp_title:"23개 공식 종목",
-    sp_body:'인류의 지성이 겨루는 스물세 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.',
+    sp_title:"24개 공식 종목",
+    sp_body:'인류의 지성이 겨루는 스물네 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.',
     c1n:"바둑 (Go)", c1d:"수천 년의 역사를 가진 전략 보드게임. 13x13 보드에서 상대 돌을 더 많이 포획하면 승리합니다. 지금 바로 AI와 대전해보세요!", c1p:"전 세계 6천만 명",
     c2n:"체스 (Chess)", c2d:"170개국, 6억 명이 즐기는 세계 최대 마인드스포츠. 체크메이트로 승부를 가립니다. 지금 바로 AI와 대전해보세요!", c2p:"전 세계 6억 명",
     c3n:"장기 (Janggi)", c3d:"한국 고유의 전통 보드게임. 국내외 한인 커뮤니티와 연계하여 글로벌 저변 확대를 목표로 합니다.", c3p:"전 세계 1천만 명",
@@ -1374,12 +1374,12 @@ const T = {
     c22n:"블랙잭 (Blackjack)", c22d:"카드 합이 21을 넘지 않으면서 가장 가깝게 만드는 카드 게임. ICOC에서는 베팅 없이 AI와 점수로만 대전합니다.", c22p:"전 세계 가장 대중적인 카드 게임",
     c23n:"볼링 (Bowling)", crn:"진 러미 (Gin Rummy)", crd:"MSO 공식 종목. 10장 패로 런·세트 족보를 만들어 데드우드 0을 완성하면 GIN!", crp:"전 세계 수천만 명", c23d:"10프레임 동안 더 높은 점수를 내면 승리하는 캐주얼 스코어 게임. 전 세계에서 가장 대중적인 생활 스포츠입니다.", c23p:"전 세계 1억 명 이상 동호인",
     ab_title:"왜 Brain Sports Omnipo인가",
-    ab_quote:'"세계 최초.<br>23개 브레인스포츠를<br>하나의 무대에서."',
+    ab_quote:'"세계 최초.<br>66개 브레인스포츠를<br>하나의 무대에서."',
     ab_body:"바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 공인 기구를 보유하고 있습니다. 그러나 이 종목들을 하나의 플랫폼에서 통합 운영하는 국제 대회는 전 세계에 단 한 차례도 개최된 바 없습니다. Brain Sports Omnipo 2027이 그 첫 장을 엽니다.",
     org_l:"주관 기관", org_d:"문화체육관광부 산하 사단법인<br>Ministry of Culture, Sports and Tourism (Korea)",
     rm_title:"대회 로드맵", rm_body:"서울에서 시작해 아시아로, 그리고 세계로. Brain Sports Omnipo를 향한 여정입니다.",
     t1d:"2026 · 준비기", t1t:"ICOC 공식 출범 및 스폰서 유치", t1b:"문체부 사단법인 완비 · 종목 네트워크 구성 · 종목별 국제 기구 협약 체결 · 스폰서십 확보",
-    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 23개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
+    t2d:"2027 · 서울", t2t:"제1회 Brain Sports Omnipo 2027", t2b:"서울 개최 · 15개국 · 해외 참가자 200명+ · 24개 종목 동시 진행 · K-컬처 연계 개막식 · 온라인 스트리밍",
     t3d:"2028", t3t:"아시아 위성 예선 확대", t3b:"30개국 · 아시아 3개 도시 위성 예선 · 전문 리그 신설 · 미디어 파트너십 확대",
     t4d:"2029~", t4t:"아시아 브레인스포츠 리그 창설", t4b:"시즌제 리그 운영 · 서울 파이널 정례화 · 글로벌 Brain Sports Omnipo로 성장",
     ct_title:"참가·스폰서 문의", ct_body:"대회 참가, 스폰서십, 종목별 파트너십 문의를 환영합니다.",
