@@ -73,8 +73,188 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 .chat-close{margin-left:auto;background:rgba(255,255,255,0.08);border:none;color:#F5F0E8;width:28px;height:28px;border-radius:50%;cursor:pointer;font-size:14px;}
 .chat-messages{flex:1;overflow-y:auto;padding:16px;}
 .chat-coming-soon{text-align:center;padding:20px;color:rgba(245,240,232,0.5);font-size:13px;}
-/* WEATHER TICKER */
-@keyframes tickerScroll{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+/* ══════════════════════════════════════
+   VENUE — WiseMom 스타일 바텀 UI
+══════════════════════════════════════ */
+
+/* 하단 탭바 (항상 보임) */
+#venue-tab-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: 64px;
+  background: rgba(8,20,44,0.97);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid rgba(201,168,76,0.2);
+  display: flex;
+  align-items: stretch;
+  z-index: 300;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.vtab-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: none;
+  border: none;
+  color: rgba(245,240,232,0.45);
+  font-family: inherit;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .04em;
+  cursor: pointer;
+  transition: color .15s;
+  padding: 0;
+  position: relative;
+}
+.vtab-btn .vtab-icon { font-size: 20px; line-height: 1; }
+.vtab-btn.active { color: #E8C97A; }
+.vtab-btn.active::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 20%; right: 20%;
+  height: 2px;
+  background: #C9A84C;
+  border-radius: 0 0 3px 3px;
+}
+
+/* 슬라이드업 패널 */
+#venue-panel {
+  position: fixed;
+  bottom: 64px; left: 0; right: 0;
+  max-height: 55vh;
+  background: rgba(8,20,44,0.98);
+  backdrop-filter: blur(24px);
+  border-top: 1px solid rgba(201,168,76,0.2);
+  border-radius: 16px 16px 0 0;
+  z-index: 299;
+  transform: translateY(100%);
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+#venue-panel.open {
+  transform: translateY(0);
+}
+
+/* 패널 핸들 */
+.vpanel-handle {
+  width: 36px; height: 4px;
+  background: rgba(201,168,76,0.3);
+  border-radius: 2px;
+  margin: 10px auto 6px;
+}
+
+/* 패널 내용 */
+.vpanel-body {
+  overflow-y: auto;
+  max-height: calc(55vh - 30px);
+  padding: 4px 16px 20px;
+}
+
+/* 정보 탭 - 핀 헤더 */
+.vinfo-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0 12px;
+  border-bottom: 1px solid rgba(201,168,76,0.1);
+  margin-bottom: 12px;
+}
+.vinfo-icon {
+  width: 44px; height: 44px;
+  border-radius: 12px;
+  background: rgba(201,168,76,0.12);
+  border: 1px solid rgba(201,168,76,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.vinfo-name { font-size: 15px; font-weight: 700; color: #F5F0E8; }
+.vinfo-addr { font-size: 11px; color: rgba(245,240,232,0.4); margin-top: 2px; }
+.vinfo-badges { display: flex; gap: 5px; margin-top: 4px; flex-wrap: wrap; }
+
+/* 통계 그리드 */
+.vstats {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.vstat {
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.1);
+  border-radius: 10px;
+  padding: 10px 4px;
+  text-align: center;
+}
+.vstat-n { font-size: 17px; font-weight: 700; color: #E8C97A; line-height: 1; }
+.vstat-l { font-size: 9px; color: rgba(245,240,232,0.4); margin-top: 3px; }
+
+/* 플레이 버튼 */
+.vplay-btn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  background: linear-gradient(135deg,#C9A84C,#E8C97A);
+  border: none;
+  color: #08143C;
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+}
+
+/* 종목 태그 */
+.vsport-tags { display: flex; flex-wrap: wrap; gap: 7px; padding: 8px 0; }
+.vsport-tag {
+  font-size: 12px;
+  padding: 6px 12px;
+  background: rgba(201,168,76,0.08);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 20px;
+  color: rgba(245,240,232,0.8);
+  cursor: pointer;
+  font-family: inherit;
+}
+.vsport-tag:active { background: rgba(201,168,76,0.2); }
+
+/* 연령대 채팅 */
+.vage-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  padding: 8px 0;
+}
+.vage-btn {
+  padding: 10px 4px;
+  background: rgba(201,168,76,0.06);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 10px;
+  color: #E8C97A;
+  font-size: 11px; font-weight: 600;
+  cursor: pointer; font-family: inherit;
+  text-align: center;
+}
+
+/* 길찾기 */
+.vmap-btns { display: flex; gap: 8px; flex-wrap: wrap; padding: 8px 0; }
+.vmap-btn {
+  flex: 1;
+  padding: 12px 8px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: #F5F0E8;
+  font-size: 12px; font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  min-width: 80px;
+}
+
+/* 지도 하단 여백 (탭바 높이만큼) */
+#map { bottom: 64px !important; height: calc(100vh - 56px - 64px) !important; }
+
 </style>
 </head>
 <body>
@@ -116,59 +296,93 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 <div id="map"></div>
 
 <!-- BOTTOM SHEET -->
-<div class="bottom-sheet" id="bottom-sheet">
-  <div class="sheet-handle-area" id="sheet-handle"><div class="sheet-handle"></div></div>
-  <div class="bs-mini">
-    <div class="bs-icon" id="v-icon">🏢</div>
-    <div class="bs-info">
-      <div class="bs-name" id="v-name">경기장</div>
-      <div class="bs-addr" id="v-addr">주소 정보 없음</div>
+<!-- ── VENUE BOTTOM UI ── -->
+
+<!-- 하단 탭바 (항상 보임) -->
+<div id="venue-tab-bar">
+  <button class="vtab-btn active" id="vtab-info" onclick="openVPanel('info',this)">
+    <span class="vtab-icon">📊</span>
+    <span>정보</span>
+  </button>
+  <button class="vtab-btn" id="vtab-sports" onclick="openVPanel('sports',this)">
+    <span class="vtab-icon">🎮</span>
+    <span>종목</span>
+  </button>
+  <button class="vtab-btn" id="vtab-chat" onclick="openVPanel('chat',this)">
+    <span class="vtab-icon">💬</span>
+    <span>채팅</span>
+  </button>
+  <button class="vtab-btn" id="vtab-route" onclick="openVPanel('route',this)">
+    <span class="vtab-icon">📍</span>
+    <span>길찾기</span>
+  </button>
+  <button class="vtab-btn" id="vtab-game" onclick="window.location.href='games.html'">
+    <span class="vtab-icon">▶</span>
+    <span>게임</span>
+  </button>
+</div>
+
+<!-- 슬라이드업 패널 (탭 누르면 열림) -->
+<div id="venue-panel">
+  <div class="vpanel-handle" onclick="closeVPanel()"></div>
+  <div class="vpanel-body">
+
+    <!-- 정보 패널 -->
+    <div id="vpanel-info">
+      <div class="vinfo-header">
+        <div class="vinfo-icon" id="v-icon">🏢</div>
+        <div>
+          <div class="vinfo-name" id="v-name">경기장</div>
+          <div class="vinfo-addr" id="v-addr">주소 정보 없음</div>
+          <div class="vinfo-badges">
+            <span class="badge badge-icoc">✦ ICOC 2027 공식</span>
+            <span class="badge badge-type" id="v-type-badge">보드카페</span>
+          </div>
+        </div>
+      </div>
+      <div class="vstats">
+        <div class="vstat"><div class="vstat-n" id="v-rank">-</div><div class="vstat-l">지역 랭킹</div></div>
+        <div class="vstat"><div class="vstat-n" id="v-players">-</div><div class="vstat-l">등록 선수</div></div>
+        <div class="vstat"><div class="vstat-n" id="v-matches">-</div><div class="vstat-l">이번 달 매치</div></div>
+        <div class="vstat"><div class="vstat-n" id="v-rating">-</div><div class="vstat-l">평점</div></div>
+      </div>
+      <button class="vplay-btn" onclick="window.location.href='games.html'">▶ 온라인으로 지금 플레이</button>
     </div>
-    <div class="bs-badges">
-      <span class="badge badge-icoc">✦ ICOC 2027 공식</span>
-      <span class="badge badge-type" id="v-type-badge">보드카페</span>
+
+    <!-- 종목 패널 -->
+    <div id="vpanel-sports" style="display:none">
+      <div style="font-size:12px;color:rgba(245,240,232,0.4);padding:8px 0 10px;font-weight:600;">플레이 가능 종목</div>
+      <div class="vsport-tags" id="v-sports-tags"></div>
     </div>
-  </div>
-  <div class="bs-tabs">
-    <button class="bs-tab active" onclick="showBsTab('info',this)">📊 정보</button>
-    <button class="bs-tab" onclick="showBsTab('sports',this)">🎮 종목</button>
-    <button class="bs-tab" onclick="showBsTab('chat',this)">💬 채팅</button>
-    <button class="bs-tab" onclick="showBsTab('route',this)">📍 길찾기</button>
-  </div>
-  <div class="bs-panel" id="bsp-info">
-    <div class="bs-stats-row">
-      <div class="bs-stat"><div class="bs-stat-n" id="v-rank">-</div><div class="bs-stat-l">지역 랭킹</div></div>
-      <div class="bs-stat"><div class="bs-stat-n" id="v-players">-</div><div class="bs-stat-l">등록 선수</div></div>
-      <div class="bs-stat"><div class="bs-stat-n" id="v-matches">-</div><div class="bs-stat-l">이번 달 매치</div></div>
-      <div class="bs-stat"><div class="bs-stat-n" id="v-rating">-</div><div class="bs-stat-l">평점</div></div>
+
+    <!-- 채팅 패널 -->
+    <div id="vpanel-chat" style="display:none">
+      <div style="font-size:12px;color:rgba(245,240,232,0.4);padding:8px 0 10px;font-weight:600;">연령대별 채팅방</div>
+      <div class="vage-grid">
+        <button class="vage-btn" onclick="openAgeChat('10대')">🧒<br>10대</button>
+        <button class="vage-btn" onclick="openAgeChat('20대')">🧑<br>20대</button>
+        <button class="vage-btn" onclick="openAgeChat('30대')">👨<br>30대</button>
+        <button class="vage-btn" onclick="openAgeChat('40대')">🧔<br>40대</button>
+        <button class="vage-btn" onclick="openAgeChat('50대')">👴<br>50대</button>
+        <button class="vage-btn" onclick="openAgeChat('60대')">👵<br>60대</button>
+        <button class="vage-btn" onclick="openAgeChat('70대+')">🧓<br>70대+</button>
+      </div>
     </div>
-    <button class="bs-play-btn" onclick="window.location.href='games.html'">▶ 온라인으로 지금 플레이</button>
-  </div>
-  <div class="bs-panel" id="bsp-sports" style="display:none;">
-    <div style="font-size:11px;color:rgba(245,240,232,0.4);margin-bottom:8px;">플레이 가능 종목</div>
-    <div class="bs-sports-tags" id="v-sports-tags"></div>
-  </div>
-  <div class="bs-panel" id="bsp-chat" style="display:none;">
-    <div style="font-size:11px;color:rgba(245,240,232,0.4);margin-bottom:8px;">연령대별 채팅방</div>
-    <div class="bs-age-btns">
-      <button onclick="openAgeChat('10대')">🧒 10대</button>
-      <button onclick="openAgeChat('20대')">🧑 20대</button>
-      <button onclick="openAgeChat('30대')">👨 30대</button>
-      <button onclick="openAgeChat('40대')">🧔 40대</button>
-      <button onclick="openAgeChat('50대')">👴 50대</button>
-      <button onclick="openAgeChat('60대')">👵 60대</button>
-      <button onclick="openAgeChat('70대+')">🧓 70대+</button>
+
+    <!-- 길찾기 패널 -->
+    <div id="vpanel-route" style="display:none">
+      <div style="font-size:12px;color:rgba(245,240,232,0.4);padding:8px 0 10px;font-weight:600;">길찾기</div>
+      <div class="vmap-btns">
+        <a id="link-kakao" href="#" target="_blank" class="vmap-btn">🟡 카카오맵</a>
+        <a id="link-naver" href="#" target="_blank" class="vmap-btn">🟢 네이버맵</a>
+        <a id="link-google" href="#" target="_blank" class="vmap-btn">🔵 구글맵</a>
+      </div>
     </div>
-  </div>
-  <div class="bs-panel" id="bsp-route" style="display:none;">
-    <div style="font-size:11px;color:rgba(245,240,232,0.4);margin-bottom:8px;">길찾기</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <a id="link-kakao" href="#" target="_blank" class="bs-map-btn">🟡 카카오맵</a>
-      <a id="link-naver" href="#" target="_blank" class="bs-map-btn">🟢 네이버맵</a>
-      <a id="link-google" href="#" target="_blank" class="bs-map-btn">🔵 구글맵</a>
-    </div>
+
   </div>
 </div>
+
+
 
 <!-- CHAT MODAL -->
 <div class="chat-modal" id="chat-modal">
@@ -237,7 +451,56 @@ if(tagsEl) T.sports.forEach(function(s){
 
 // ── 전역 함수 ──
 
-function showBsTab(tab, btn) {
+function openVPanel(tab, btn) {
+  // 모든 패널 숨기기
+  ['info','sports','chat','route'].forEach(function(t) {
+    var p = document.getElementById('vpanel-'+t);
+    if(p) p.style.display = 'none';
+  });
+  // 선택 패널 보이기
+  var panel = document.getElementById('vpanel-'+tab);
+  if(panel) panel.style.display = 'block';
+
+  // 탭 active 상태
+  document.querySelectorAll('.vtab-btn').forEach(function(b){ b.classList.remove('active'); });
+  if(btn) btn.classList.add('active');
+  else {
+    var b2 = document.getElementById('vtab-'+tab);
+    if(b2) b2.classList.add('active');
+  }
+
+  // 패널 열기/닫기 토글
+  var vp = document.getElementById('venue-panel');
+  if(vp) {
+    if(vp.classList.contains('open') && vp.dataset.tab === tab) {
+      // 같은 탭 다시 누르면 닫기
+      closeVPanel();
+    } else {
+      vp.dataset.tab = tab;
+      vp.classList.add('open');
+    }
+  }
+
+  // 길찾기 링크 세팅
+  if(tab === 'route') {
+    var q = encodeURIComponent(VENUE.name + ' ' + VENUE.addr);
+    var kk = document.getElementById('link-kakao');
+    var nv = document.getElementById('link-naver');
+    var gg = document.getElementById('link-google');
+    if(kk) kk.href = 'https://map.kakao.com/?q=' + encodeURIComponent(VENUE.name);
+    if(nv) nv.href = 'https://map.naver.com/v5/search/' + q;
+    if(gg) gg.href = 'https://www.google.com/maps/search/?api=1&query=' + q;
+  }
+}
+
+function closeVPanel() {
+  var vp = document.getElementById('venue-panel');
+  if(vp) vp.classList.remove('open');
+  document.querySelectorAll('.vtab-btn').forEach(function(b){ b.classList.remove('active'); });
+}
+
+function showBsTab(tab, btn) { openVPanel(tab, btn); } // 하위 호환
+function showBsTab_old(tab, btn) {
   document.querySelectorAll('.bs-panel').forEach(function(p){ p.style.display='none'; });
   document.querySelectorAll('.bs-tab').forEach(function(b){ b.classList.remove('active'); });
   var panel=document.getElementById('bsp-'+tab);
