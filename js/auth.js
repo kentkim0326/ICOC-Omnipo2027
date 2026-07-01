@@ -435,33 +435,6 @@
     `;
     document.body.appendChild(overlay);
 
-    // ── 195개국 그리드 ──
-    const cgrid = document.getElementById('country-grid');
-    const csearch = document.getElementById('country-search-input');
-    let _selCountry = '';
-    function buildCGrid(q) {
-      cgrid.innerHTML = '';
-      COUNTRIES_ALL.filter(([n,,en]) => !q || n.includes(q) || en.toLowerCase().includes(q.toLowerCase()))
-      .forEach(([name, iso]) => {
-        const b = document.createElement('button');
-        b.type = 'button';
-        b.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 4px;border-radius:7px;border:1px solid transparent;background:rgba(255,255,255,0.04);cursor:pointer;font-size:10px;color:rgba(245,240,232,0.75);font-family:inherit;transition:all 0.15s;';
-        b.innerHTML = iso
-          ? `<img src="https://flagcdn.com/w40/${iso}.png" loading="lazy" style="width:30px;height:20px;object-fit:cover;border-radius:2px;" alt="${name}"><span>${name}</span>`
-          : `<span style="font-size:18px;">🌍</span><span>${name}</span>`;
-        b.addEventListener('click', () => {
-          _selCountry = name;
-          document.getElementById('ps-country').value = name;
-          document.getElementById('ps-country-selected').textContent = name;
-          cgrid.querySelectorAll('button').forEach(x => x.style.borderColor='transparent');
-          b.style.cssText = b.style.cssText.replace('transparent','#C9A84C') + ';background:rgba(201,168,76,0.18);color:#E8C97A;font-weight:700;';
-          b.scrollIntoView({behavior:'smooth',block:'nearest'});
-        });
-        cgrid.appendChild(b);
-      });
-    }
-    buildCGrid('');
-    csearch && csearch.addEventListener('input', () => buildCGrid(csearch.value.trim()));
     overlay.addEventListener('click', e => { if (e.target===overlay) closeMyPage(); });
     document.getElementById('mp-close').addEventListener('click', closeMyPage);
     document.getElementById('mp-signout').addEventListener('click', signOut);
