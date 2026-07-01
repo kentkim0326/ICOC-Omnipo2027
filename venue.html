@@ -524,6 +524,9 @@ function initVenueMap(){
   map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
   map.on('load', addVenueMarker);
 }
+}  // end initVenueMap
+document.addEventListener('DOMContentLoaded', initVenueMap);
+
 
 function addVenueMarker() {
   const el = document.createElement('div');
@@ -537,16 +540,16 @@ function addVenueMarker() {
 }
 
 // 3D toggle
-document.getElementById('btn-3d').addEventListener('click', () => {
+const _btn3d = document.getElementById('btn-3d'); if(_btn3d) _btn3d.addEventListener('click', () => {
   is3d = !is3d;
   map.easeTo({pitch: is3d?55:0, bearing: is3d?-15:0, duration:800});
-  document.getElementById('btn-3d').textContent = is3d ? '🧭' : '🗺️';
+  if(_btn3d) _btn3d.textContent = is3d ? '🧭' : '🗺️';
 });
 
 // Bottom sheet collapse (mobile)
 const sheet = document.getElementById('bottom-sheet');
 let collapsed = false;
-document.getElementById('sheet-handle').addEventListener('click', () => {
+const _sh = document.getElementById('sheet-handle'); if(_sh) _sh.addEventListener('click', () => {
   collapsed = !collapsed;
   sheet.classList.toggle('collapsed', collapsed);
 });
@@ -555,7 +558,7 @@ map.on('click', () => { if(!collapsed){collapsed=true;sheet.classList.add('colla
 // Chat toggle
 const chatFab  = document.getElementById('chat-fab');
 const chatModal = document.getElementById('chat-modal');
-chatFab.addEventListener('click', () => chatModal.classList.toggle('open'));
+if(chatFab) chatFab.addEventListener('click', () => chatModal.classList.toggle('open'));
 document.getElementById('chat-close').addEventListener('click', () => chatModal.classList.remove('open'));
 
 // ── 슬라이드쇼: PC에서만 (768px 이상) ──
