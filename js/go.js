@@ -404,14 +404,8 @@ function sfx(type) {
   }
 
   function checkWinAfterMove(color) {
-    // 바둑은 패스 2회로만 종료 (mid-game 즉시 승리 없음)
-    // 단, 상대방 돌이 0개면 종료
-    let oppColor = (color === BLACK) ? WHITE : BLACK;
-    let oppCount = 0;
-    for (let r = 0; r < SIZE; r++)
-      for (let c = 0; c < SIZE; c++)
-        if (board[r][c] === oppColor) oppCount++;
-    if (oppCount === 0) { endGame(); return true; }
+    // 바둑: 두 번 연속 패스로만 종료. 돌 개수로 즉시 승리 없음.
+    // (AI가 첫 수에 응답 안 하는 버그 원인이었음 - 흰 돌 0개 판정)
     return false;
   }
 
