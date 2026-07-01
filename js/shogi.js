@@ -414,5 +414,11 @@
     reset();
   }
 
-  global.ShogiGame = { start };
+  
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    onCellClick(payload.r, payload.c);
+    ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.ShogiGame = { start, applyOpponentMove };
 })(window);
