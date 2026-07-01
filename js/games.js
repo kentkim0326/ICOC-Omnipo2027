@@ -148,6 +148,21 @@
     modal.classList.add('open');
     document.body.style.overflow = 'hidden';
     game.init();
+
+    // 온라인 1:1 대전 버튼 (로그인 + 지원 종목만)
+    const _onlineGames = ['omok','go','chess','janggi','shogi'];
+    if (_onlineGames.includes(key) && window.ICOC_AUTH?.getCurrentUser?.()) {
+      const _body = document.getElementById('game-modal-body');
+      if (_body && !document.getElementById('online-btn-row')) {
+        const _row = document.createElement('div');
+        _row.id = 'online-btn-row';
+        _row.style.cssText = 'padding:8px 12px;border-top:1px solid rgba(201,168,76,0.1);display:flex;align-items:center;gap:8px;justify-content:flex-end;';
+        _row.innerHTML = '<span style="font-size:11px;color:rgba(245,240,232,0.35);">사람과 대전:</span>'
+          + '<button onclick="if(window.ICOC_ONLINE)ICOC_ONLINE.injectMatchmakingUI(document.getElementById(\'game-modal\'),\''+key+'\')" '
+          + 'style="padding:5px 14px;background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);border-radius:16px;color:#4ade80;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">🌐 온라인 1:1</button>';
+        _body.appendChild(_row);
+      }
+    }
   }
 
   function closeGame() {
