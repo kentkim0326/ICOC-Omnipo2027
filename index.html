@@ -1140,6 +1140,10 @@ footer a { color:var(--gold); text-decoration:none; }
   </div>
 </div>
 
+<!-- MAP -->
+<div class="full-divider"></div>
+<div id="map-section"></div>
+
 <!-- ABOUT -->
 <div class="full-divider"></div>
 <div class="section-wrap" id="about">
@@ -1573,8 +1577,12 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<!-- MapLibre GL JS -->
+<link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.js"></script>
 <!-- ICOC 설정 & 인증 -->
 <script src="js/config.js"></script>
+<script src="js/map.js"></script>
 <script src="js/auth.js"></script>
 
 <script>
