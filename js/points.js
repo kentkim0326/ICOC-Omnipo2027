@@ -71,7 +71,7 @@
   /* ── 친구 추천 ── */
   function buildReferralLink() {
     const uid = getReferralUID();
-    return `${location.origin}${location.pathname.replace(/[^/]*$/','')}referral.html?ref=${uid}`;
+    return `${location.origin}${location.pathname.replace(/[^/]*$/, '')}referral.html?ref=${uid}`;
   }
 
   function getReferralUID() {
