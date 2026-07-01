@@ -109,13 +109,14 @@ body{display:flex;flex-direction:column;min-height:100vh;}
 </div>
 
 <div id="mp-body">
-  <div style="text-align:center;padding:60px 20px;color:rgba(245,240,232,0.4);">
-    <div style="font-size:40px;margin-bottom:12px;">🔒</div>
-    <div style="font-size:16px;font-weight:600;color:var(--cream);margin-bottom:8px;">로그인이 필요합니다</div>
-    <div style="font-size:13px;margin-bottom:24px;">구글 로그인으로 국가대표 등록 & 전적 관리</div>
-    <button onclick="if(window.ICOC_AUTH)window.ICOC_AUTH.signIn()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#E8C97A);border:none;border-radius:10px;font-size:14px;font-weight:700;color:#0B1F3A;cursor:pointer;font-family:inherit;">구글 로그인</button>
+  <div id="mp-loading" style="text-align:center;padding:80px 20px;">
+    <div style="width:40px;height:40px;border:3px solid rgba(201,168,76,0.2);border-top-color:#C9A84C;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px;"></div>
+    <div style="font-size:13px;color:rgba(245,240,232,0.4);">로딩 중...</div>
   </div>
 </div>
+<style>
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="js/config.js"></script>
