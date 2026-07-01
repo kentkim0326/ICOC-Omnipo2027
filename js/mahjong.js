@@ -133,6 +133,7 @@
       ? '🎉 완성! 모든 타일을 제거했습니다!'
       : '😵 더 이상 맞출 수 있는 쌍이 없습니다. 다시 도전해보세요!');
     const res = window.ICOC_POINTS.addPoints(pts, 'mahjong_' + (win ? 'win' : 'lose'));
+    if(window.ICOC_AUTH) window.ICOC_AUTH.recordGameResult('마작', win, pts);
     setPts(res.capped
       ? `+${res.added}P 적립 (오늘 한도 도달 · 보유 ${res.total.toLocaleString()}P)`
       : `+${res.added}P 적립 · 보유 ${res.total.toLocaleString()}P`);
