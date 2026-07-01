@@ -679,7 +679,7 @@ footer a { color:var(--gold); text-decoration:none; }
 /* Nav height variable for sticky positioning */
 :root { --nav-h: 96px; }
 /* Push hero content down for dual-ticker */
-.hero { padding-top:calc(var(--nav-h) + 28px + 16px) !important; }
+.hero { padding-top:calc(var(--nav-h) + 28px + 16px) !important; padding-bottom:60px !important; }
 </style>
 
 <script>
@@ -698,42 +698,33 @@ footer a { color:var(--gold); text-decoration:none; }
   ];
 
   const CITIES = [
-    {name:'서울',  lat:37.57, lon:126.98},
-    {name:'도쿄',  lat:35.69, lon:139.69},
-    {name:'뉴욕',  lat:40.71, lon:-74.00},
-    {name:'런던',  lat:51.51, lon:-0.13},
-    {name:'파리',  lat:48.85, lon:2.35},
-    {name:'베이징',lat:39.91, lon:116.39},
-    {name:'두바이', lat:25.20, lon:55.27},
-    {name:'시드니', lat:-33.87,lon:151.21},
-    {name:'상파울루',lat:-23.55,lon:-46.63},
-    {name:'모스크바',lat:55.75, lon:37.62},
+    {name:'서울',lat:37.57,lon:126.98},{name:'도쿄',lat:35.69,lon:139.69},
+    {name:'뉴욕',lat:40.71,lon:-74.00},{name:'런던',lat:51.51,lon:-0.13},
+    {name:'베이징',lat:39.91,lon:116.39},{name:'시드니',lat:-33.87,lon:151.21},
   ];
-
-  const WX_ICONS = {0:'☀️',1:'☀️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
-    51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
-    71:'❄️',73:'❄️',75:'❄️',80:'🌦️',81:'🌦️',82:'⛈️',
-    95:'⛈️',96:'⛈️',99:'⛈️'};
+  const WX={0:'☀️',1:'☀️',2:'⛅',3:'☁️',45:'🌫️',51:'🌦️',61:'🌧️',71:'❄️',80:'🌦️',95:'⛈️'};
 
   async function fetchWeather(city) {
-    try {
-      const r = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weathercode&timezone=auto`,
-        {signal: AbortSignal.timeout(4000)}
-      );
-      const d = await r.json();
-      const t = Math.round(d.current.temperature_2m);
-      const icon = WX_ICONS[d.current.weathercode] || '🌡️';
-      return `${city.name} ${icon} ${t}°C`;
-    } catch { return `${city.name} —`; }
+    const key='icoc_wx_'+city.name, cached=JSON.parse(localStorage.getItem(key)||'null');
+    if(cached && Date.now()-cached.ts<1800000) return cached.txt;
+    try{
+      const r=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${city.lat}&longitude=${city.lon}&current=temperature_2m,weathercode&timezone=auto`,{signal:AbortSignal.timeout(5000)});
+      const d=await r.json();
+      const t=Math.round(d.current.temperature_2m);
+      const code=d.current.weathercode;
+      const icon=WX[code]||WX[Math.floor(code/10)*10]||'🌡️';
+      const txt=`${city.name} ${icon} ${t}°C`;
+      localStorage.setItem(key,JSON.stringify({ts:Date.now(),txt}));
+      return txt;
+    }catch{return cached?.txt||`${city.name} —`;}
   }
 
   async function loadWeather() {
-    const el = document.getElementById('weather-ticker');
-    if (!el) return;
-    const results = await Promise.all(CITIES.map(fetchWeather));
-    // Repeat for seamless loop
-    el.textContent = results.join('  ·  ') + '  ·  ' + results.join('  ·  ');
+    const el=document.getElementById('weather-ticker');
+    if(!el) return;
+    const res=[];
+    for(const city of CITIES){ res.push(await fetchWeather(city)); await new Promise(r=>setTimeout(r,500)); }
+    if(el) el.textContent=res.join(' · ')+' · '+res.join(' · ');
   }
 
   function setupIcocTicker() {
@@ -813,8 +804,30 @@ footer a { color:var(--gold); text-decoration:none; }
         Facebook
       </a>
     </div>
+    <!-- 하단 ICOC 뉴스 티커 -->
+    <div style="width:100%;max-width:600px;margin-top:14px;overflow:hidden;">
+      <div id="hero-news-ticker-2" style="
+        font-size:11px;color:rgba(201,168,76,0.8);
+        white-space:nowrap;animation:tickerScroll 30s linear infinite;
+        display:inline-block;
+      "></div>
+    </div>
   </div>
 </header>
+
+<script>
+// 히어로 하단 티커
+document.addEventListener('DOMContentLoaded',function(){
+  const el2=document.getElementById('hero-news-ticker-2');
+  if(!el2) return;
+  const msgs=['✦ ICOC Brain Sports Omnipo 2027','✦ 66개 브레인스포츠 AI 대전',
+    '✦ 전 세계 195개국 국가대표 선발','✦ 서울 2027 본선 50개국 1,000명 초청',
+    '✦ 로그인 없이 바로 AI 대전 가능','✦ 국가대표 등록은 구글 로그인 필요',
+    '✦ 친구 초대시 10,000P 지급','✦ 매 시간 체크인 보너스'];
+  const txt=msgs.join('  ') + '  ' + msgs.join('  ');
+  el2.textContent=txt;
+});
+</script>
 
 <!-- STATS -->
 <!-- NEWS TICKER -->
