@@ -69,24 +69,66 @@
         container: 'icoc-map',
         style: 'mapbox://styles/mapbox/dark-v11',
         center: [127.024612, 37.532600],
-        zoom: 10,
+        zoom: 11,
+        pitch: 52,
+        bearing: -18,
+        antialias: true,
       });
       map.addControl(new mapboxgl.NavigationControl(), 'top-right');
       map.addControl(new mapboxgl.GeolocateControl({
         positionOptions: { enableHighAccuracy: true },
         trackUserLocation: false,
       }), 'top-right');
-      map.on('load', () => { loadVenues(SAMPLE_VENUES); loadSupabaseVenues(); });
+      map.on('load', () => {
+        // 3D 건물 레이어
+        if (map.getLayer('building')) {
+          map.setPaintProperty('building','fill-extrusion-height',['get','height']);
+          map.setPaintProperty('building','fill-extrusion-color','rgba(14,40,71,0.9)');
+          map.setPaintProperty('building','fill-extrusion-opacity',0.85);
+        }
+        map.addLayer({
+          id:'3d-buildings', source:'composite', 'source-layer':'building',
+          filter:['==','extrude','true'], type:'fill-extrusion', minzoom:12,
+          paint:{
+            'fill-extrusion-color':'#0e2847',
+            'fill-extrusion-height':['get','height'],
+            'fill-extrusion-base':['get','min_height'],
+            'fill-extrusion-opacity':0.8,
+          }
+        });
+        loadVenues(SAMPLE_VENUES); loadSupabaseVenues();
+      });
     } else if (window.maplibregl) {
       // 폴백: MapLibre
       map = new maplibregl.Map({
         container: 'icoc-map',
         style: 'https://tiles.openfreemap.org/styles/liberty',
         center: [127.024612, 37.532600],
-        zoom: 10,
+        zoom: 11,
+        pitch: 52,
+        bearing: -18,
+        antialias: true,
       });
       map.addControl(new maplibregl.NavigationControl(), 'top-right');
-      map.on('load', () => { loadVenues(SAMPLE_VENUES); loadSupabaseVenues(); });
+      map.on('load', () => {
+        // 3D 건물 레이어
+        if (map.getLayer('building')) {
+          map.setPaintProperty('building','fill-extrusion-height',['get','height']);
+          map.setPaintProperty('building','fill-extrusion-color','rgba(14,40,71,0.9)');
+          map.setPaintProperty('building','fill-extrusion-opacity',0.85);
+        }
+        map.addLayer({
+          id:'3d-buildings', source:'composite', 'source-layer':'building',
+          filter:['==','extrude','true'], type:'fill-extrusion', minzoom:12,
+          paint:{
+            'fill-extrusion-color':'#0e2847',
+            'fill-extrusion-height':['get','height'],
+            'fill-extrusion-base':['get','min_height'],
+            'fill-extrusion-opacity':0.8,
+          }
+        });
+        loadVenues(SAMPLE_VENUES); loadSupabaseVenues();
+      });
     }
   }
 
@@ -184,15 +226,46 @@
           ${Object.entries(TYPES).map(([k,v]) =>
             `<button class="map-filter-btn" data-type="${k}" onclick="ICOC_MAP.filter('${k}')">${v.icon} ${v.label}</button>`
           ).join('')}
-          <span id="map-venue-count" class="map-count">23개 장소</span>
+          <span id="map-venue-count" class="map-count">24개 장소</span>
         </div>
 
-        <div id="icoc-map" class="icoc-map-container"></div>
+        <div style="position:relative;"><div id="icoc-map" class="icoc-map-container"></div>
+      </div>
 
         <p class="map-note">
           📌 데이터는 지속 업데이트 중입니다.
           내 동네 경기장을 <a href="#" class="map-register-link">등록하기 →</a>
         </p>
+        <button id="map-chat-btn" onclick="document.getElementById('map-chat-modal').classList.toggle('open')" style="
+          position:absolute; bottom:60px; right:20px;
+          width:52px; height:52px; border-radius:50%;
+          background:linear-gradient(135deg,#C9A84C,#E8C97A);
+          border:none; cursor:pointer; font-size:22px;
+          box-shadow:0 4px 18px rgba(201,168,76,0.5); z-index:10;
+          display:flex; align-items:center; justify-content:center;
+        " title="경기장 채팅">💬<span style="
+          position:absolute; top:2px; right:2px; width:13px; height:13px;
+          border-radius:50%; background:#4ade80; border:2px solid #0B1F3A;
+        "></span></button>
+        <!-- 채팅 모달 -->
+        <div id="map-chat-modal" style="
+          display:none; position:absolute; bottom:120px; right:16px;
+          width:300px; background:rgba(10,26,52,0.97);
+          border:1px solid rgba(201,168,76,0.25); border-radius:16px;
+          backdrop-filter:blur(20px); z-index:20;
+          box-shadow:0 12px 40px rgba(0,0,0,0.5); flex-direction:column; overflow:hidden;
+        " class="">
+          <div style="padding:14px 16px; border-bottom:1px solid rgba(201,168,76,0.1); display:flex; align-items:center; gap:10px;">
+            <span style="font-size:18px;">💬</span>
+            <div style="flex:1;"><strong style="font-size:13px; color:#F5F0E8;">경기장 커뮤니티</strong><br><span style="font-size:11px; color:rgba(245,240,232,0.4);">이 지역 ICOC 플레이어들과 소통</span></div>
+            <button onclick="document.getElementById('map-chat-modal').classList.remove('open')" style="background:none;border:none;color:rgba(245,240,232,0.4);font-size:18px;cursor:pointer;">✕</button>
+          </div>
+          <div style="padding:20px 16px; text-align:center; color:rgba(245,240,232,0.4); font-size:12px; line-height:1.8;">
+            <span style="font-size:30px; display:block; margin-bottom:8px;">🔔</span>
+            <strong style="color:#C9A84C; display:block; margin-bottom:4px;">채팅 기능 준비 중</strong>
+            경기장 채팅, 정모 약속,<br>국가대표 팀 빌딩 기능이<br>곧 오픈됩니다!
+          </div>
+        </div>
       </div>
     `;
 
