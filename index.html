@@ -2297,20 +2297,23 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── URL 파라미터로 게임 자동 실행 (?game=go 등) ──
 (function() {
   function tryAutoOpenGame() {
-  const p = new URLSearchParams(location.search);
-  const gk = p.get('game');
-  if (!gk) return;
-  const _try = (attempts) => {
-    const fn = window.openGame || (window.ICOC_GAMES && window.ICOC_GAMES.openGame);
-    if (fn) { fn(gk); return; }
-    if (attempts > 0) setTimeout(() => _try(attempts-1), 300);
-  };
-  // DOMContentLoaded 후 시도 (스크립트 로드 대기)
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => setTimeout(() => _try(5), 200));
-  } else {
-    setTimeout(() => _try(5), 100);
+    var p = new URLSearchParams(location.search);
+    var gk = p.get('game');
+    if (!gk) return;
+    var _try = function(n) {
+      var fn = window.openGame
+        || (window.ICOC_GAMES && window.ICOC_GAMES.openGame);
+      if (fn) { fn(gk); return; }
+      if (n > 0) setTimeout(function(){ _try(n-1); }, 300);
+    };
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function(){ setTimeout(function(){ _try(10); }, 300); });
+    } else {
+      setTimeout(function(){ _try(10); }, 150);
+    }
   }
-}</script>
+  tryAutoOpenGame();
+})();
+</script>
 </body>
 </html>
