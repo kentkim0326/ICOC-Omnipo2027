@@ -473,8 +473,8 @@ const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
 // Fill DOM
 document.title = `${VENUE.name} — ICOC 2027`;
 document.getElementById('top-name').textContent = VENUE.name;
-document.getElementById('top-type').textContent = T.label;
-document.getElementById('v-icon').textContent = T.icon;
+const _tt = document.getElementById('top-type'); if(_tt) _tt.textContent = T.label;
+const _vi = document.getElementById('v-icon'); if(_vi) _vi.textContent = T.icon;
 document.getElementById('v-icon').style.cssText += `;background:${T.color}22;border-color:${T.color}55`;
 document.getElementById('v-name').textContent = VENUE.name;
 document.getElementById('v-type-badge').textContent = T.label;
@@ -502,7 +502,7 @@ const MAPBOX_TOKEN = 'pk.eyJ1IjoibWlsaXZlcnNlMTAwNCIsImEiOiJjbXF0NmltcjYwMWprMnp
 let is3d = true;
 
 // Try Mapbox first, fallback to MapLibre
-let map;
+var map;
 if (window.mapboxgl) {
   mapboxgl.accessToken = MAPBOX_TOKEN;
   map = new mapboxgl.Map({
@@ -577,6 +577,42 @@ function openAgeChat(age) {
 }
 
 
+
+function showWeatherTicker() {
+  // 이미 있으면 스킵
+  if (document.getElementById('venue-weather-ticker')) return;
+  const ticker = document.createElement('div');
+  ticker.id = 'venue-weather-ticker';
+  ticker.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(8,20,44,0.92);backdrop-filter:blur(10px);border-top:1px solid rgba(201,168,76,0.15);height:28px;overflow:hidden;display:flex;align-items:center;';
+  ticker.innerHTML = `
+    <div style="flex-shrink:0;padding:0 8px;"><span style="font-size:9px;font-weight:700;color:#C9A84C;">🌤 날씨</span></div>
+    <div style="flex:1;overflow:hidden;">
+      <div id="venue-weather-text" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.7);white-space:nowrap;animation:tickerScroll 35s linear infinite;padding:0 10px;line-height:28px;">날씨 불러오는 중...</div>
+    </div>`;
+  document.body.appendChild(ticker);
+  
+  // 날씨 데이터 로드 (open-meteo)
+  const cities = [
+    {name:'서울',lat:37.5665,lng:126.9780},
+    {name:'도쿄',lat:35.6762,lng:139.6503},
+    {name:'뉴욕',lat:40.7128,lng:-74.0060},
+    {name:'런던',lat:51.5074,lng:-0.1278},
+    {name:'베이징',lat:39.9042,lng:116.4074},
+    {name:'시드니',lat:-33.8688,lng:151.2093},
+  ];
+  const WMO = {0:'맑음',1:'대체로맑음',2:'흐릿',3:'흐림',45:'안개',48:'서리',51:'이슬비',53:'이슬비',55:'이슬비',61:'비',63:'비',65:'폭우',71:'눈',73:'눈',75:'폭설',80:'소나기',81:'소나기',82:'폭풍',95:'뇌우',99:'뇌우'};
+  
+  Promise.all(cities.map(c =>
+    fetch(`https://api.open-meteo.com/v1/forecast?latitude=${c.lat}&longitude=${c.lng}&current_weather=true`)
+      .then(r=>r.json()).then(d=>({name:c.name,temp:Math.round(d.current_weather.temperature),code:d.current_weather.weathercode}))
+      .catch(()=>({name:c.name,temp:'?',code:0}))
+  )).then(results => {
+    const text = results.map(r=>`🌍 ${r.name} ${r.temp}°C ${WMO[r.code]||''}`).join('　·　');
+    const el = document.getElementById('venue-weather-text');
+    if(el) el.textContent = text + '　·　' + text;
+  });
+}
+
 // ── 지도 스타일 변경 ──
 function changeVenueStyle(style) {
   if (!map) return;
@@ -610,24 +646,6 @@ function changeVenueStyle(style) {
 }
 
 // ── 지도 스타일 변경 ──
-function changeVenueStyle(style) {
-  if (!map) return;
-  const mlStyles = {
-    dark:    'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-    light:   'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-    streets: 'https://tiles.openfreemap.org/styles/liberty',
-    outdoor: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-  };
-  const mbStyles = {
-    dark:    'mapbox://styles/mapbox/dark-v11',
-    light:   'mapbox://styles/mapbox/light-v11',
-    streets: 'mapbox://styles/mapbox/streets-v12',
-    outdoor: 'mapbox://styles/mapbox/outdoors-v12',
-  };
-  const useMapbox = !!(window.mapboxgl && typeof map.setStyle === 'function' && map.version);
-  const url = useMapbox ? (mbStyles[style]||mbStyles.dark) : (mlStyles[style]||mlStyles.dark);
-  map.setStyle(url);
-}
 
 function toggle3D() {
   if (!map) return;
