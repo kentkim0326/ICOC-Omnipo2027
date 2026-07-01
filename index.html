@@ -33,17 +33,54 @@ body.lang-ja { font-family:'Noto Sans JP',sans-serif; }
 body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 
 /* ── LANG BAR ── */
+/* ── 2열 네비바 ── */
 .lang-bar {
   position:fixed; top:0; left:0; right:0; z-index:1000;
-  display:flex; justify-content:flex-end; align-items:center;
-  padding:10px 32px;
-  background:rgba(11,31,58,0.82);
-  backdrop-filter:blur(16px);
-  -webkit-backdrop-filter:blur(16px);
+  display:flex; flex-direction:column;
+  background:rgba(11,31,58,0.9);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid rgba(201,168,76,0.18);
   transition:background 0.3s;
 }
-.lang-bar:hover { background:rgba(11,31,58,0.94); }
+.nav-row { display:flex; align-items:center; }
+.nav-row-top {
+  padding:7px 16px; gap:8px;
+  border-bottom:1px solid rgba(201,168,76,0.08);
+}
+.nav-row-right { display:flex; align-items:center; gap:8px; margin-left:auto; flex-wrap:nowrap; }
+.nav-row-links {
+  padding:0 16px 6px;
+  gap:4px; flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none;
+}
+.nav-row-links::-webkit-scrollbar { display:none; }
+.nav-link-btn {
+  display:flex; align-items:center; gap:4px;
+  padding:4px 10px; border-radius:16px;
+  font-size:11px; font-weight:600; letter-spacing:0.03em;
+  color:rgba(245,240,232,0.7); text-decoration:none;
+  border:1px solid rgba(255,255,255,0.08);
+  background:rgba(255,255,255,0.04);
+  transition:all 0.2s; white-space:nowrap; flex-shrink:0;
+}
+.nav-link-btn:hover { color:var(--gold); border-color:rgba(201,168,76,0.35); background:rgba(201,168,76,0.08); }
+.nav-link-gold { color:var(--gold-light) !important; border-color:rgba(201,168,76,0.3) !important; background:rgba(201,168,76,0.07) !important; }
+.nav-pts-tag { background:rgba(201,168,76,0.2); padding:1px 5px; border-radius:6px; font-size:10px; }
+.login-txt { display:none; }
+/* PC에서 로그인 텍스트 표시 */
+@media(min-width:768px){ .login-txt { display:inline; } }
+/* 기존 hero padding: 2열 nav 높이만큼 늘리기 */
+.hero { padding-top:108px !important; }
+@media(max-width:640px){ .hero { padding-top:96px !important; } }
+
+/* login notice */
+.login-notice {
+  display:inline-flex; align-items:center; flex-wrap:wrap; gap:4px;
+  margin-top:12px; padding:10px 16px;
+  background:rgba(201,168,76,0.06); border:1px solid rgba(201,168,76,0.2);
+  border-radius:10px; font-size:13px;
+  color:rgba(245,240,232,0.7); line-height:1.6;
+}
+.login-notice strong { color:var(--gold-light); }
 .lang-bar .logo-mini {
   margin-right:auto;
   display:flex; align-items:center; gap:8px;
@@ -483,22 +520,12 @@ footer a { color:var(--gold); text-decoration:none; }
 
 /* ── MOBILE ── */
 @media(max-width:640px){
-  .lang-bar {
-    flex-wrap:nowrap; gap:5px;
-    padding:7px 12px;
-    background:rgba(11,31,58,0.68);
-  }
-  .lang-bar .logo-mini {
-    margin-right:4px; font-size:11px; gap:4px; flex-shrink:0;
-  }
+  .lang-bar { background:rgba(11,31,58,0.92); }
+  .nav-row-top { padding:6px 12px; gap:6px; }
+  .lang-bar .logo-mini { font-size:11px; gap:4px; }
   .lang-bar .logo-mini img { height:18px; }
-  .points-badge {
-    font-size:10.5px; padding:3px 8px; flex-shrink:0;
-    margin-right:0; order:3;
-  }
+  .points-badge { font-size:10px; padding:2px 7px; }
   .points-badge .cap-note { display:none; }
-  .lang-btns { flex-wrap:nowrap; gap:3px; flex:1; justify-content:flex-end; order:2; }
-  .lang-btn { padding:3px 7px; font-size:9.5px; white-space:nowrap; overflow:hidden; }
 
   .hero { padding:70px 20px 90px; }
   .section-wrap { padding:72px 24px; }
@@ -554,59 +581,56 @@ footer a { color:var(--gold); text-decoration:none; }
 <body>
 
 <!-- LANG BAR -->
-<nav class="lang-bar">
-  <span class="logo-mini"><img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img"> ICOC · OMNIPO</span>
-  <span class="points-badge">
-    <span class="coin">🪙</span>
-    <span id="points-badge-num">0</span>P
-    <span id="points-badge-cap" class="cap-note"></span>
-  </span>
-  <div class="lang-toggle-wrap" id="lt-wrap-main">
-    <button class="lang-trigger-main" id="lt-trigger-main" type="button">
-      <span id="lt-flag-main">🇰🇷</span>
-      <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
-      <span style="font-size:9px;opacity:.5;">▼</span>
-    </button>
-    <div class="lang-dropdown-main" id="lt-dd-main"></div>
-  </div>
-  <a href="venue.html" class="nav-venue-btn">
-    🗺️ 경기장 지도
-  </a>
-  <a href="games.html" class="nav-venue-btn">
-    🎮 게임
-  </a>
-  <a href="referral.html" class="nav-venue-btn" style="color:#E8C97A;border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);">
-    🎁 친구 초대 <span style="font-size:10px;background:rgba(201,168,76,0.25);padding:1px 5px;border-radius:6px;margin-left:2px;">+10,000P</span>
-  </a>
-  <a href="leaderboard.html" class="nav-venue-btn">
-    🏆 리더보드
-  </a>
-  <a href="about.html" class="nav-venue-btn">
-    ℹ️ About
-  </a>
-  <!-- 배경음악 플레이어 -->
-  <div class="nav-music-player" id="nav-music-player">
-    <button class="music-toggle" id="music-toggle" title="배경음악 ON/OFF" onclick="ICOC_BGM.toggle()">
-      <span id="music-icon">🔇</span>
-    </button>
-    <input type="range" class="music-volume" id="music-volume"
-      min="0" max="100" value="30" oninput="ICOC_BGM.setVolume(this.value)"
-      title="볼륨">
-  </div>
-  <audio id="icoc-bgm" loop preload="none">
-    <source src="assets/audio/bgm.ogg" type="audio/ogg">
-    <source src="assets/audio/bgm.mp3" type="audio/mpeg">
-  </audio>
-  <div class="nav-auth-area">
-    <button class="nav-login-btn" id="nav-login-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-      구글 로그인
-    </button>
-    <div class="nav-user-area" id="nav-user-area" style="display:none">
-      <span id="nav-flag">🌍</span>
-      <span id="nav-nickname" class="nav-nickname">-</span>
-      <span class="nav-arrow">▾</span>
-    </div>
+<nav class="lang-bar" id="main-nav">
+  <!-- 1열: 로고 + 인증/포인트/언어 + 음악 -->
+  <div class="nav-row nav-row-top">
+    <span class="logo-mini"><img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img"> ICOC · OMNIPO</span>
+    <div class="nav-row-right">
+      <span class="points-badge">
+        <span class="coin">🪙</span>
+        <span id="points-badge-num">0</span>P
+      </span>
+      <div class="lang-toggle-wrap" id="lt-wrap-main">
+        <button class="lang-trigger-main" id="lt-trigger-main" type="button">
+          <span id="lt-flag-main">🇰🇷</span>
+          <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
+          <span style="font-size:9px;opacity:.5;">▼</span>
+        </button>
+        <div class="lang-dropdown-main" id="lt-dd-main"></div>
+      </div>
+      <!-- 음악 -->
+      <div class="nav-music-player" id="nav-music-player">
+        <button class="music-toggle" id="music-toggle" title="배경음악 ON/OFF" onclick="ICOC_BGM.toggle()">
+          <span id="music-icon">🔇</span>
+        </button>
+        <input type="range" class="music-volume" id="music-volume"
+          min="0" max="100" value="30" oninput="ICOC_BGM.setVolume(this.value)" title="볼륨">
+      </div>
+      <audio id="icoc-bgm" loop preload="none">
+        <source src="assets/audio/bgm.ogg" type="audio/ogg">
+        <source src="assets/audio/bgm.mp3" type="audio/mpeg">
+      </audio>
+      <!-- 로그인 -->
+      <div class="nav-auth-area">
+        <button class="nav-login-btn" id="nav-login-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span class="login-txt">구글 로그인</span>
+        </button>
+        <div class="nav-user-area" id="nav-user-area" style="display:none">
+          <span id="nav-flag">🌍</span>
+          <span id="nav-nickname" class="nav-nickname">-</span>
+          <span class="nav-arrow">▾</span>
+        </div>
+      </div>
+    </div><!-- /nav-row-right -->
+  </div><!-- /nav-row-top -->
+  <!-- 2열: 페이지 링크 버튼들 -->
+  <div class="nav-row nav-row-links">
+    <a href="venue.html" class="nav-link-btn">🗺️ 경기장</a>
+    <a href="games.html" class="nav-link-btn">🎮 게임</a>
+    <a href="leaderboard.html" class="nav-link-btn">🏆 랭킹</a>
+    <a href="referral.html" class="nav-link-btn nav-link-gold">🎁 초대 <span class="nav-pts-tag">+10K</span></a>
+    <a href="about.html" class="nav-link-btn">ℹ️ About</a>
   </div>
 </nav>
 
@@ -714,9 +738,10 @@ footer a { color:var(--gold); text-decoration:none; }
   <div class="reveal">
     <p class="section-label">Official Brain Sports · Open Division</p>
     <h2 class="section-title" data-i18n="sp_title">66개 공식 종목</h2>
-    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 예순여섯 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다. "▶ PLAY" 카드는 로그인 없이 바로 AI와 대전할 수 있습니다.</p>
+    <p class="section-body" data-i18n="sp_body">인류의 지성이 겨루는 예순여섯 종목. 각자의 전통과 깊이를 가진 브레인스포츠가 처음으로 하나의 무대에 모입니다.</p>
+    <p class="login-notice">⚡ <strong>로그인 없이</strong> 바로 AI와 대전 가능 &nbsp;|&nbsp; 승률·랭킹 집계 &amp; 지역별 국가대표 등록은 <strong>구글 로그인</strong> 필요</p>
   </div>
-  <div class="sports-grid reveal">
+  <div class="sports-grid">
 
         <div class="sport-card playable" data-game="go">
       <span class="sport-icon">⚫</span>
@@ -1612,8 +1637,10 @@ function setLang(lang) {
 
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
-}, {threshold:0.1});
+}, {threshold:0, rootMargin:'0px 0px -30px 0px'});
 document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+// 폴백: 1.5초 후 모두 강제 visible
+setTimeout(()=>{ document.querySelectorAll('.reveal:not(.visible)').forEach(el=>el.classList.add('visible')); }, 1500);
 
 // ── 게임 카드 클릭 바인딩 ──
 // 페이지 로드시 T 객체 기준으로 자동 동기화 (하드코딩된 기본 텍스트와 T 객체가 어긋나는 것을 방지)
