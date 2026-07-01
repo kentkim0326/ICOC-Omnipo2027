@@ -641,6 +641,18 @@ footer a { color:var(--gold); text-decoration:none; }
 .stone.om-white { background: radial-gradient(circle at 35% 35%, #fff, #ccc); }
 .stone.om-last  { box-shadow: 0 0 0 2px #E8C97A, 2px 2px 4px rgba(0,0,0,0.5); }
 
+
+@keyframes tickerScrollTop {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+#icoc-top-ticker-text {
+  display: inline-block;
+  animation: tickerScrollTop 40s linear infinite;
+  white-space: nowrap;
+}
+#icoc-top-ticker-text:hover { animation-play-state: paused; }
+
 </style>
 
 <style id="lang-toggle-css">
@@ -1014,7 +1026,7 @@ footer a { color:var(--gold); text-decoration:none; }
 </nav>
 
 <!-- ── ICOC 뉴스 티커 ── -->
-<div id="icoc-top-ticker" style="position:fixed;top:var(--nav-h,96px);left:0;right:0;z-index:999;background:rgba(8,20,44,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.12);height:28px;overflow:hidden;display:flex;align-items:center;">
+<div id="icoc-top-ticker" style="overflow:hidden;white-space:nowrap;" style="position:fixed;top:var(--nav-h,96px);left:0;right:0;z-index:999;background:rgba(8,20,44,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.12);height:28px;overflow:hidden;display:flex;align-items:center;">
   <div style="flex-shrink:0;padding:0 10px;"><span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:#C9A84C;white-space:nowrap;">📢 ICOC</span></div>
   <div style="flex:1;overflow:hidden;"><div id="icoc-top-news" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.75);white-space:nowrap;animation:tickerScroll 38s linear infinite;padding:0 12px;line-height:28px;"></div></div>
 </div>
