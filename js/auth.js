@@ -44,12 +44,13 @@
 
   const GENERATIONS = ['10대','20대','30대','40대','50대','60대','70대 이상'];
 
-  const MAIN_SPORTS = [
-    '바둑','체스','장기','쇼기','오목','체커','백개먼','리버시','커넥트4',
-    '텍사스홀덤','블랙잭','고스톱','마작','브릿지','하트','진러미',
-    '당구','볼링','스크린골프','파크골프','다트',
-    '스도쿠','루빅스큐브','노노그램','카탄','루미큐브','다빈치코드',
-  ];
+  const MAIN_SPORTS = {
+    '전략 보드': ['바둑','체스','장기','쇼기','오목','체커','백개먼','리버시','커넥트4','쿼리도','헥스','다빈치코드','루미큐브','윷놀이','샹치','중국체커','나인맨스모리스','만칼라','아발론','블로커스'],
+    '현대 보드': ['카탄','티켓투라이드','스플렌더','코드네임','7원더스','카르카손','도미노','젠가','시퀀스','딕싯','스크래블','알까기','펜토미노','아줄'],
+    '카드게임':  ['브릿지','하트','진러미','원카드','도둑잡기','두라크','마이티','스페이드','훌라','페이지원','텍사스홀덤','블랙잭','고스톱','마작'],
+    '액티브':   ['당구(8볼)','당구(3구)','당구(4구)','스누커','9볼','볼링','스크린골프','파크골프','다트','에어하키'],
+    '퍼즐·수리': ['스도쿠','루빅스큐브','노노그램','크로스워드','카쿠로','스피드수학'],
+  };
 
   // ── 포인트 동기화 (로그인 후 DB에서 불러오기) ──
   async function syncPointsFromDB() {
@@ -255,8 +256,13 @@
           <input type="hidden" id="ps-generation">
 
           <label class="ps-label">주요 종목 (최대 3개)</label>
-          <div class="ps-sport-grid">
-            ${MAIN_SPORTS.map(s => `<button class="ps-sport-btn" data-sport="${s}">${s}</button>`).join('')}
+          <div class="ps-sport-cats">
+            ${Object.entries(MAIN_SPORTS).map(([cat, sports]) => `
+              <div class="ps-sport-cat-label">${cat}</div>
+              <div class="ps-sport-grid">
+                ${sports.map(s => `<button class="ps-sport-btn" data-sport="${s}">${s}</button>`).join('')}
+              </div>
+            `).join('')}
           </div>
           <input type="hidden" id="ps-sports">
 
@@ -284,7 +290,9 @@
           btn.classList.remove('active');
           selectedSports = selectedSports.filter(s => s !== sp);
         } else {
-          if (selectedSports.length >= 3) return;
+          if (selectedSports.length >= 3) { 
+            setMsg('주요 종목은 최대 3개까지 선택 가능합니다.'); return; 
+          }
           btn.classList.add('active');
           selectedSports.push(sp);
         }
