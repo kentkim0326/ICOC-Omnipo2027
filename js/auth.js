@@ -110,6 +110,7 @@
     }
     try {
       supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+      window._ICOC_SB = supabase; // online.js 등에서 재사용
       console.log('[ICOC] Supabase 초기화 완료');
       return true;
     } catch(e) {
