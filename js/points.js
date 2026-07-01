@@ -55,14 +55,22 @@
   /* ── AI 대전 결과 ── */
   function onGameWin(sport)  {
     const pts = changePoints(+100, 'AI 대전 승리: ' + (sport||''));
-    // Supabase 기록 + 로컬 기록
     if (sport && window.ICOC_AUTH) window.ICOC_AUTH.recordGameResult(sport, true, 100);
+    // 플레이 기록 저장
+    saveHistory(sport, true, 100);
     return pts;
   }
   function onGameLoss(sport) {
     const pts = changePoints(-100, 'AI 대전 패배: ' + (sport||''));
     if (sport && window.ICOC_AUTH) window.ICOC_AUTH.recordGameResult(sport, false, 0);
+    saveHistory(sport, false, 0);
     return pts;
+  }
+  function saveHistory(sport, won, pts) {
+    const ICONS={'바둑':'⚫','오목':'⬤','체스':'♟️','쇼기':'🎌','마작':'🀄','당구':'🎱','볼링':'🎳','홀덤':'🃏','블랙잭':'♠️','장기':'🈴'};
+    const hist = JSON.parse(localStorage.getItem('icoc_history')||'[]');
+    hist.unshift({sport:sport||'게임',icon:ICONS[sport]||'🎮',won:won,pts:pts,time:Date.now()});
+    localStorage.setItem('icoc_history', JSON.stringify(hist.slice(0,50))); // 최근 50개
   }
   function addPoints(amount, reason) { return changePoints(amount, reason||'포인트 적립'); }
 
