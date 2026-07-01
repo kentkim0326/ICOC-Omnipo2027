@@ -312,7 +312,8 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 @media(max-width:400px) { .tb-label { display:none; } }
 
 /* ── MAP fills full screen ── */
-#map { position:fixed; top:0; left:0; right:0; bottom:0; z-index:0; }
+html,body{height:100%;margin:0;overflow:hidden;}
+#map{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;}
 .bottom-sheet { z-index:200; }
 .mapboxgl-ctrl-top-left { top:56px !important; }
 .maplibregl-ctrl-top-left { top:56px !important; }
@@ -371,14 +372,14 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 
 
 <!-- CHAT MODAL -->
-<div class="chat-modal" id="chat-modal">
+<div class="chat-modal" id="chat-modal" style="display:none;">
   <div class="chat-header">
     <div class="chat-header-icon">💬</div>
     <div class="chat-header-text">
       <h3 id="chat-venue-name">경기장 채팅</h3>
       <p>이 경기장 유저들과 소통하세요</p>
     </div>
-    <button class="chat-close" id="chat-close">✕</button>
+    <button class="chat-close" id="chat-close" onclick="closeAgeChat()">✕</button>
   </div>
   <div class="chat-messages" id="chat-messages">
     <div class="chat-coming-soon">
@@ -484,8 +485,8 @@ document.getElementById('v-players').textContent = rnd(12,280);
 document.getElementById('v-matches').textContent = rnd(40,310);
 document.getElementById('v-rating').textContent = '★ ' + (3.8+Math.random()*1.2).toFixed(1);
 document.getElementById('chat-venue-name').textContent = VENUE.name + ' 채팅';
-document.getElementById('btn-route').href = `https://map.kakao.com/?q=${encodeURIComponent(VENUE.name)}`;
-document.getElementById('btn-games').href = `games.html?type=${VENUE.type}`;
+// btn-route removed
+// btn-games removed
 
 // Sports tags
 const tagsEl = document.getElementById('v-sports-tags');
@@ -503,7 +504,10 @@ let is3d = true;
 
 // Try Mapbox first, fallback to MapLibre
 var map;
-if (window.mapboxgl) {
+function initVenueMap(){
+  const el=document.getElementById('map');
+  if(!el||el.offsetWidth===0){setTimeout(initVenueMap,150);return;}
+  if(window.mapboxgl){
   mapboxgl.accessToken = MAPBOX_TOKEN;
   map = new mapboxgl.Map({
     container:'map', style:'mapbox://styles/mapbox/dark-v11',
@@ -570,6 +574,12 @@ document.getElementById('chat-close').addEventListener('click', () => chatModal.
 function openAgeChat(age) {
   const modal = document.getElementById('chat-modal');
   if(!modal) return;
+  modal.style.display = 'flex';
+  // 뒤로가기 버튼
+  const sub = modal.querySelector('.chat-header-text p');
+  if(sub) sub.innerHTML = '<button onclick="closeAgeChat()" style="background:none;border:none;color:#C9A84C;font-size:12px;cursor:pointer;font-family:inherit;padding:0;">← 연령대 선택으로</button>';
+  const nameEl = document.getElementById('chat-venue-name');
+  if(nameEl) nameEl.textContent = VENUE.name + ' · ' + age + ' 채팅방';
   document.getElementById('chat-venue-name').textContent = VENUE.name + ' · ' + age + ' 채팅방';
   const msgs = document.getElementById('chat-messages');
   if(msgs) msgs.innerHTML = '<div class="chat-coming-soon"><span class="icon">💬</span><strong style="color:var(--gold);display:block;margin-bottom:6px;">' + age + ' 전용 채팅방</strong>같은 연령대 ICOC 플레이어들과<br>경기 신청 · 정모 약속 · 팀 빌딩!<br><br><span style="color:rgba(245,240,232,0.4);font-size:11px;">🔔 곧 오픈 예정입니다</span></div>';
@@ -660,6 +670,14 @@ function toggle3D() {
   }
 }
 
+
+function closeAgeChat() {
+  const modal = document.getElementById('chat-modal');
+  if(modal) modal.style.display = 'none';
+  // 뒤로가기: 채팅 드롭다운 다시 보여주기
+  const dd = document.getElementById('tb-chat-dropdown');
+  if(dd) dd.classList.add('open');
+}
 function toggleChatPanel() {
   const dd = document.getElementById('tb-chat-dropdown');
   if (dd) dd.classList.toggle('open');
