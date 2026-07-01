@@ -80,29 +80,46 @@
         trackUserLocation: false,
       }), 'top-right');
       map.on('load', () => {
-        // Mapbox v3 3D 건물 — 'building' 레이어 존재 시 extrusion 적용
+        // ── 한글 레이블 설정 ──
         try {
-          const layers = map.getStyle().layers;
-          // composite source의 building layer 찾기
-          const bldLayer = layers.find(l => l['source-layer']==='building' || l.id==='building');
-          if (bldLayer) {
-            // 기존 fill 레이어 뒤에 extrusion 추가
+          const koField = ['coalesce',['get','name_ko'],['get','name']];
+          map.getStyle().layers.forEach(layer => {
+            if (layer.type === 'symbol') {
+              try { map.setLayoutProperty(layer.id, 'text-field', koField); } catch(e) {}
+            }
+          });
+        } catch(e) {}
+
+        // ── 3D 건물 (Mapbox dark-v11 기준) ──
+        try {
+          if (!map.getLayer('icoc-3d-buildings')) {
             map.addLayer({
-              id:'icoc-3d-buildings',
-              type:'fill-extrusion',
-              source: bldLayer.source || 'composite',
-              'source-layer': bldLayer['source-layer'] || 'building',
-              minzoom: 11,
+              id: 'icoc-3d-buildings',
+              type: 'fill-extrusion',
+              source: 'composite',
+              'source-layer': 'building',
+              minzoom: 13,
               filter: ['==', 'extrude', 'true'],
               paint: {
-                'fill-extrusion-color': '#0d2244',
-                'fill-extrusion-height': ['interpolate',['linear'],['zoom'],11,0,11.5,['get','height']],
-                'fill-extrusion-base':   ['interpolate',['linear'],['zoom'],11,0,11.5,['get','min_height']],
-                'fill-extrusion-opacity': 0.82,
+                'fill-extrusion-color': [
+                  'interpolate', ['linear'], ['get', 'height'],
+                  0, '#0e2847', 20, '#122f55', 60, '#1a3c6e', 120, '#203f6a'
+                ],
+                'fill-extrusion-height': [
+                  'interpolate', ['linear'], ['zoom'],
+                  13, 0, 14, ['get', 'height']
+                ],
+                'fill-extrusion-base': [
+                  'interpolate', ['linear'], ['zoom'],
+                  13, 0, 14, ['get', 'min_height']
+                ],
+                'fill-extrusion-opacity': 0.85,
+                'fill-extrusion-vertical-gradient': true,
               }
             });
           }
-        } catch(e) { console.log('3D buildings skip:', e.message); }
+        } catch(e) { console.log('3D skip:', e.message); }
+
         loadVenues(SAMPLE_VENUES); loadSupabaseVenues();
       });
     } else if (window.maplibregl) {
@@ -118,29 +135,46 @@
       });
       map.addControl(new maplibregl.NavigationControl(), 'top-right');
       map.on('load', () => {
-        // Mapbox v3 3D 건물 — 'building' 레이어 존재 시 extrusion 적용
+        // ── 한글 레이블 설정 ──
         try {
-          const layers = map.getStyle().layers;
-          // composite source의 building layer 찾기
-          const bldLayer = layers.find(l => l['source-layer']==='building' || l.id==='building');
-          if (bldLayer) {
-            // 기존 fill 레이어 뒤에 extrusion 추가
+          const koField = ['coalesce',['get','name_ko'],['get','name']];
+          map.getStyle().layers.forEach(layer => {
+            if (layer.type === 'symbol') {
+              try { map.setLayoutProperty(layer.id, 'text-field', koField); } catch(e) {}
+            }
+          });
+        } catch(e) {}
+
+        // ── 3D 건물 (Mapbox dark-v11 기준) ──
+        try {
+          if (!map.getLayer('icoc-3d-buildings')) {
             map.addLayer({
-              id:'icoc-3d-buildings',
-              type:'fill-extrusion',
-              source: bldLayer.source || 'composite',
-              'source-layer': bldLayer['source-layer'] || 'building',
-              minzoom: 11,
+              id: 'icoc-3d-buildings',
+              type: 'fill-extrusion',
+              source: 'composite',
+              'source-layer': 'building',
+              minzoom: 13,
               filter: ['==', 'extrude', 'true'],
               paint: {
-                'fill-extrusion-color': '#0d2244',
-                'fill-extrusion-height': ['interpolate',['linear'],['zoom'],11,0,11.5,['get','height']],
-                'fill-extrusion-base':   ['interpolate',['linear'],['zoom'],11,0,11.5,['get','min_height']],
-                'fill-extrusion-opacity': 0.82,
+                'fill-extrusion-color': [
+                  'interpolate', ['linear'], ['get', 'height'],
+                  0, '#0e2847', 20, '#122f55', 60, '#1a3c6e', 120, '#203f6a'
+                ],
+                'fill-extrusion-height': [
+                  'interpolate', ['linear'], ['zoom'],
+                  13, 0, 14, ['get', 'height']
+                ],
+                'fill-extrusion-base': [
+                  'interpolate', ['linear'], ['zoom'],
+                  13, 0, 14, ['get', 'min_height']
+                ],
+                'fill-extrusion-opacity': 0.85,
+                'fill-extrusion-vertical-gradient': true,
               }
             });
           }
-        } catch(e) { console.log('3D buildings skip:', e.message); }
+        } catch(e) { console.log('3D skip:', e.message); }
+
         loadVenues(SAMPLE_VENUES); loadSupabaseVenues();
       });
     }
@@ -273,6 +307,92 @@
             <button class="age-bar-btn" onclick="ICOC_MAP.openAgeChat('70대+')">🧓 70대+</button>
           </div>
         </div>
+        
+        <!-- 경기장 등록 버튼 (로그인 시) -->
+        <div id="venue-reg-btn-wrap" style="display:none;margin-top:10px;">
+          <button onclick="openVenueRegModal()"
+            style="width:100%;padding:10px 16px;background:rgba(201,168,76,0.1);
+            border:1px solid rgba(201,168,76,0.35);border-radius:10px;
+            color:#E8C97A;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;
+            display:flex;align-items:center;gap:8px;justify-content:center;">
+            📍 내 경기장 등록하기
+            <span style="font-size:11px;opacity:0.6;">(기원·당구장·볼링장·보드게임카페 등)</span>
+          </button>
+        </div>
+
+        <!-- 경기장 등록 모달 -->
+        <div id="venue-reg-modal" style="display:none;position:fixed;inset:0;z-index:3000;
+          background:rgba(5,12,24,0.88);align-items:center;justify-content:center;">
+          <div style="background:rgba(10,28,55,0.98);border:1px solid rgba(201,168,76,0.28);
+            border-radius:18px;padding:28px 24px;max-width:420px;width:92%;
+            max-height:90vh;overflow-y:auto;backdrop-filter:blur(20px);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <h3 style="font-size:16px;font-weight:700;color:#C9A84C;">📍 경기장 등록</h3>
+              <button onclick="closeVenueRegModal()" style="background:none;border:none;color:rgba(245,240,232,0.5);font-size:20px;cursor:pointer;">✕</button>
+            </div>
+            
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <div>
+                <label style="font-size:11px;color:rgba(245,240,232,0.5);display:block;margin-bottom:4px;">장소명 *</label>
+                <input id="vreg-name" type="text" placeholder="예: 홍길동 보드게임카페"
+                  style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:var(--cream,#F5F0E8);font-size:13px;font-family:inherit;outline:none;">
+              </div>
+              
+              <div>
+                <label style="font-size:11px;color:rgba(245,240,232,0.5);display:block;margin-bottom:4px;">종류 *</label>
+                <select id="vreg-type"
+                  style="width:100%;padding:10px 12px;background:rgba(10,28,55,0.98);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:var(--cream,#F5F0E8);font-size:13px;font-family:inherit;outline:none;">
+                  <option value="boardgame_cafe">🎲 보드게임카페</option>
+                  <option value="baduk">⚫ 기원 (바둑)</option>
+                  <option value="billiards">🎱 당구장</option>
+                  <option value="bowling">🎳 볼링장</option>
+                  <option value="screen_golf">⛳ 스크린골프장</option>
+                  <option value="chess_club">♟️ 체스클럽</option>
+                  <option value="card_room">🃏 홀덤펍/카드방</option>
+                  <option value="mahjong">🀄 마작클럽</option>
+                  <option value="multi">🏆 복합 경기장</option>
+                  <option value="other">🎮 기타</option>
+                </select>
+              </div>
+              
+              <div>
+                <label style="font-size:11px;color:rgba(245,240,232,0.5);display:block;margin-bottom:4px;">주소 * (검색하면 지도에 핀 표시)</label>
+                <div style="display:flex;gap:6px;">
+                  <input id="vreg-addr" type="text" placeholder="서울시 강남구 테헤란로 123"
+                    style="flex:1;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:var(--cream,#F5F0E8);font-size:13px;font-family:inherit;outline:none;">
+                  <button onclick="geocodeVenueAddr()"
+                    style="padding:10px 14px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.35);border-radius:8px;color:#E8C97A;font-size:12px;cursor:pointer;font-family:inherit;white-space:nowrap;">
+                    📍 검색
+                  </button>
+                </div>
+                <div id="vreg-addr-result" style="font-size:11px;color:rgba(201,168,76,0.7);margin-top:4px;min-height:16px;"></div>
+              </div>
+              
+              <div>
+                <label style="font-size:11px;color:rgba(245,240,232,0.5);display:block;margin-bottom:4px;">한 줄 소개</label>
+                <input id="vreg-desc" type="text" placeholder="예: 바둑 전문, 주차 가능, 매일 오전 10시 ~ 밤 11시"
+                  style="width:100%;padding:10px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:8px;color:var(--cream,#F5F0E8);font-size:13px;font-family:inherit;outline:none;">
+              </div>
+              
+              <div>
+                <label style="font-size:11px;color:rgba(245,240,232,0.5);display:block;margin-bottom:6px;">평판 (별점) ★</label>
+                <div id="vreg-stars" style="display:flex;gap:6px;">
+                  ${[1,2,3,4,5].map(n=>`<button onclick="setVenueRating(${n})" data-star="${n}"
+                    style="background:none;border:none;font-size:24px;cursor:pointer;transition:transform .1s;padding:0;">⭐</button>`).join('')}
+                </div>
+                <input type="hidden" id="vreg-rating" value="5">
+              </div>
+              
+              <button onclick="submitVenueReg()"
+                style="width:100%;padding:12px;background:linear-gradient(135deg,#C9A84C,#E8C97A);
+                border:none;border-radius:10px;font-size:14px;font-weight:700;color:#0B1F3A;
+                cursor:pointer;font-family:inherit;margin-top:4px;">
+                ✅ 경기장 등록하기
+              </button>
+            </div>
+          </div>
+        </div>
+
         <!-- 날씨 티커 (지도 섹션에서만) -->
         <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-top:1px solid rgba(201,168,76,0.08);margin-top:6px;overflow:hidden;">
           <span style="font-size:10px;font-weight:700;color:#60a5fa;white-space:nowrap;flex-shrink:0;">🌍 세계 날씨</span>
@@ -401,6 +521,144 @@
     if(el&&res.length)el.textContent=res.join(' · ')+'  · '+res.join(' · ');
   }
   setTimeout(()=>{const el=document.getElementById('map-wx-ticker');if(el)loadMapWeather();},1500);
+
+
+  // ── 경기장 등록 관련 변수 ──
+  let _venueRegLat = null, _venueRegLng = null;
+  let _venueRating = 5;
+  let _venueRegMarker = null;
+
+  // 로그인 확인 후 등록 버튼 표시
+  function checkShowVenueRegBtn() {
+    const wrap = document.getElementById('venue-reg-btn-wrap');
+    if (!wrap) return;
+    const isLoggedIn = !!(window.ICOC_AUTH && ICOC_AUTH.getCurrentUser && ICOC_AUTH.getCurrentUser());
+    wrap.style.display = isLoggedIn ? 'block' : 'none';
+  }
+  setTimeout(checkShowVenueRegBtn, 2000);
+  setInterval(checkShowVenueRegBtn, 5000);
+
+  function openVenueRegModal() {
+    if (!window.ICOC_AUTH || !ICOC_AUTH.getCurrentUser()) {
+      alert('경기장 등록은 구글 로그인 후 이용 가능합니다.');
+      if(window.ICOC_AUTH) ICOC_AUTH.signIn();
+      return;
+    }
+    document.getElementById('venue-reg-modal').style.display = 'flex';
+    setVenueRating(5);
+    // Center map on current position for context
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(pos => {
+        if (map) map.flyTo({center:[pos.coords.longitude, pos.coords.latitude], zoom:15});
+      }, () => {});
+    }
+  }
+
+  function closeVenueRegModal() {
+    document.getElementById('venue-reg-modal').style.display = 'none';
+    if (_venueRegMarker) { _venueRegMarker.remove(); _venueRegMarker = null; }
+    _venueRegLat = null; _venueRegLng = null;
+  }
+
+  function setVenueRating(n) {
+    _venueRating = n;
+    document.getElementById('vreg-rating').value = n;
+    document.querySelectorAll('#vreg-stars button').forEach(btn => {
+      btn.textContent = parseInt(btn.dataset.star) <= n ? '⭐' : '☆';
+    });
+  }
+
+  async function geocodeVenueAddr() {
+    const addr = document.getElementById('vreg-addr').value.trim();
+    if (!addr) return;
+    const resultEl = document.getElementById('vreg-addr-result');
+    resultEl.textContent = '🔍 검색 중...';
+    try {
+      const MBTOKEN = MAPBOX_TOKEN;
+      const res = await fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(addr)}.json?access_token=${MBTOKEN}&language=ko&country=KR&limit=1`
+      );
+      const data = await res.json();
+      if (data.features && data.features.length > 0) {
+        const [lng, lat] = data.features[0].center;
+        _venueRegLat = lat; _venueRegLng = lng;
+        resultEl.textContent = '✅ ' + data.features[0].place_name;
+        // Show pin on map
+        if (map) {
+          map.flyTo({center: [lng, lat], zoom: 16});
+          if (_venueRegMarker) _venueRegMarker.remove();
+          const MapLib = window.mapboxgl || window.maplibregl;
+          const el = document.createElement('div');
+          el.style.cssText = 'width:32px;height:32px;border-radius:50%;background:#C9A84C;border:3px solid #fff;display:flex;align-items:center;justify-content:center;font-size:16px;';
+          el.textContent = '📍';
+          _venueRegMarker = new MapLib.Marker({element:el}).setLngLat([lng,lat]).addTo(map);
+        }
+      } else {
+        resultEl.textContent = '❌ 주소를 찾을 수 없습니다. 더 자세히 입력해주세요.';
+      }
+    } catch(e) {
+      resultEl.textContent = '❌ 검색 오류: ' + e.message;
+    }
+  }
+
+  async function submitVenueReg() {
+    const name = document.getElementById('vreg-name').value.trim();
+    const type = document.getElementById('vreg-type').value;
+    const addr = document.getElementById('vreg-addr').value.trim();
+    const desc = document.getElementById('vreg-desc').value.trim();
+    const rating = parseInt(document.getElementById('vreg-rating').value) || 5;
+
+    if (!name) { alert('장소명을 입력해주세요.'); return; }
+    if (!addr || !_venueRegLat) { alert('주소를 입력하고 검색 버튼을 눌러주세요.'); return; }
+
+    const user = ICOC_AUTH.getCurrentUser();
+    if (!user) { alert('로그인이 필요합니다.'); return; }
+
+    // Type labels
+    const typeLabels = {boardgame_cafe:'보드게임카페',baduk:'기원',billiards:'당구장',
+      bowling:'볼링장',screen_golf:'스크린골프장',chess_club:'체스클럽',
+      card_room:'홀덤펍',mahjong:'마작클럽',multi:'복합경기장',other:'기타'};
+    const typeIcons = {boardgame_cafe:'🎲',baduk:'⚫',billiards:'🎱',
+      bowling:'🎳',screen_golf:'⛳',chess_club:'♟️',
+      card_room:'🃏',mahjong:'🀄',multi:'🏆',other:'🎮'};
+
+    const venueData = {
+      name, type,
+      addr,
+      description: desc,
+      lat: _venueRegLat, lng: _venueRegLng,
+      rating,
+      user_id: user.id,
+      registered_by: user.email,
+      icon: typeIcons[type] || '🎮',
+      label: typeLabels[type] || '경기장',
+      created_at: new Date().toISOString(),
+      sports: [typeLabels[type]],
+    };
+
+    // Save to Supabase
+    if (window.supabase) {
+      try {
+        const cfg = window.ICOC_CONFIG;
+        const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+        const { error } = await sb.from('icoc_venues').insert(venueData);
+        if (error) throw error;
+        // Show on map immediately
+        loadVenues([venueData]);
+        closeVenueRegModal();
+        // Show success
+        const toast = document.createElement('div');
+        toast.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(74,222,128,0.9);color:#0B1F3A;padding:12px 24px;border-radius:10px;font-weight:700;font-size:13px;z-index:9999;transition:opacity .5s;';
+        toast.textContent = '✅ ' + name + ' 등록 완료!';
+        document.body.appendChild(toast);
+        setTimeout(() => { toast.style.opacity='0'; setTimeout(()=>toast.remove(),500); }, 3000);
+      } catch(e) {
+        alert('등록 오류: ' + e.message + '\n\nSupabase에 icoc_venues 테이블이 없을 수 있습니다.');
+      }
+    } else {
+      alert('데이터베이스 연결이 필요합니다.');
+    }
+  }
 
   const styleCSS = `
   .age-chat-bar{
