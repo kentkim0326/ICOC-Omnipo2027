@@ -689,7 +689,19 @@
 
     // 이벤트 핸들러
     document.getElementById('nav-login-btn')?.addEventListener('click', signInWithGoogle);
-    document.getElementById('nav-user-area')?.addEventListener('click', openMyPage);
+    document.getElementById('nav-user-area')?.addEventListener('click', function(e) {
+      // 내부 버튼 클릭이면 무시 (버튼 자체 onclick이 처리)
+      if (e.target.closest('button')) return;
+      const dd = document.getElementById('nav-user-dd');
+      if (dd) dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    });
+    // 외부 클릭 시 드롭다운 닫기
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('#nav-user-area')) {
+        const dd = document.getElementById('nav-user-dd');
+        if (dd) dd.style.display = 'none';
+      }
+    });
     document.getElementById('hero-login-btn')?.addEventListener('click', signInWithGoogle);
     document.getElementById('hero-mypage-btn')?.addEventListener('click', ()=>{ window.location.href='mypage.html'; });
 
