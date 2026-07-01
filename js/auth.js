@@ -20,8 +20,14 @@
       console.warn('[ICOC Auth] Supabase 미설정 — js/config.js 를 수정하세요.');
       return false;
     }
-    supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
-    return true;
+    try {
+      supabase = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+      console.log('[ICOC] Supabase 초기화 완료');
+      return true;
+    } catch(e) {
+      console.error('[ICOC] Supabase 초기화 실패:', e);
+      return false;
+    }
   }
 
   // ── 현재 사용자 ──
@@ -81,14 +87,26 @@
 
   // ── Google 로그인 ──
   async function signInWithGoogle() {
-    if (!supabase) { alert('인증 서비스가 준비되지 않았습니다.'); return; }
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: window.location.origin + window.location.pathname,
-      },
-    });
-    if (error) console.error('Login error:', error);
+    if (!supabase) {
+      alert('인증 서비스가 준비되지 않았습니다. 페이지를 새로고침해주세요.');
+      console.error('[ICOC] supabase not initialized');
+      return;
+    }
+    try {
+      const redirectTo = window.location.origin + window.location.pathname;
+      console.log('[ICOC] OAuth 시작, redirectTo:', redirectTo);
+      const { data, error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: { redirectTo },
+      });
+      if (error) {
+        console.error('[ICOC] OAuth 오류:', error);
+        alert('로그인 오류: ' + error.message);
+      }
+    } catch(e) {
+      console.error('[ICOC] 로그인 예외:', e);
+      alert('로그인 중 오류가 발생했습니다: ' + e.message);
+    }
   }
 
   // ── 로그아웃 ──
