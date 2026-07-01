@@ -262,31 +262,27 @@ function sfx(type) {
 
 
   function aiPickMove(){
-    // 1단계: 전체 휴리스틱 스코어
-    const candidates=[];
+    // 빠른 휴리스틱 AI (MCTS 제거 - 모바일 성능)
+    const scored = [];
     for(let r=0;r<SIZE;r++) for(let c=0;c<SIZE;c++){
       if(board[r][c]!==EMPTY) continue;
-      const s=aiHeuristic(r,c);
-      if(s!==null) candidates.push({r,c,h:s});
+      // 자살수 체크
+      const test=tryMove(board,WHITE,r,c,koPoint,koColor);
+      if(!test.ok) continue;
+      const h=aiHeuristic(r,c);
+      if(h===null) continue;
+      scored.push({r,c,h});
     }
-    if(!candidates.length) return null;
-    candidates.sort((a,b)=>b.h-a.h);
+    if(!scored.length) return null;
+    scored.sort((a,b)=>b.h-a.h);
 
-    // 긴급 수: 스코어가 압도적으로 높은 경우 즉시 선택
-    if(candidates[0].h >= 900 && candidates.length > 1){
-      // 포획/구출 수는 바로 실행
-      if(candidates[0].h >= 1000) return [candidates[0].r, candidates[0].c];
-    }
+    // 즉시 승/방어 (스코어 매우 높을 때)
+    if(scored[0].h >= 1000) return [scored[0].r, scored[0].c];
 
-    // 2단계: 상위 15후보에 대해 몬테카를로 평가 (50 플레이아웃씩)
-    const top=candidates.slice(0,15);
-    let best=-Infinity, bestCell=null;
-    for(const {r,c,h} of top){
-      const mc=mcEval(r,c,50); // 8 → 50 플레이아웃
-      const combined=h*0.35 + mc*1500; // MC 가중치 높임
-      if(combined>best){ best=combined; bestCell=[r,c]; }
-    }
-    return bestCell;
+    // 상위 5개 중 랜덤 선택 (다양성)
+    const topN = Math.min(5, scored.length);
+    const pick = scored[Math.floor(Math.random() * topN)];
+    return [pick.r, pick.c];
   }
 
 
@@ -294,7 +290,8 @@ function sfx(type) {
     console.log('[Go] doAiTurn running, board:', board[9][9]);
     setStatus('AI가 생각 중...');
     setTimeout(()=>{
-      const mv=aiPickMove();
+      let mv;
+      try { mv=aiPickMove(); } catch(e){ console.error('[Go] aiPickMove error:',e); mv=null; }
       console.log('[Go] AI picked move:', mv);
       if(!mv){
         passCount++;
