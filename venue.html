@@ -598,6 +598,55 @@ function addVenueMarker() {
   new Lib.Marker({element:el, anchor:'bottom'})
     .setLngLat([VENUE.lng, VENUE.lat])
     .addTo(map);
+
+  // ── 한글 레이블 적용 ──
+  try {
+    var layers = map.getStyle().layers;
+    layers.forEach(function(layer) {
+      if (layer.layout && layer.layout['text-field']) {
+        map.setLayoutProperty(layer.id, 'text-field', [
+          'coalesce',
+          ['get', 'name_ko'],
+          ['get', 'name:ko'],
+          ['get', 'name']
+        ]);
+      }
+    });
+  } catch(e) { console.warn('Korean label error:', e); }
+
+  // ── 3D 건물 (Mapbox만 지원) ──
+  if (window.mapboxgl && map.getSource('composite')) {
+    try {
+      if (!map.getLayer('3d-buildings')) {
+        map.addLayer({
+          id: '3d-buildings',
+          source: 'composite',
+          'source-layer': 'building',
+          filter: ['==', 'extrude', 'true'],
+          type: 'fill-extrusion',
+          minzoom: 14,
+          paint: {
+            'fill-extrusion-color': [
+              'interpolate', ['linear'], ['get', 'height'],
+              0,   '#C9A84C',
+              50,  '#E8C97A',
+              100, '#F5F0E8',
+            ],
+            'fill-extrusion-height': [
+              'interpolate', ['linear'], ['zoom'],
+              14, 0, 14.5, ['get', 'height']
+            ],
+            'fill-extrusion-base': [
+              'interpolate', ['linear'], ['zoom'],
+              14, 0, 14.5, ['get', 'min_height']
+            ],
+            'fill-extrusion-opacity': 0.75
+          }
+        });
+      }
+    } catch(e) { console.warn('3D buildings error:', e); }
+  }
+
   showWeatherTicker();
   checkShowVenueRegBtn();
 }
