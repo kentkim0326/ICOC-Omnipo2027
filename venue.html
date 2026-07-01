@@ -318,6 +318,16 @@ html,body{height:100%;margin:0;overflow:hidden;}
 .mapboxgl-ctrl-top-left { top:56px !important; }
 .maplibregl-ctrl-top-left { top:56px !important; }
 
+
+@keyframes tickerScroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+@keyframes tickerFade {
+  0%,100% { opacity:0.6; }
+  50%      { opacity:1; }
+}
+
 </style>
 </head>
 <body>
@@ -590,6 +600,32 @@ function showWeatherTicker() {
   });
 }
 
+
+function showNewsTicker() {
+  if(document.getElementById('venue-news-ticker')) return;
+  const ticker = document.createElement('div');
+  ticker.id = 'venue-news-ticker';
+  ticker.style.cssText = 'position:fixed;bottom:28px;left:0;right:0;z-index:149;background:rgba(201,168,76,0.08);backdrop-filter:blur(8px);border-top:1px solid rgba(201,168,76,0.1);height:22px;overflow:hidden;display:flex;align-items:center;';
+  ticker.innerHTML = '<div style="flex-shrink:0;padding:0 8px;font-size:9px;font-weight:700;color:#C9A84C;white-space:nowrap;">📰 뉴스</div><div style="flex:1;overflow:hidden;"><div id="venue-news-text" style="display:inline-block;font-size:10px;color:rgba(245,240,232,0.6);white-space:nowrap;animation:tickerScroll 50s linear infinite;padding:0 10px;line-height:22px;">뉴스 로딩 중...</div></div>';
+  document.body.appendChild(ticker);
+
+  // RSS2JSON (무료 CORS 프록시)
+  const RSS_URL = encodeURIComponent('https://news.google.com/rss/search?q=브레인스포츠+바둑+체스&hl=ko&gl=KR&ceid=KR:ko');
+  fetch('https://api.rss2json.com/v1/api.json?rss_url=' + RSS_URL + '&count=10')
+    .then(function(r){return r.json();})
+    .then(function(d){
+      if(d.items && d.items.length) {
+        const text = d.items.map(function(item){ return '📌 ' + item.title; }).join('　　·　　');
+        const el = document.getElementById('venue-news-text');
+        if(el) el.textContent = text + '　　·　　' + text;
+      }
+    })
+    .catch(function(){
+      const el = document.getElementById('venue-news-text');
+      if(el) el.textContent = '📌 ICOC Brain Sports Omnipo 2027 오픈　·　195개국 온라인 두뇌스포츠 플랫폼　·　바둑·체스·장기·당구·볼링 온라인 대전　·　지금 국가대표에 도전하세요';
+    });
+}
+
 // ── 마커 추가 ──
 function addVenueMarker() {
   const el = document.createElement('div');
@@ -651,6 +687,7 @@ function addVenueMarker() {
   }
 
   showWeatherTicker();
+  showNewsTicker();
   checkShowVenueRegBtn();
 }
 
