@@ -325,6 +325,33 @@
   }
 
   function buildBoardDOM(container){
+    function onCellClick(r,c){
+      // 온라인 모드
+      if(window.ICOC_ONLINE?.active){
+        const myColor = ICOC_ONLINE.myRole==='host' ? BLACK : WHITE;
+        if(!ICOC_ONLINE.isMyTurn || turn!==myColor || gameOver) return;
+        const res=tryMove(board,myColor,r,c,koPoint,koColor);
+        if(!res.ok) return;
+        board=res.bd;
+        if(myColor===BLACK) capturedByBlack+=res.captured;
+        else capturedByWhite+=res.captured;
+        if(res.newKo){koPoint=res.newKo.pt;koColor=res.newKo.col;}else{koPoint=null;}
+        passCount=0; renderBoard(); markLastMove(r,c);
+        setTurnUI();
+        ICOC_ONLINE.sendMove({r,c});
+        ICOC_ONLINE.showTurnIndicator(false);
+        return;
+      }
+      // AI 모드 (기존 로직)
+      if(turn!==BLACK||gameOver) return;
+      const res=tryMove(board,BLACK,r,c,koPoint,koColor);
+      if(!res.ok){sfx('invalid');return;}
+      board=res.bd; capturedByBlack+=res.captured;
+      if(res.newKo){koPoint=res.newKo.pt;koColor=res.newKo.col;}else{koPoint=null;}
+      passCount=0; renderBoard(); markLastMove(r,c); sfx('place');
+      if(checkWinAfterMove(BLACK)){return;}
+      turn=WHITE; setTurnUI(); setTimeout(doAiTurn,400);
+    }
     boardUI=global.BoardUI.createGoban(container, SIZE, {
       onIntersectionClick: onCellClick,
       starPoints: STAR_POINTS_19,
@@ -353,5 +380,20 @@
     reset();
   }
 
-  global.GoGame={start};
+  
+  function applyOpponentMove(payload){
+    if(!payload||gameOver) return;
+    const oppColor = ICOC_ONLINE?.myRole==='host' ? WHITE : BLACK;
+    const res=tryMove(board,oppColor,payload.r,payload.c,koPoint,koColor);
+    if(!res.ok) return;
+    board=res.bd;
+    if(oppColor===BLACK) capturedByBlack+=res.captured;
+    else capturedByWhite+=res.captured;
+    if(res.newKo){koPoint=res.newKo.pt;koColor=res.newKo.col;}else{koPoint=null;}
+    passCount=0; turn = ICOC_ONLINE?.myRole==='host' ? BLACK : WHITE;
+    renderBoard(); markLastMove(payload.r,payload.c); sfx('place'); setTurnUI();
+    ICOC_ONLINE?.showTurnIndicator(true);
+  }
+
+  global.GoGame = {start, applyOpponentMove};
 })(window);
