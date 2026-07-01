@@ -220,6 +220,18 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
   .chat-fab{right:396px;bottom:24px;}
   .chat-modal{right:396px;bottom:88px;}
 }
+
+/* ── 슬라이드쇼 ── */
+.venue-slides-wrap{position:relative;height:110px;border-radius:10px;overflow:hidden;margin:10px 0 8px;}
+.venue-slide{position:absolute;inset:0;opacity:0;transition:opacity 0.7s;}
+.venue-slide.vs-active{opacity:1;}
+.venue-slide img{width:100%;height:100%;object-fit:cover;filter:brightness(.65);}
+/* ── 연령대 채팅 ── */
+.age-chat-wrap{margin:8px 0 12px;}
+.age-chat-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(245,240,232,0.38);margin-bottom:7px;}
+.age-chat-btns{display:flex;gap:5px;}
+.age-chat-btn{flex:1;padding:7px 2px;border:1px solid rgba(201,168,76,0.22);border-radius:10px;background:rgba(201,168,76,0.06);color:rgba(245,240,232,0.75);font-size:11px;font-weight:600;cursor:pointer;transition:all .18s;font-family:inherit;}
+.age-chat-btn:hover{background:rgba(201,168,76,0.18);border-color:var(--gold);color:var(--gold-l);}
 </style>
 </head>
 <body>
@@ -303,6 +315,27 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
         <div class="sports-tags" id="v-sports-tags"></div>
       </div>
 
+      <!-- 경기장 분위기 슬라이드쇼 -->
+      <div class="venue-slides-wrap" id="venue-slides-wrap">
+        <div class="venue-slide vs-active"><img src="assets/hero-bg.jpg" alt=""></div>
+        <div class="venue-slide"><img src="assets/hero-slide-1.jpg" alt=""></div>
+        <div class="venue-slide"><img src="assets/hero-slide-2.jpg" alt=""></div>
+        <div class="venue-slide"><img src="assets/hero-slide-3.jpg" alt=""></div>
+        <div class="venue-slide"><img src="assets/hero-slide-4.jpg" alt=""></div>
+      </div>
+
+      <!-- 연령대별 채팅방 버튼 -->
+      <div class="age-chat-wrap">
+        <div class="age-chat-label">💬 연령대별 채팅방</div>
+        <div class="age-chat-btns">
+          <button class="age-chat-btn" onclick="openAgeChat('10대')">🧒 10대</button>
+          <button class="age-chat-btn" onclick="openAgeChat('20대')">🧑 20대</button>
+          <button class="age-chat-btn" onclick="openAgeChat('30대')">👨 30대</button>
+          <button class="age-chat-btn" onclick="openAgeChat('40대')">🧔 40대</button>
+          <button class="age-chat-btn" onclick="openAgeChat('50대')">👴 50대</button>
+          <button class="age-chat-btn" onclick="openAgeChat('60대+')">👵 60대+</button>
+        </div>
+      </div>
     </div>
 
     <div class="action-row">
@@ -428,6 +461,28 @@ const chatFab  = document.getElementById('chat-fab');
 const chatModal = document.getElementById('chat-modal');
 chatFab.addEventListener('click', () => chatModal.classList.toggle('open'));
 document.getElementById('chat-close').addEventListener('click', () => chatModal.classList.remove('open'));
+
+// ── 슬라이드쇼 자동 재생 (2초) ──
+(function(){
+  const slides = document.querySelectorAll('.venue-slide');
+  if(!slides.length) return;
+  let cur = 0;
+  setInterval(()=>{
+    slides[cur].classList.remove('vs-active');
+    cur = (cur+1) % slides.length;
+    slides[cur].classList.add('vs-active');
+  }, 2000);
+})();
+
+function openAgeChat(age) {
+  const modal = document.getElementById('chat-modal');
+  if(!modal) return;
+  document.getElementById('chat-venue-name').textContent = VENUE.name + ' · ' + age + ' 채팅방';
+  const msgs = document.getElementById('chat-messages');
+  if(msgs) msgs.innerHTML = '<div class="chat-coming-soon"><span class="icon">💬</span><strong style="color:var(--gold);display:block;margin-bottom:6px;">' + age + ' 전용 채팅방</strong>같은 연령대 ICOC 플레이어들과<br>경기 신청 · 정모 약속 · 팀 빌딩!<br><br><span style="color:rgba(245,240,232,0.4);font-size:11px;">🔔 곧 오픈 예정입니다</span></div>';
+  modal.classList.add('open');
+}
+
 </script>
 </body>
 </html>
