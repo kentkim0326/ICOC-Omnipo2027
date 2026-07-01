@@ -323,7 +323,7 @@ function buildGrid(cat){
       const isHL = (highlightGame && g.name === highlightGame) || (highlightType && typeMatchesCat(highlightType, g.cat));
       const a = document.createElement('a');
       a.className = `game-card${g.featured?' featured':''}${g.play?'':' soon'}${isHL?' highlighted':''}`;
-      a.href = g.play ? `index.html#game-${g.id}` : '#';
+      a.href = g.play ? `index.html?game=${g.id}` : '#';
       if(!g.play) a.addEventListener('click', e => { e.preventDefault(); showComingSoon(g.name); });
 
       a.innerHTML = `
