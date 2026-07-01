@@ -307,9 +307,111 @@
     bar.textContent  = isMyTurn ? '🟢 당신의 차례' : '🔴 상대방 차례';
   }
 
+
+  // ── AI 플레이 중 백그라운드 방 생성 (상대 기다리기) ──
+  async function createRoomInBackground(game, callbacks) {
+    if (!init()) return;
+    gameKey = game;
+    onMoveCallback  = callbacks.onMove;
+    onStartCallback = callbacks.onStart;
+    onEndCallback   = callbacks.onEnd;
+    myRole  = 'host';
+    myColor = 'black';
+    roomId  = Math.random().toString(36).slice(2, 8).toUpperCase();
+
+    const user = window.ICOC_AUTH?.getCurrentUser();
+    if (!user) return;
+
+    await sb.from('icoc_game_rooms').insert({
+      id: roomId, game,
+      host_id:   user.id,
+      host_nick: user.email?.split('@')[0] || 'Player',
+      status: 'waiting',
+      created_at: new Date().toISOString()
+    });
+
+    // 조용히 채널 구독 (UI 없이)
+    channel = sb.channel('icoc-game-' + roomId, {
+      config: { presence: { key: 'host' } }
+    });
+
+    channel.on('presence', { event: 'join' }, ({ newPresences }) => {
+      const guests = newPresences.filter(p => p.role === 'guest');
+      if (guests.length > 0 && !active) {
+        // 🎯 상대 입장! AI → 사람 전환
+        active   = true;
+        isMyTurn = true;
+        opponentNick = guests[0].nick || '상대방';
+        _showHandoffNotice(opponentNick);
+        if (onStartCallback) onStartCallback({ myColor: 'black', myRole: 'host', roomId, handoff: true });
+      }
+    });
+
+    channel.on('broadcast', { event: 'move' }, ({ payload }) => {
+      isMyTurn = true;
+      if (onMoveCallback) onMoveCallback(payload);
+      _showStatus(`${opponentNick}의 수 — 당신 차례!`);
+    });
+
+    channel.on('broadcast', { event: 'end' }, ({ payload }) => {
+      active = false;
+      if (onEndCallback) onEndCallback(payload);
+      _cleanup();
+    });
+
+    channel.on('presence', { event: 'leave' }, () => {
+      if (active) {
+        active = false;
+        _showStatus('상대방 연결 끊김');
+        if (onEndCallback) onEndCallback({ winner: 'host', reason: 'disconnect' });
+      }
+    });
+
+    channel.subscribe(async (status) => {
+      if (status === 'SUBSCRIBED') {
+        await channel.track({ role: 'host', game, nick: user.email?.split('@')[0] });
+        // 화면 오른쪽 하단에 작은 방 코드 배지 표시
+        _showRoomCodeBadge(roomId);
+      }
+    });
+  }
+
+  // AI 게임 중 방 코드 배지
+  function _showRoomCodeBadge(code) {
+    let badge = document.getElementById('online-room-badge');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.id = 'online-room-badge';
+      badge.style.cssText = 'position:fixed;bottom:70px;right:12px;z-index:500;background:rgba(8,20,44,0.9);border:1px solid rgba(201,168,76,0.3);border-radius:10px;padding:6px 12px;font-size:11px;cursor:pointer;backdrop-filter:blur(10px);';
+      badge.title = '클릭해서 코드 복사';
+      badge.onclick = () => {
+        navigator.clipboard.writeText(code);
+        badge.style.borderColor = 'rgba(74,222,128,0.5)';
+        setTimeout(() => badge.style.borderColor = 'rgba(201,168,76,0.3)', 800);
+      };
+      document.body.appendChild(badge);
+    }
+    badge.innerHTML = `<span style="color:rgba(245,240,232,0.5);">🌐 대전 코드 </span><span style="color:#E8C97A;font-weight:700;letter-spacing:.1em;">${code}</span>`;
+  }
+
+  // 상대 입장 알림 (핸드오프)
+  function _showHandoffNotice(nick) {
+    const notice = document.createElement('div');
+    notice.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2000;background:rgba(8,20,44,0.97);border:1px solid rgba(74,222,128,0.4);border-radius:16px;padding:24px 32px;text-align:center;box-shadow:0 8px 40px rgba(0,0,0,.6);';
+    notice.innerHTML = `
+      <div style="font-size:32px;margin-bottom:8px;">🌐</div>
+      <div style="color:#4ade80;font-size:16px;font-weight:700;margin-bottom:4px;">${nick}님이 입장!</div>
+      <div style="color:rgba(245,240,232,0.6);font-size:13px;">AI → 1:1 대전으로 전환됩니다</div>`;
+    document.body.appendChild(notice);
+    setTimeout(() => { notice.style.opacity='0'; notice.style.transition='opacity .5s'; setTimeout(()=>notice.remove(),500); }, 2500);
+
+    // 방 코드 배지 제거
+    document.getElementById('online-room-badge')?.remove();
+  }
+
   global.ICOC_ONLINE = {
     createRoom, joinRoom, sendMove, sendEnd,
-    listRooms, injectMatchmakingUI,
+    createRoomInBackground, listRooms, injectMatchmakingUI,
     get active()   { return active; },
     get isMyTurn() { return isMyTurn; },
     get myColor()  { return myColor; },
