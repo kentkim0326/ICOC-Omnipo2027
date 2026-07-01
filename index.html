@@ -851,6 +851,77 @@ footer a { color:var(--gold); text-decoration:none; }
 [data-supabase-ui], #supabase-auth-modal, .__sb-auth { display:none !important; }
 
 </style>
+</head>
+<body>
+
+<!-- ── 2열 네비바 ── -->
+<nav class="lang-bar" id="main-nav">
+  <div class="nav-row nav-row-top">
+    <span class="logo-mini">
+      <img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img"> ICOC&nbsp;·&nbsp;OMNIPO
+    </span>
+    <div class="nav-row-right">
+      <span class="points-badge">
+        <span class="coin">🪙</span><span id="points-badge-num">0</span>P
+      </span>
+      <div class="lang-toggle-wrap" id="lt-wrap-main">
+        <button class="lang-trigger-main" id="lt-trigger-main" type="button">
+          <span id="lt-flag-main">🇰🇷</span>
+          <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
+          <span style="font-size:9px;opacity:.5;">▼</span>
+        </button>
+        <div class="lang-dropdown-main" id="lt-dd-main"></div>
+      </div>
+      <div class="nav-music-player" id="nav-music-player">
+        <button class="music-toggle" id="music-toggle" title="배경음악" onclick="ICOC_BGM.toggle()">
+          <span id="music-icon">🔇</span>
+        </button>
+        <input type="range" class="music-volume" id="music-volume"
+          min="0" max="100" value="30" oninput="ICOC_BGM.setVolume(this.value)">
+      </div>
+      <audio id="icoc-bgm" loop preload="none">
+        <source src="assets/audio/bgm.ogg" type="audio/ogg">
+        <source src="assets/audio/bgm.mp3" type="audio/mpeg">
+      </audio>
+      <div class="nav-auth-area">
+        <button class="nav-login-btn" id="nav-login-btn"
+          onclick="(function(){try{if(window.ICOC_AUTH)window.ICOC_AUTH.signIn();else alert('잠시 후 다시 시도해주세요');}catch(e){console.error(e);}})()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span class="login-txt">구글 로그인</span>
+        </button>
+        <div class="nav-user-area" id="nav-user-area" style="display:none;position:relative;">
+          <span id="nav-flag">🌍</span>
+          <span id="nav-nickname" class="nav-nickname">-</span>
+          <span class="nav-arrow">▾</span>
+          <div class="nav-user-dd" id="nav-user-dd">
+            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.openMyPage()" class="nav-dd-btn">👤 마이페이지</button>
+            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.signOut()" class="nav-dd-btn nav-dd-logout">🚪 로그아웃</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-row nav-row-links">
+    <a href="venue.html"       class="nav-link-btn">🗺️ 경기장</a>
+    <a href="games.html"       class="nav-link-btn">🎮 게임</a>
+    <a href="leaderboard.html" class="nav-link-btn">🏆 랭킹</a>
+    <a href="referral.html"    class="nav-link-btn nav-link-gold">🎁 초대 <span class="nav-pts-tag">+10K</span></a>
+    <a href="about.html"       class="nav-link-btn">ℹ️ About</a>
+  </div>
+</nav>
+
+<!-- ── ICOC 뉴스 티커 ── -->
+<div id="icoc-top-ticker" style="position:fixed;top:var(--nav-h,96px);left:0;right:0;z-index:999;background:rgba(8,20,44,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.12);height:28px;overflow:hidden;display:flex;align-items:center;">
+  <div style="display:flex;align-items:center;flex-shrink:0;padding:0 10px;gap:5px;">
+    <span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:#C9A84C;white-space:nowrap;">📢 ICOC</span>
+  </div>
+  <div style="flex:1;overflow:hidden;">
+    <div id="icoc-top-news" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.75);white-space:nowrap;animation:tickerScroll 38s linear infinite;padding:0 12px;line-height:28px;"></div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -936,7 +1007,7 @@ footer a { color:var(--gold); text-decoration:none; }
       </svg>
       YouTube
     </a>
-    <a href="https://www.facebook.com/icoc8891" target="_blank" rel="noopener"
+    <a href="https://www.facebook.com/ICOC2019/" target="_blank" rel="noopener"
       class="hero-social-btn hero-fb">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
         <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
