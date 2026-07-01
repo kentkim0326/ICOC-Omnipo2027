@@ -60,13 +60,19 @@
     onEndCallback   = callbacks.onEnd;
 
     // DB에서 방 찾기
-    const { data: room, error } = await sb.from('icoc_game_rooms')
-      .select('*').eq('id', code.toUpperCase()).eq('status','waiting').maybeSingle();
-    if (error || !room) {
-      const msg = error?.message?.includes('does not exist')
-        ? '멀티플레이 테이블이 없습니다. Supabase SQL을 먼저 실행해주세요.'
-        : '방을 찾을 수 없습니다. 코드를 다시 확인하세요.';
-      alert(msg); return;
+    let room, joinError;
+    try {
+      const result = await sb.from('icoc_game_rooms')
+        .select('*').eq('id', code.toUpperCase()).eq('status','waiting').maybeSingle();
+      room = result.data; joinError = result.error;
+    } catch(e) {
+      alert('연결 오류: ' + (e.message || '알 수 없는 오류')); return '오류';
+    }
+    if (joinError || !room) {
+      const msg = joinError?.message?.includes('does not exist')
+        ? '❌ icoc_game_rooms 테이블이 없습니다. Supabase SQL을 실행하세요.'
+        : '방을 찾을 수 없습니다. 코드를 다시 확인하세요. (방이 꽉 찼거나 이미 시작됨)';
+      return msg;
     }
 
     roomId  = room.id;
@@ -274,9 +280,10 @@
     panel.id = 'online-panel';
     panel.style.cssText = `
       position:absolute; top:0; left:0; right:0; bottom:0;
-      background:rgba(8,20,44,0.97); z-index:100;
+      background:rgba(8,20,44,0.97); z-index:200;
       display:flex; flex-direction:column; align-items:center; justify-content:center;
-      gap:16px; padding:24px; border-radius:16px;
+      gap:14px; padding:24px; border-radius:16px;
+      overflow-y:auto;
     `;
     panel.innerHTML = `
       <div style="font-size:24px;">🌐</div>
@@ -315,8 +322,10 @@
       </div>
     `;
 
-    gameModal.style.position = 'relative';
-    gameModal.appendChild(panel);
+    // game-modal-box에 패널 붙이기 (overlay가 아닌 내부 박스)
+    const modalBox = gameModal.querySelector('.game-modal-box') || gameModal;
+    modalBox.style.position = 'relative';
+    modalBox.appendChild(panel);
 
     // 이벤트
     panel.querySelector('#btn-create-room').addEventListener('click', async () => {
