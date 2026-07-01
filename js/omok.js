@@ -133,8 +133,26 @@
   }
 
   function onCellClick(r, c) {
-    if (gameOver || turn !== BLACK || board[r][c] !== EMPTY) return;
+    if (gameOver) return;
+    // 온라인 모드: 내 턴 & 내 색상 체크
+    if (window.ICOC_ONLINE?.active) {
+      const myPiece = ICOC_ONLINE.myRole === 'host' ? BLACK : WHITE;
+      if (!ICOC_ONLINE.isMyTurn || turn !== myPiece || board[r][c] !== EMPTY) return;
+      placeMove(r, c, myPiece);
+      ICOC_ONLINE.sendMove({ r, c, color: myPiece });
+      return;
+    }
+    // AI 모드 (기존)
+    if (turn !== BLACK || board[r][c] !== EMPTY) return;
     placeMove(r, c, BLACK);
+  }
+
+  // 온라인: 상대 수 적용
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    const oppPiece = ICOC_ONLINE?.myRole === 'host' ? WHITE : BLACK;
+    placeMove(payload.r, payload.c, oppPiece);
+    ICOC_ONLINE?.showTurnIndicator(true);
   }
 
   function placeMove(r, c, player) {
@@ -201,5 +219,5 @@
     reset();
   }
 
-  global.OmokGame = { start };
+  global.OmokGame = { start, applyOpponentMove };
 })(window);
