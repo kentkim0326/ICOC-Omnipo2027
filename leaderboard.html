@@ -308,34 +308,34 @@ const ALL_SPORTS = [
 
 /* ── COUNTRY DATA with flags + sport breakdown ── */
 const COUNTRIES = [
-  {rank:1,flag:'🇰🇷',name:'대한민국',en:'South Korea',players:8420,pts:2840000,change:'up',
+  {rank:1,flag:'🇰🇷',iso:'kr',name:'대한민국',en:'South Korea',players:8420,pts:2840000,change:'up',
    cities:['서울(3820)','부산(1310)','수원(890)','대구(680)','인천(520)'],
    sports:{go:1840,omok:1620,janggi:980,chess:720,holdem:580,billiards:680}},
-  {rank:2,flag:'🇨🇳',name:'중국',en:'China',players:7100,pts:2310000,change:'up',
+  {rank:2,flag:'🇨🇳',iso:'cn',name:'중국',en:'China',players:7100,pts:2310000,change:'up',
    cities:['베이징(2910)','상하이(1020)','광저우(780)','선전(640)'],
    sports:{go:2400,chess:890,mahjong:1200,xiangqi:980,holdem:430}},
-  {rank:3,flag:'🇯🇵',name:'일본',en:'Japan',players:5830,pts:1990000,change:'dn',
+  {rank:3,flag:'🇯🇵',iso:'jp',name:'일본',en:'Japan',players:5830,pts:1990000,change:'dn',
    cities:['도쿄(2540)','오사카(1120)','나고야(680)','삿포로(490)'],
    sports:{go:1680,shogi:2100,chess:380,mahjong:780,rummy:290}},
-  {rank:4,flag:'🇺🇸',name:'미국',en:'USA',players:4920,pts:1760000,change:'up',
+  {rank:4,flag:'🇺🇸',iso:'us',name:'미국',en:'USA',players:4920,pts:1760000,change:'up',
    cities:['뉴욕(2120)','LA(980)','시카고(680)','시애틀(420)'],
    sports:{chess:1840,holdem:1280,bridge:680,checkers:420,bowling:500}},
-  {rank:5,flag:'🇩🇪',name:'독일',en:'Germany',players:3210,pts:1120000,change:'eq',
+  {rank:5,flag:'🇩🇪',iso:'de',name:'독일',en:'Germany',players:3210,pts:1120000,change:'eq',
    cities:['베를린(1480)','뮌헨(780)','함부르크(520)'],
    sports:{chess:1200,skat:680,backgammon:390,catan:420,rummy:320}},
-  {rank:6,flag:'🇧🇷',name:'브라질',en:'Brazil',players:2980,pts:1050000,change:'up',
+  {rank:6,flag:'🇧🇷',iso:'br',name:'브라질',en:'Brazil',players:2980,pts:1050000,change:'up',
    cities:['상파울루(1080)','리우(780)','브라질리아(420)'],
    sports:{holdem:820,checkers:680,chess:540,bowling:480,rummy:360}},
-  {rank:7,flag:'🇷🇺',name:'러시아',en:'Russia',players:2740,pts:980000,change:'dn',
+  {rank:7,flag:'🇷🇺',iso:'ru',name:'러시아',en:'Russia',players:2740,pts:980000,change:'dn',
    cities:['모스크바(1340)','상트페테르부르크(680)','노보시비르스크(380)'],
    sports:{chess:1680,backgammon:480,reversi:280,rummy:180,billiards:120}},
-  {rank:8,flag:'🇫🇷',name:'프랑스',en:'France',players:2410,pts:870000,change:'eq',
+  {rank:8,flag:'🇫🇷',iso:'fr',name:'프랑스',en:'France',players:2410,pts:870000,change:'eq',
    cities:['파리(1140)','리옹(480)','마르세유(380)'],
    sports:{bridge:820,chess:580,tarot:420,petanque:280,rummy:310}},
-  {rank:9,flag:'🇮🇳',name:'인도',en:'India',players:2290,pts:820000,change:'up',
+  {rank:9,flag:'🇮🇳',iso:'in',name:'인도',en:'India',players:2290,pts:820000,change:'up',
    cities:['뭄바이(820)','델리(680)','방갈로르(480)'],
    sports:{chess:1240,carrom:480,rummy:320,bridge:180,ludo:270}},
-  {rank:10,flag:'🇬🇧',name:'영국',en:'UK',players:1980,pts:710000,change:'dn',
+  {rank:10,flag:'🇬🇧',iso:'gb',name:'영국',en:'UK',players:1980,pts:710000,change:'dn',
    cities:['런던(1200)','맨체스터(380)','버밍엄(280)'],
    sports:{chess:680,bridge:520,darts:420,snooker:280,backgammon:80}},
   {rank:11,flag:'🇹🇷',name:'터키',en:'Turkey',players:1650,pts:590000,change:'up',
@@ -497,7 +497,11 @@ function renderCountry(wrap){
     pod.innerHTML+=`
       <div class="p-item r${ri}">
         <div class="p-badge">${ri}</div>
-        <div class="p-avatar" style="font-size:${ri===1?'36px':'28px'}">${d.flag}</div>
+        <div class="p-avatar" style="padding:4px;">${
+      d.iso
+      ? `<img src="https://flagcdn.com/w80/${d.iso}.png" style="width:${ri===1?'52px':'42px'};height:${ri===1?'36px':'28px'};object-fit:cover;border-radius:4px;" alt="${d.name}">`
+      : `<span style="font-size:${ri===1?'36px':'28px'}">${d.flag}</span>`
+    }</div>
         <div class="p-nick">${d.name}</div>
         <div style="font-size:11px;color:rgba(245,240,232,0.45);">${d.players.toLocaleString()}명</div>
         <div class="p-pts">${fmtPts(d.pts)}</div>
@@ -518,7 +522,7 @@ function renderCountry(wrap){
     item.dataset.id = d.rank;
     item.innerHTML = `
       <div class="c-rank">${d.rank}</div>
-      <div class="c-flag">${d.flag}</div>
+      <div class="c-flag">${d.iso?`<img src="https://flagcdn.com/w40/${d.iso}.png" style="width:36px;height:24px;object-fit:cover;border-radius:3px;" alt="${d.name}">`:d.flag}</div>
       <div class="c-info">
         <div class="c-name">${d.name} <span style="font-size:11px;color:rgba(245,240,232,0.35);">${d.en}</span></div>
         <div class="c-sub">
@@ -578,7 +582,7 @@ function renderCity(wrap){
     li.className='rank-item'; li.style.cursor='pointer';
     li.innerHTML=`
       <div class="r-num">${d.rank}</div>
-      <div class="r-flag">${d.flag}</div>
+      <div class="r-flag">${d.iso?`<img src="https://flagcdn.com/w40/${d.iso}.png" style="width:28px;height:18px;object-fit:cover;border-radius:2px;" alt="">`:d.flag}</div>
       <div class="r-info">
         <div class="r-nick">${d.name}</div>
         <div class="r-sub"><span>${d.country}</span><span>👥 ${d.players.toLocaleString()}명</span></div>
@@ -609,7 +613,7 @@ function renderDistrict(wrap){
     list.innerHTML+=`
       <div class="rank-item">
         <div class="r-num">${d.rank}</div>
-        <div class="r-flag">${d.flag}</div>
+        <div class="r-flag">${d.iso?`<img src="https://flagcdn.com/w40/${d.iso}.png" style="width:28px;height:18px;object-fit:cover;border-radius:2px;" alt="">`:d.flag}</div>
         <div class="r-info">
           <div class="r-nick">${d.name}</div>
           <div class="r-sub">
@@ -649,7 +653,7 @@ function renderPersonal(wrap){
     list.innerHTML+=`
       <div class="rank-item">
         <div class="r-num">${d.rank}</div>
-        <div class="r-flag">${d.flag}</div>
+        <div class="r-flag">${d.iso?`<img src="https://flagcdn.com/w40/${d.iso}.png" style="width:28px;height:18px;object-fit:cover;border-radius:2px;" alt="">`:d.flag}</div>
         <div class="r-info">
           <div class="r-nick">${d.nick}</div>
           <div class="r-sub"><span>${d.city}</span><span class="r-tag">${d.sport}</span></div>
