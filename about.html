@@ -400,58 +400,59 @@ const ABOUT_T = {
 
 function changeAboutLang(lang) {
   const t = ABOUT_T[lang] || ABOUT_T.ko;
-  const qs = (sel) => document.querySelector(sel);
-  const qsa = (sel) => document.querySelectorAll(sel);
+  const qs  = (sel) => document.querySelector(sel);
+  const qsa = (sel) => Array.from(document.querySelectorAll(sel));
 
-  // Hero
-  const heroLabel = qs('.about-hero .sec-label, .hero-eyebrow-about');
-  if(heroLabel) heroLabel.textContent = t.hero_label;
-  const heroH1 = qs('.about-hero h1, .hero-title-about');
-  if(heroH1) heroH1.innerHTML = t.hero_h1;
-  const heroP = qs('.about-hero > p, .about-hero .sec-body');
-  if(heroP) heroP.innerHTML = t.hero_sub;
+  // 1. 히어로 (about-hero 안)
+  const heroWrap = qs('.about-hero');
+  if (heroWrap) {
+    const lbl = heroWrap.querySelector('.sec-label');
+    if (lbl) lbl.textContent = t.hero_label;
+    const h1 = heroWrap.querySelector('h1');
+    if (h1) h1.innerHTML = t.hero_h1;
+    const ps = heroWrap.querySelectorAll('p');
+    if (ps[1]) ps[1].innerHTML = t.hero_sub; // 두 번째 p (첫 번째가 sec-label p)
+    else if (ps[0]) ps[0].innerHTML = t.hero_sub;
+  }
 
-  // Sec labels 순서대로
-  const labels = qsa('.sec-label');
-  const titles = qsa('.sec-title, h2.sec-title');
-  const bodies = qsa('.sec-body');
-  if(labels[0]) labels[0].textContent = t.vision_label;
-  if(titles[0]) titles[0].textContent = t.vision_h;
-  if(bodies[0]) bodies[0].textContent = t.vision_body;
+  // 2. 비전 섹션 — .sec h2 / .sec-body
+  const secs = qsa('.sec');
+  if (secs[0]) {
+    const lbl = secs[0].querySelector('.sec-label');
+    if (lbl) lbl.textContent = t.vision_label;
+    const h2  = secs[0].querySelector('h2, .sec-title');
+    if (h2)  h2.textContent = t.vision_h;
+    const bod = secs[0].querySelector('.sec-body, p.sec-body');
+    if (bod) bod.textContent = t.vision_body;
+  }
 
-  // Sports
-  labels.forEach(el => {
-    if(el.textContent.includes('종목')||el.textContent.includes('Sport')||el.textContent.includes('项目')||el.textContent.includes('種目')||el.textContent.includes('Deporte')||el.textContent.includes('Sport')) {
-      el.textContent = t.sports_label;
-    }
-  });
-  titles.forEach(el => {
-    if(el.textContent.includes('66')||el.textContent.includes('종목')) el.textContent = t.sports_h;
-  });
+  // 3. 공식 종목 섹션
+  if (secs[1]) {
+    const lbl = secs[1].querySelector('.sec-label');
+    if (lbl) lbl.textContent = t.sports_label;
+    const h2 = secs[1].querySelector('h2, .sec-title');
+    if (h2) h2.textContent = t.sports_h;
+  }
 
-  // Roadmap
-  labels.forEach(el => {
-    if(el.textContent.includes('로드맵')||el.textContent.includes('Road')||el.textContent.includes('路线')||el.textContent.includes('ロード')||el.textContent.includes('Hoja')||el.textContent.includes('Feuille')) {
-      el.textContent = t.road_label;
-    }
-  });
-  titles.forEach(el => {
-    if(el.textContent.includes('2027')||el.textContent.includes('여정')||el.textContent.includes('journey')||el.textContent.includes('Journey')) {
-      el.textContent = t.road_h;
-    }
-  });
+  // 4. 로드맵 섹션
+  if (secs[2]) {
+    const lbl = secs[2].querySelector('.sec-label');
+    if (lbl) lbl.textContent = t.road_label;
+    const h2 = secs[2].querySelector('h2, .sec-title');
+    if (h2) h2.textContent = t.road_h;
+  }
 
-  // CTA
-  const ctaTitle = qs('.cta-title, .cta-band h2');
-  if(ctaTitle) ctaTitle.textContent = t.cta_h;
+  // 5. CTA
+  const ctaTitle = qs('.cta-title');
+  if (ctaTitle) ctaTitle.textContent = t.cta_h;
   const ctaSub = qs('.cta-sub');
-  if(ctaSub) ctaSub.textContent = t.cta_sub;
+  if (ctaSub) ctaSub.textContent = t.cta_sub;
 
-  // Footer
-  const footerEl = qs('.about-footer, footer .footer-copy');
-  if(footerEl) footerEl.innerHTML = t.footer;
+  // 6. 푸터
+  const foot = qs('footer');
+  if (foot) foot.innerHTML = t.footer;
 
-  document.documentElement.dir = lang==='ar'?'rtl':'ltr';
+  document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
   localStorage.setItem('about_lang', lang);
 }
 document.addEventListener('DOMContentLoaded', () => {
