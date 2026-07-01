@@ -140,6 +140,7 @@
   function applyMove(b, move, rights, ep) {
     const [fr, fc] = move.from, [tr, tc] = move.to;
     const piece = b[fr][fc];
+    const isCapture = b[tr][tc] !== null || move.flag === 'enpassant';
     const newRights = { ...rights };
     let newEp = null;
 
