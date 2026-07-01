@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>마이페이지 — ICOC Brain Sports</title>
+<link rel="icon" href="assets/favicon-32.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--navy2:#0e2847;--gold:#C9A84C;--gold-l:#E8C97A;--cream:#F5F0E8;--border:rgba(201,168,76,0.2);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;background:var(--navy);color:var(--cream);font-family:'Noto Sans KR',sans-serif;overflow-x:hidden;}
+body{display:flex;flex-direction:column;min-height:100vh;}
+
+/* TOP BAR */
+.top-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;padding:0 16px;height:52px;background:rgba(11,31,58,0.98);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);}
+.btn-back{display:flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid rgba(201,168,76,0.28);border-radius:20px;background:rgba(201,168,76,0.06);color:var(--gold-l);font-size:12px;cursor:pointer;text-decoration:none;transition:all .2s;}
+.bar-title{flex:1;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.06em;}
+
+/* PROFILE HERO */
+.profile-hero{padding:24px 16px 0;background:linear-gradient(to bottom,rgba(14,40,71,0.8),rgba(11,31,58,0));display:flex;align-items:flex-start;gap:16px;}
+.avatar-wrap{flex-shrink:0;width:80px;height:96px;position:relative;}
+.avatar-img{width:80px;height:80px;border-radius:50%;border:2px solid var(--gold);background:linear-gradient(135deg,#0e2847,#1a3c6e);display:flex;align-items:center;justify-content:center;font-size:36px;overflow:hidden;}
+.avatar-tier{position:absolute;bottom:14px;right:-4px;background:var(--gold);color:var(--navy);font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;white-space:nowrap;}
+.profile-info{flex:1;}
+.profile-nick{font-size:20px;font-weight:700;margin-bottom:3px;}
+.profile-meta{font-size:12px;color:rgba(245,240,232,0.5);margin-bottom:10px;}
+.profile-stats-row{display:flex;gap:12px;flex-wrap:wrap;}
+.pstat{text-align:center;}
+.pstat-num{font-size:18px;font-weight:700;color:var(--gold-l);}
+.pstat-lbl{font-size:10px;color:rgba(245,240,232,0.4);margin-top:1px;}
+
+/* WIN RATE CHART */
+.wr-section{padding:16px 16px 0;}
+.sec-title{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(201,168,76,0.7);margin-bottom:10px;}
+.wr-bar-wrap{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.wr-game{font-size:12px;color:rgba(245,240,232,0.6);width:60px;flex-shrink:0;text-align:right;}
+.wr-bar-bg{flex:1;height:14px;background:rgba(255,255,255,0.06);border-radius:7px;overflow:hidden;}
+.wr-bar-fill{height:100%;border-radius:7px;transition:width 1s ease;}
+.wr-pct{font-size:11px;font-weight:600;width:32px;text-align:right;flex-shrink:0;}
+
+/* GAME GRID */
+.games-section{padding:16px;}
+.games-grid-mp{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;}
+.game-mp-card{background:rgba(14,40,71,0.7);border:1px solid var(--border);border-radius:12px;padding:14px 12px;cursor:pointer;transition:all .2s;position:relative;}
+.game-mp-card:hover{border-color:rgba(201,168,76,0.4);background:rgba(14,40,71,0.9);}
+.game-mp-card.played{border-color:rgba(201,168,76,0.25);}
+.game-mp-card.pro{border-color:var(--gold);background:rgba(201,168,76,0.06);}
+.gmc-icon{font-size:28px;margin-bottom:8px;}
+.gmc-name{font-size:12px;font-weight:600;margin-bottom:6px;color:var(--cream);}
+.gmc-badge{font-size:9px;padding:2px 6px;border-radius:6px;display:inline-block;margin-bottom:8px;}
+.badge-pro{background:rgba(201,168,76,0.2);color:#E8C97A;}
+.badge-ai{background:rgba(100,150,255,0.15);color:#93c5fd;}
+.badge-new{background:rgba(255,255,255,0.07);color:rgba(245,240,232,0.4);}
+.gmc-stats{display:flex;gap:8px;font-size:11px;}
+.gmc-w{color:#4ade80;}
+.gmc-l{color:#f87171;}
+.gmc-wr{color:rgba(245,240,232,0.4);}
+.gmc-prog{height:4px;background:rgba(255,255,255,0.07);border-radius:2px;margin-top:8px;overflow:hidden;}
+.gmc-prog-fill{height:100%;background:linear-gradient(90deg,#60a5fa,#C9A84C);border-radius:2px;transition:width 1s;}
+.gmc-unlock{font-size:9px;color:rgba(245,240,232,0.35);margin-top:4px;}
+.gmc-play-btn{position:absolute;top:10px;right:10px;width:24px;height:24px;border-radius:50%;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--gold-l);font-size:11px;display:flex;align-items:center;justify-content:center;text-decoration:none;cursor:pointer;}
+
+/* HISTORY */
+.history-section{padding:0 16px 24px;}
+.history-list{display:flex;flex-direction:column;gap:6px;}
+.history-item{display:flex;align-items:center;gap:10px;background:rgba(14,40,71,0.5);border:1px solid var(--border);border-radius:8px;padding:8px 12px;}
+.hi-icon{font-size:18px;flex-shrink:0;}
+.hi-info{flex:1;}
+.hi-title{font-size:12px;font-weight:600;color:var(--cream);}
+.hi-time{font-size:10px;color:rgba(245,240,232,0.35);}
+.hi-result{font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;flex-shrink:0;}
+.hi-win{background:rgba(74,222,128,0.15);color:#4ade80;}
+.hi-loss{background:rgba(248,113,113,0.15);color:#f87171;}
+
+/* AVATAR ITEMS */
+.items-section{padding:0 16px 24px;}
+.items-grid{display:flex;gap:8px;flex-wrap:wrap;}
+.item-card{background:rgba(14,40,71,0.6);border:1px solid var(--border);border-radius:8px;padding:10px;text-align:center;min-width:64px;cursor:pointer;transition:all .2s;}
+.item-card:hover{border-color:rgba(201,168,76,0.4);}
+.item-card.equipped{border-color:var(--gold);background:rgba(201,168,76,0.1);}
+.item-icon{font-size:22px;margin-bottom:4px;}
+.item-name{font-size:9px;color:rgba(245,240,232,0.5);}
+.item-equipped-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);margin:2px auto 0;}
+
+/* KAKAO BTN */
+.kakao-share-btn{background:#FEE500;color:#3C1E1E;border:none;border-radius:10px;padding:10px 20px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;font-family:inherit;}
+.kakao-share-btn:hover{opacity:.9;}
+.share-row{display:flex;gap:8px;padding:0 16px 24px;flex-wrap:wrap;}
+
+@media(min-width:768px){
+  .profile-hero{padding:32px 32px 0;}
+  .avatar-wrap{width:100px;height:120px;}
+  .avatar-img{width:100px;height:100px;font-size:48px;}
+  .games-section,.wr-section,.history-section,.items-section{padding-left:32px;padding-right:32px;}
+  .share-row{padding-left:32px;}
+  .games-grid-mp{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="javascript:history.back()" class="btn-back">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> 뒤로
+  </a>
+  <div class="bar-title">🏅 마이페이지</div>
+  <a href="index.html?game=go" style="font-size:11px;color:var(--gold-l);text-decoration:none;border:1px solid rgba(201,168,76,0.3);border-radius:16px;padding:4px 10px;">🎮 게임하기</a>
+</div>
+
+<div id="mp-body">
+  <div style="text-align:center;padding:60px 20px;color:rgba(245,240,232,0.4);">
+    <div style="font-size:40px;margin-bottom:12px;">🔒</div>
+    <div style="font-size:16px;font-weight:600;color:var(--cream);margin-bottom:8px;">로그인이 필요합니다</div>
+    <div style="font-size:13px;margin-bottom:24px;">구글 로그인으로 국가대표 등록 & 전적 관리</div>
+    <button onclick="if(window.ICOC_AUTH)window.ICOC_AUTH.signIn()" style="padding:12px 28px;background:linear-gradient(135deg,#C9A84C,#E8C97A);border:none;border-radius:10px;font-size:14px;font-weight:700;color:#0B1F3A;cursor:pointer;font-family:inherit;">구글 로그인</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/points.js"></script>
+<script src="js/auth.js"></script>
+
+<script>
+// ── AI 게임 목록 (현재 플레이 가능한 것) ──
+const AVAILABLE_GAMES = [
+  {id:'go',     name:'바둑',    icon:'⚫', thresh:5},
+  {id:'omok',   name:'오목',    icon:'⬤', thresh:3},
+  {id:'chess',  name:'체스',    icon:'♟️', thresh:5},
+  {id:'shogi',  name:'쇼기',    icon:'🎌', thresh:5},
+  {id:'checkers',name:'체커',   icon:'🔴', thresh:3},
+  {id:'connect4',name:'커넥트4',icon:'🔵', thresh:3},
+  {id:'reversi', name:'리버시', icon:'⚪', thresh:3},
+  {id:'mahjong', name:'마작',   icon:'🀄', thresh:3},
+  {id:'billiards',name:'당구',  icon:'🎱', thresh:5},
+  {id:'bowling', name:'볼링',   icon:'🎳', thresh:3},
+  {id:'holdem',  name:'홀덤',   icon:'🃏', thresh:5},
+  {id:'blackjack',name:'블랙잭',icon:'♠️', thresh:3},
+  {id:'janggi',  name:'장기',   icon:'🈴', thresh:5},
+  {id:'backgammon',name:'백개먼',icon:'🎲',thresh:3},
+  {id:'hearts',  name:'하츠',   icon:'♥️', thresh:3},
+  {id:'rummy',   name:'진러미', icon:'🃏', thresh:3},
+  {id:'davinci', name:'다빈치코드',icon:'🔢',thresh:3},
+  {id:'screengolf',name:'스크린골프',icon:'⛳',thresh:3},
+];
+
+// ── 티어 결정 ──
+function getTier(pts) {
+  if(pts >= 50000) return {name:'마스터',emoji:'🏆',color:'#C9A84C'};
+  if(pts >= 10000) return {name:'고수',  emoji:'🏅',color:'#E8C97A'};
+  if(pts >= 1000)  return {name:'수련생',emoji:'⚔️',color:'#93c5fd'};
+  return {name:'입문',emoji:'🌱',color:'#4ade80'};
+}
+
+// ── 아바타 이모지 by tier ──
+function getAvatarEmoji(tier) {
+  if(tier.name==='마스터') return '🥋';
+  if(tier.name==='고수')   return '🎭';
+  if(tier.name==='수련생') return '🎮';
+  return '🌱';
+}
+
+// ── 최근 플레이 기록 (localStorage) ──
+function getRecentHistory(limit) {
+  const hist = JSON.parse(localStorage.getItem('icoc_history')||'[]');
+  return hist.slice(0,limit);
+}
+
+// ── 마이페이지 렌더링 ──
+function renderMypage(profile, gameRecords) {
+  const pts = parseInt(localStorage.getItem('icoc_points')||'0');
+  const tier = getTier(pts);
+  const avatarEmoji = getAvatarEmoji(tier);
+
+  // 장착 아이템 (localStorage)
+  const equip = JSON.parse(localStorage.getItem('icoc_equip')||'{}');
+
+  // 게임 전적 맵
+  const recMap = {};
+  (gameRecords||[]).forEach(r => {
+    const local = JSON.parse(localStorage.getItem('icoc_stat_'+r.sport)||'{"ai_wins":0,"ai_losses":0,"pts":0}');
+    recMap[r.sport] = {
+      wins:   Math.max(r.wins||0,  local.ai_wins||0),
+      losses: Math.max(r.losses||0,local.ai_losses||0),
+      pts:    r.points_earned || local.pts || 0,
+    };
+  });
+  // Also check local-only records
+  AVAILABLE_GAMES.forEach(g => {
+    const key = g.name;
+    if(!recMap[key]) {
+      const local = JSON.parse(localStorage.getItem('icoc_stat_'+key)||'null');
+      if(local && (local.ai_wins||0)+(local.ai_losses||0)>0) {
+        recMap[key] = {wins:local.ai_wins||0,losses:local.ai_losses||0,pts:local.pts||0};
+      }
+    }
+  });
+
+  const totalGames = Object.values(recMap).reduce((a,r)=>a+r.wins+r.losses,0);
+  const totalWins  = Object.values(recMap).reduce((a,r)=>a+r.wins,0);
+  const overallWR  = totalGames>0?Math.round(totalWins/totalGames*100):0;
+  const playedCount= Object.keys(recMap).length;
+
+  // 국기
+  const flagHTML = profile.country_iso
+    ? `<img src="https://flagcdn.com/w40/${profile.country_iso}.png" style="width:18px;height:12px;object-fit:cover;border-radius:2px;vertical-align:middle;">`
+    : '🌍';
+
+  // 최근 기록
+  const hist = getRecentHistory(5);
+
+  document.getElementById('mp-body').innerHTML = `
+<div class="profile-hero">
+  <div class="avatar-wrap">
+    <div class="avatar-img" id="mp-avatar">${avatarEmoji}</div>
+    <div class="avatar-tier" style="background:${tier.color};color:${tier.name==='입문'?'#155724':'#0B1F3A'}">${tier.emoji} ${tier.name}</div>
+  </div>
+  <div class="profile-info">
+    <div class="profile-nick">${profile.nickname||profile.email?.split('@')[0]||'Player'}</div>
+    <div class="profile-meta">${flagHTML} ${profile.country||''} · ${profile.generation||''} · ${profile.city||''}</div>
+    <div class="profile-stats-row">
+      <div class="pstat"><div class="pstat-num">${pts.toLocaleString()}</div><div class="pstat-lbl">포인트</div></div>
+      <div class="pstat"><div class="pstat-num">${overallWR}%</div><div class="pstat-lbl">AI 승률</div></div>
+      <div class="pstat"><div class="pstat-num">${totalGames}</div><div class="pstat-lbl">총 대전</div></div>
+      <div class="pstat"><div class="pstat-num">${playedCount}</div><div class="pstat-lbl">종목 경험</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="padding:0 16px;margin-top:8px;">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;">
+    <a href="leaderboard.html#personal" class="btn-back" style="font-size:11px;">🏆 글로벌 랭킹 보기</a>
+    <a href="referral.html" class="btn-back" style="font-size:11px;">🎁 친구 초대 +10K</a>
+  </div>
+</div>
+
+${Object.keys(recMap).length>0?`
+<div class="wr-section">
+  <div class="sec-title">종목별 AI 승률</div>
+  ${Object.entries(recMap).map(([sport,r])=>{
+    const total=r.wins+r.losses, wr=total>0?Math.round(r.wins/total*100):0;
+    const color=wr>=70?'#4ade80':wr>=50?'#E8C97A':'#f87171';
+    return `<div class="wr-bar-wrap">
+      <div class="wr-game">${sport}</div>
+      <div class="wr-bar-bg"><div class="wr-bar-fill" style="width:${wr}%;background:${color};"></div></div>
+      <div class="wr-pct" style="color:${color};">${wr}%</div>
+    </div>`;
+  }).join('')}
+</div>
+`:''}
+
+<div class="games-section">
+  <div class="sec-title">AI 대전 가능 게임 — 플레이해서 등수 올리기!</div>
+  <div class="games-grid-mp">
+    ${AVAILABLE_GAMES.map(g=>{
+      const r=recMap[g.name]||{wins:0,losses:0,pts:0};
+      const total=r.wins+r.losses, wr=total>0?Math.round(r.wins/total*100):0;
+      const pro=r.wins>=g.thresh;
+      const pct=Math.min(100,Math.round(r.wins/g.thresh*100));
+      const cls=pro?'pro':total>0?'played':'';
+      return `<div class="game-mp-card ${cls}" onclick="playGame('${g.id}')">
+        <a href="index.html?game=${g.id}" class="gmc-play-btn" title="플레이" onclick="event.stopPropagation()">▶</a>
+        <div class="gmc-icon">${g.icon}</div>
+        <div class="gmc-name">${g.name}</div>
+        <span class="gmc-badge ${pro?'badge-pro':total>0?'badge-ai':'badge-new'}">${pro?'🏆 PRO':total>0?'🤖 수련중':'🆕 미시작'}</span>
+        <div class="gmc-stats">
+          <span class="gmc-w">${r.wins}승</span>
+          <span class="gmc-l">${r.losses}패</span>
+          ${total>0?`<span class="gmc-wr">${wr}%</span>`:''}
+        </div>
+        ${!pro?`<div class="gmc-prog"><div class="gmc-prog-fill" style="width:${pct}%;"></div></div>
+        <div class="gmc-unlock">${r.wins}/${g.thresh}승 → 인간 대전 해금</div>`:`<div class="gmc-unlock" style="color:#4ade80;margin-top:4px;">✅ 인간 대전 가능</div>`}
+      </div>`;
+    }).join('')}
+  </div>
+</div>
+
+${hist.length>0?`
+<div class="history-section">
+  <div class="sec-title">최근 플레이 기록</div>
+  <div class="history-list">
+    ${hist.map(h=>`
+    <div class="history-item">
+      <div class="hi-icon">${h.icon||'🎮'}</div>
+      <div class="hi-info">
+        <div class="hi-title">${h.sport} AI 대전</div>
+        <div class="hi-time">${new Date(h.time).toLocaleString('ko-KR',{month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})}</div>
+      </div>
+      <div class="hi-result ${h.won?'hi-win':'hi-loss'}">${h.won?'승리':'패배'}</div>
+    </div>`).join('')}
+  </div>
+</div>
+`:''}
+
+<div class="items-section">
+  <div class="sec-title">아바타 아이템</div>
+  <div class="items-grid" id="items-grid">
+    ${[
+      {key:'crown',icon:'👑',name:'왕관',pts:5000},
+      {key:'fire',icon:'🔥',name:'연승불꽃',pts:3000},
+      {key:'flag',icon:'🎌',name:'국가배경',pts:2000},
+      {key:'medal',icon:'🏅',name:'고수칭호',pts:1500},
+      {key:'thunder',icon:'⚡',name:'번개이펙트',pts:4000},
+    ].map(item=>`
+    <div class="item-card ${equip[item.key]?'equipped':''}" onclick="toggleItem('${item.key}')" title="${item.pts}P 필요">
+      <div class="item-icon">${item.icon}</div>
+      <div class="item-name">${item.name}</div>
+      ${equip[item.key]?'<div class="item-equipped-dot"></div>':'<div style="font-size:9px;color:rgba(245,240,232,0.25);margin-top:2px;">${item.pts}P</div>'}
+    </div>`).join('')}
+  </div>
+</div>
+
+<div class="share-row">
+  <button class="kakao-share-btn" onclick="shareKakao()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3C6.5 3 2 6.5 2 11c0 2.9 1.7 5.5 4.3 7l-1.2 4.4L10 19.4c.6.1 1.3.1 2 .1 5.5 0 10-3.5 10-8S17.5 3 12 3z"/></svg>
+    카카오 공유
+  </button>
+  <button onclick="navigator.share&&navigator.share({title:'ICOC Brain Sports',text:'AI와 대전하고 국가대표 도전!',url:location.origin})" style="padding:10px 16px;background:rgba(201,168,76,0.1);border:1px solid rgba(201,168,76,0.3);border-radius:10px;color:var(--gold-l);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;">🔗 링크 공유</button>
+</div>
+`;
+
+  // 아이템 price 표시 수정
+  document.querySelectorAll('.item-card').forEach(card => {
+    const name = card.querySelector('.item-name')?.textContent;
+    const priceMap = {왕관:5000,연승불꽃:3000,국가배경:2000,고수칭호:1500,번개이펙트:4000};
+    const div = card.querySelector('div:last-child');
+    if(div && div.textContent.includes('P')) div.textContent = (priceMap[name]||0).toLocaleString()+'P';
+  });
+}
+
+function playGame(id) {
+  window.location.href = 'index.html?game=' + id;
+}
+
+function toggleItem(key) {
+  const equip = JSON.parse(localStorage.getItem('icoc_equip')||'{}');
+  equip[key] = !equip[key];
+  localStorage.setItem('icoc_equip', JSON.stringify(equip));
+  // Re-render items
+  document.querySelectorAll('.item-card').forEach(card => {
+    const k = card.getAttribute('onclick').match(/'([^']+)'/)?.[1];
+    if(k) card.classList.toggle('equipped', !!equip[k]);
+  });
+}
+
+function shareKakao() {
+  if(window.Kakao && Kakao.isInitialized()) {
+    Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: 'ICOC Brain Sports Omnipo 2027',
+        description: 'AI와 66개 브레인스포츠 대전! 국가별 랭킹 도전',
+        imageUrl: location.origin + '/assets/logo-hero.png',
+        link: {mobileWebUrl: location.origin, webUrl: location.origin}
+      }
+    });
+  } else {
+    const url = 'https://icoc-omnipo2027.vercel.app';
+    window.open(`https://sharer.kakao.com/talk/friends/picker/easylink?app_key=KAKAO_APP_KEY&lang=ko&url=${encodeURIComponent(url)}&text=AI와 바둑·체스·오목 대전! 국가대표 도전 👉`, '_blank');
+  }
+}
+
+// ── 진입점 ──
+document.addEventListener('DOMContentLoaded', () => {
+  function tryRender() {
+    if(window.ICOC_AUTH) {
+      const user = ICOC_AUTH.getCurrentUser();
+      const profile = ICOC_AUTH.getCurrentProfile();
+      if(user && profile) {
+        // Fetch game records from Supabase
+        const supabaseCfg = window.ICOC_CONFIG;
+        if(supabaseCfg && supabaseCfg.SUPABASE_URL !== 'YOUR_SUPABASE_URL') {
+          const sb = window.supabase.createClient(supabaseCfg.SUPABASE_URL, supabaseCfg.SUPABASE_ANON);
+          sb.from('icoc_game_records').select('*').eq('user_id', user.id)
+            .order('wins', {ascending:false})
+            .then(({data}) => renderMypage(profile, data||[]));
+        } else {
+          renderMypage(profile, []);
+        }
+      } else if(user && !profile) {
+        setTimeout(tryRender, 500);
+      }
+    } else {
+      setTimeout(tryRender, 300);
+    }
+  }
+  tryRender();
+});
+</script>
+</body>
+</html>
