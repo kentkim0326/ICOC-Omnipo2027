@@ -174,16 +174,37 @@
   function updateNavbar(profile) {
     const loginBtn = document.getElementById('nav-login-btn');
     const userArea = document.getElementById('nav-user-area');
-    if (!loginBtn || !userArea) return;
+    if (loginBtn && userArea) {
+      if (profile) {
+        loginBtn.style.display = 'none';
+        userArea.style.display = 'flex';
+        document.getElementById('nav-nickname').textContent = profile.nickname;
+        document.getElementById('nav-flag').textContent = countryFlag(profile.country);
+      } else {
+        loginBtn.style.display = '';
+        userArea.style.display = 'none';
+      }
+    }
 
-    if (profile) {
-      loginBtn.style.display = 'none';
-      userArea.style.display = 'flex';
-      document.getElementById('nav-nickname').textContent = profile.nickname;
-      document.getElementById('nav-flag').textContent = countryFlag(profile.country);
-    } else {
-      loginBtn.style.display = '';
-      userArea.style.display = 'none';
+    // 히어로 영역 업데이트
+    const heroAuth = document.getElementById('hero-auth-area');
+    const heroUser = document.getElementById('hero-user-area');
+    if (heroAuth && heroUser) {
+      if (profile) {
+        heroAuth.style.display = 'none';
+        heroUser.style.display = 'block';
+        const avatar = document.getElementById('hero-avatar');
+        if (avatar && currentUser?.user_metadata?.avatar_url) {
+          avatar.src = currentUser.user_metadata.avatar_url;
+        }
+        const el = document.getElementById('hero-nickname');
+        if (el) el.textContent = profile.nickname;
+        const meta = document.getElementById('hero-user-meta');
+        if (meta) meta.textContent = countryFlag(profile.country) + ' ' + profile.country + ' · ' + profile.generation;
+      } else {
+        heroAuth.style.display = 'flex';
+        heroUser.style.display = 'none';
+      }
     }
   }
 
@@ -426,6 +447,8 @@
     // 이벤트 핸들러
     document.getElementById('nav-login-btn')?.addEventListener('click', signInWithGoogle);
     document.getElementById('nav-user-area')?.addEventListener('click', openMyPage);
+    document.getElementById('hero-login-btn')?.addEventListener('click', signInWithGoogle);
+    document.getElementById('hero-mypage-btn')?.addEventListener('click', openMyPage);
 
     // 세션 확인
     const { data: { session } } = await supabase.auth.getSession();
