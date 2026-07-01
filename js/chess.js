@@ -311,6 +311,7 @@
     if (!awarded) {
       awarded = true;
       const r = global.ICOC_POINTS.addPoints(pts, 'chess_' + result);
+      if(window.ICOC_AUTH) window.ICOC_AUTH.recordGameResult('체스', result==='win', pts);
       setPointsMsg(
         r.capped
           ? `+${r.added}P 적립 (오늘 획득 한도 도달, 보유 ${r.total.toLocaleString()}P)`
