@@ -296,6 +296,35 @@ footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;fo
 .cert-img-wrap:hover .cert-img{filter:brightness(1);}
 </style>
 
+
+<!-- COUBERTIN TRIBUTE -->
+<div class="divider"></div>
+<div class="sec" id="sec-dream">
+  <p class="sec-label" id="dream-label">우리의 꿈</p>
+  <h2 class="sec-title" id="dream-title">피에르 드 쿠베르탱에게 경의를</h2>
+  <p class="sec-body" id="dream-body">
+    1896년 아테네, 피에르 드 쿠베르탱(Pierre de Coubertin)은 신체 스포츠의 올림픽을 부활시켰습니다. 
+    우리는 그의 정신에 경의를 표하며, 두뇌 스포츠의 새로운 올림픽을 꿈꿉니다.
+  </p>
+  <blockquote class="coubertin-quote" id="dream-quote">
+    "중요한 것은 이기는 것이 아니라, 참가하는 것이다."<br>
+    <span style="font-size:12px;opacity:.6;">— Pierre de Coubertin, 근대 올림픽 창시자</span>
+  </blockquote>
+  <p class="sec-body" id="dream-body2" style="margin-top:16px;">
+    아직 모든 종목이 온라인으로 가능하지 않습니다. 하지만 언젠가, 전세계 브레인스포츠 선수들이 한 자리에 모이는 
+    진정한 오프라인 대회를 올림픽 수준으로 개최하는 것이 ICOC의 궁극적인 꿈입니다.
+    지금은 온라인으로 195개국 플레이어들과 경쟁하며, 그 날을 함께 준비합니다.
+  </p>
+</div>
+<style>
+.coubertin-quote{
+  border-left:3px solid var(--gold);padding:16px 20px;margin:24px 0;
+  background:rgba(201,168,76,0.06);border-radius:0 12px 12px 0;
+  font-family:'Playfair Display',serif;font-size:16px;
+  color:rgba(245,240,232,0.85);line-height:1.7;font-style:italic;
+}
+</style>
+
 <!-- CTA -->
 <div class="cta-band">
   <h2 class="cta-title">지금 바로 국가대표에 도전하세요</h2>
@@ -322,6 +351,12 @@ const ABOUT_T = {
     road_label:'로드맵', road_h:'2027년까지의 여정',
     cta_h:'지금 바로 국가대표에 도전하세요',
     cta_sub:'로그인 없이 바로 AI와 대전 — 이기면 포인트, 국가대표 타이틀까지',
+    
+    dream_label:'우리의 꿈',
+    dream_title:'피에르 드 쿠베르탱에게 경의를',
+    dream_body:'1896년 아테네, 피에르 드 쿠베르탱은 신체 스포츠의 올림픽을 부활시켰습니다. 우리는 그의 정신에 경의를 표하며, 두뇌 스포츠의 새로운 올림픽을 꿈꿉니다.',
+    dream_quote:'"중요한 것은 이기는 것이 아니라, 참가하는 것이다." — Pierre de Coubertin',
+    dream_body2:'아직 모든 종목이 온라인으로 가능하지 않지만, 언젠가 전세계 브레인스포츠 선수들이 모이는 오프라인 대회를 올림픽 수준으로 개최하는 것이 ICOC의 궁극적인 꿈입니다.',
     footer:'© 2026 ICOC 국제브레인스포츠협회 · Deother · 문화체육관광부',
   },
   en: {
@@ -334,6 +369,12 @@ const ABOUT_T = {
     road_label:'Roadmap', road_h:'Journey to 2027',
     cta_h:'Challenge for National Representative Now',
     cta_sub:'Play AI without login — earn points, win national title',
+    
+    dream_label:'Our Dream',
+    dream_title:'In Honor of Pierre de Coubertin',
+    dream_body:'In Athens 1896, Pierre de Coubertin revived the Olympic Games for physical sports. We honor his spirit and dream of a new Olympics for brain sports.',
+    dream_quote:'"The most important thing is not to win but to take part." — Pierre de Coubertin',
+    dream_body2:'Not all sports are yet available online. But someday, ICOC\'s ultimate dream is to host a world-class offline championship where brain sports athletes from 195 countries compete together.',
     footer:'© 2026 ICOC International Brain Sports Association · Deother · Ministry of Culture, Sports and Tourism (Korea)',
   },
   zh: {
@@ -346,6 +387,12 @@ const ABOUT_T = {
     road_label:'路线图', road_h:'通向2027之路',
     cta_h:'现在就挑战国家代表',
     cta_sub:'无需登录即可与AI对战 — 获得积分，赢得国家代表称号',
+    
+    dream_label:'我们的梦想',
+    dream_title:'向皮埃尔·德·顾拜旦致敬',
+    dream_body:'1896年雅典，皮埃尔·德·顾拜旦复兴了现代奥运会。我们向他的精神致敬，梦想创建脑力运动的新奥运会。',
+    dream_quote:'"最重要的不是胜利，而是参与。" — 皮埃尔·德·顾拜旦',
+    dream_body2:'虽然目前并非所有项目都能在线进行，但有朝一日，ICOC 的终极梦想是举办奥运会级别的线下脑力运动盛会。',
     footer:'© 2026 ICOC国际脑力运动协会 · Deother · 韩国文化体育观光部',
   },
   ja: {
@@ -358,6 +405,12 @@ const ABOUT_T = {
     road_label:'ロードマップ', road_h:'2027年への旅',
     cta_h:'今すぐ国家代表に挑戦',
     cta_sub:'ログインなしでAI対戦 — ポイント獲得、国家代表タイトルへ',
+    
+    dream_label:'私たちの夢',
+    dream_title:'ピエール・ド・クーベルタンへの敬意',
+    dream_body:'1896年アテネ、ピエール・ド・クーベルタンは近代オリンピックを復活させました。私たちは彼の精神に敬意を表し、ブレインスポーツの新しいオリンピックを夢見ています。',
+    dream_quote:'"最も重要なのは勝つことではなく、参加することだ。" — ピエール・ド・クーベルタン',
+    dream_body2:'まだすべての種目がオンラインで行えるわけではありませんが、いつの日か、世界195カ国のブレインスポーツ選手が一堂に会すオリンピックレベルの大会を開催することがICOCの究極の夢です。',
     footer:'© 2026 ICOC国際ブレインスポーツ協会 · Deother · 韓国文化体育観光省認可',
   },
   es: {
@@ -370,6 +423,12 @@ const ABOUT_T = {
     road_label:'Hoja de Ruta', road_h:'Camino a 2027',
     cta_h:'Desafía el Representante Nacional Ahora',
     cta_sub:'Juega con IA sin iniciar sesión — gana puntos y título nacional',
+    
+    dream_label:'Nuestro Sueño',
+    dream_title:'En Honor a Pierre de Coubertin',
+    dream_body:'En Atenas 1896, Pierre de Coubertin revivió los Juegos Olímpicos. Honramos su espíritu y soñamos con unos nuevos Juegos Olímpicos para los deportes cerebrales.',
+    dream_quote:'"Lo más importante no es ganar sino participar." — Pierre de Coubertin',
+    dream_body2:'No todos los deportes están disponibles en línea todavía. Pero algún día, el sueño final del ICOC es organizar un campeonato presencial de nivel olímpico.',
     footer:'© 2026 ICOC Asociación Internacional de Deportes Cerebrales · Deother',
   },
   fr: {
@@ -382,6 +441,12 @@ const ABOUT_T = {
     road_label:'Feuille de Route', road_h:'Voyage vers 2027',
     cta_h:'Devenez Représentant National',
     cta_sub:'Jouez contre l'IA sans connexion — gagnez des points et titre national',
+    
+    dream_label:'Notre Rêve',
+    dream_title:'En Hommage à Pierre de Coubertin',
+    dream_body:'À Athènes en 1896, Pierre de Coubertin a fait revivre les Jeux Olympiques. Nous honorons son esprit et rêvons d\'une nouvelle Olympiade pour les sports cérébraux.',
+    dream_quote:'"L\'essentiel n\'est pas de vaincre, mais de participer." — Pierre de Coubertin',
+    dream_body2:'Tous les sports ne sont pas encore disponibles en ligne. Mais un jour, le rêve ultime de l\'ICOC est d\'organiser des championnats hors ligne de niveau olympique.',
     footer:'© 2026 ICOC Association Internationale des Sports Cérébraux · Deother',
   },
   de: {
@@ -394,6 +459,12 @@ const ABOUT_T = {
     road_label:'Roadmap', road_h:'Reise bis 2027',
     cta_h:'Fordern Sie jetzt den Nationalrepräsentanten heraus',
     cta_sub:'KI spielen ohne Anmeldung — Punkte verdienen, nationalen Titel gewinnen',
+    
+    dream_label:'Unser Traum',
+    dream_title:'In Ehren von Pierre de Coubertin',
+    dream_body:'In Athen 1896 ließ Pierre de Coubertin die Olympischen Spiele wiederaufleben. Wir ehren seinen Geist und träumen von einer neuen Olympiade für Gehirnsportarten.',
+    dream_quote:'"Das Wichtigste ist nicht der Sieg, sondern die Teilnahme." — Pierre de Coubertin',
+    dream_body2:'Nicht alle Sportarten sind noch online verfügbar. Aber irgendwann ist der ultimative Traum des ICOC, eine Weltmeisterschaft auf Olympia-Niveau zu veranstalten.',
     footer:'© 2026 ICOC Internationaler Gehirnsportverband · Deother',
   },
 };
@@ -442,7 +513,19 @@ function changeAboutLang(lang) {
     if (h2) h2.textContent = t.road_h;
   }
 
-  // 5. CTA
+  // 5. Dream / Coubertin section
+  const dreamLabel = document.getElementById('dream-label');
+  if(dreamLabel) dreamLabel.textContent = t.dream_label || '';
+  const dreamTitle = document.getElementById('dream-title');
+  if(dreamTitle) dreamTitle.textContent = t.dream_title || '';
+  const dreamBody  = document.getElementById('dream-body');
+  if(dreamBody)  dreamBody.textContent = t.dream_body  || '';
+  const dreamQuote = document.getElementById('dream-quote');
+  if(dreamQuote) dreamQuote.innerHTML = (t.dream_quote || '').replace(' — ',' —<br><span style="font-size:12px;opacity:.6;">') + '</span>';
+  const dreamBody2 = document.getElementById('dream-body2');
+  if(dreamBody2) dreamBody2.textContent = t.dream_body2 || '';
+
+  // 6. CTA
   const ctaTitle = qs('.cta-title');
   if (ctaTitle) ctaTitle.textContent = t.cta_h;
   const ctaSub = qs('.cta-sub');
