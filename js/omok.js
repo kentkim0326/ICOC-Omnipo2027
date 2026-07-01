@@ -125,8 +125,10 @@
     board[r][c] = player;
     moveCount++;
     renderStone(r, c, player);
+    if(global.ICOC_SFX) global.ICOC_SFX.stone();
     if (checkWin(r, c, player)) {
       endGame(player === BLACK ? 'win' : 'lose');
+      if(global.ICOC_SFX){ setTimeout(()=>global.ICOC_SFX[player===BLACK?'win':'lose'](),100); }
       return;
     }
     if (boardFull()) { endGame('draw'); return; }
