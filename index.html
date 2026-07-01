@@ -537,6 +537,19 @@ footer a { color:var(--gold); text-decoration:none; }
   <a href="#map-section" class="nav-venue-btn" onclick="document.getElementById('map-section').scrollIntoView({behavior:'smooth'});return false;">
     📍 경기장
   </a>
+  <!-- 배경음악 플레이어 -->
+  <div class="nav-music-player" id="nav-music-player">
+    <button class="music-toggle" id="music-toggle" title="배경음악 ON/OFF" onclick="ICOC_BGM.toggle()">
+      <span id="music-icon">🔇</span>
+    </button>
+    <input type="range" class="music-volume" id="music-volume"
+      min="0" max="100" value="30" oninput="ICOC_BGM.setVolume(this.value)"
+      title="볼륨">
+  </div>
+  <audio id="icoc-bgm" loop preload="none">
+    <source src="assets/audio/bgm.ogg" type="audio/ogg">
+    <source src="assets/audio/bgm.mp3" type="audio/mpeg">
+  </audio>
   <div class="nav-auth-area">
     <button class="nav-login-btn" id="nav-login-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -1596,6 +1609,78 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 <script src="js/bridge.js"></script>
 <script src="js/rummy.js"></script>
 <script src="js/hearts.js"></script>
+
+<script>
+// ── ICOC BGM 컨트롤러 ──
+window.ICOC_BGM = (function() {
+  let audio = null, playing = false, userInteracted = false;
+
+  function init() {
+    audio = document.getElementById('icoc-bgm');
+    if (!audio) return;
+    audio.volume = 0.30;
+
+    // 첫 사용자 인터랙션 후 자동재생
+    const start = () => {
+      if (!userInteracted) {
+        userInteracted = true;
+        play();
+        document.removeEventListener('click', start);
+        document.removeEventListener('keydown', start);
+        document.removeEventListener('touchstart', start);
+      }
+    };
+    document.addEventListener('click', start, { once: true });
+    document.addEventListener('keydown', start, { once: true });
+    document.addEventListener('touchstart', start, { once: true });
+  }
+
+  function play() {
+    if (!audio) return;
+    audio.play().then(() => {
+      playing = true;
+      updateIcon();
+    }).catch(() => {});
+  }
+
+  function pause() {
+    if (!audio) return;
+    audio.pause();
+    playing = false;
+    updateIcon();
+  }
+
+  function toggle() {
+    userInteracted = true;
+    playing ? pause() : play();
+  }
+
+  function setVolume(v) {
+    if (!audio) return;
+    audio.volume = v / 100;
+    if (v > 0 && !playing) play();
+    if (v == 0) pause();
+    updateIcon();
+  }
+
+  function updateIcon() {
+    const icon = document.getElementById('music-icon');
+    const vol  = document.getElementById('music-volume');
+    if (!icon) return;
+    if (!playing || (audio && audio.volume === 0)) {
+      icon.textContent = '🔇';
+    } else if (audio.volume < 0.4) {
+      icon.textContent = '🔉';
+    } else {
+      icon.textContent = '🔊';
+    }
+    if (vol) vol.value = Math.round((audio?.volume || 0) * 100);
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+  return { toggle, setVolume, play, pause };
+})();
+</script>
 
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
