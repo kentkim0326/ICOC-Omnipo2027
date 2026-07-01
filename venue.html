@@ -59,7 +59,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 .bottom-sheet{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   transition:transform .4s cubic-bezier(.32,.72,0,1);
-  max-height:55vh; /* sheet 전체 최대 높이 */
+  max-height:40vh; /* sheet 전체 최대 높이 */
   display:flex;flex-direction:column;
 }
 .sheet-handle-area{
@@ -76,15 +76,15 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 /* 스크롤 영역 - 최대 높이 제한 */
 .sheet-scroll{
   overflow-y:auto;flex:1;
-  max-height:calc(55vh - 130px); /* action-row 높이 제외 */
+  max-height:calc(40vh - 100px); /* action-row 높이 제외 */
 }
 .sheet-scroll::-webkit-scrollbar{width:3px;}
 .sheet-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.25);border-radius:2px;}
 
 /* 모바일: 더 작게 */
 @media(max-width:640px){
-  .bottom-sheet{ max-height:48vh; }
-  .sheet-scroll{ max-height:calc(48vh - 120px); }
+  .bottom-sheet{ max-height:38vh; }
+  .sheet-scroll{ max-height:calc(38vh - 90px); }
 }
 /* 접힌 상태 */
 .bottom-sheet.collapsed .sheet-scroll{ max-height:0;overflow:hidden; }
@@ -310,6 +310,14 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 </div>
 
 <!-- BOTTOM SHEET -->
+<!-- 지도 스타일 버튼 (플로팅) -->
+<div style="position:fixed;top:64px;right:8px;z-index:200;display:flex;flex-direction:column;gap:4px;">
+  <button onclick="changeVenueStyle('dark')"   style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">🌑 다크</button>
+  <button onclick="changeVenueStyle('light')"  style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">☀️ 라이트</button>
+  <button onclick="changeVenueStyle('streets')"style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">🏙️ 도시</button>
+  <button onclick="changeVenueStyle('outdoor')"style="background:rgba(11,31,58,0.85);color:#E8C97A;border:1px solid rgba(201,168,76,0.3);border-radius:8px;padding:4px 8px;font-size:10px;cursor:pointer;font-family:inherit;backdrop-filter:blur(8px);">🌿 아웃도어</button>
+</div>
+
 <div class="bottom-sheet" id="bottom-sheet">
   <div class="sheet-handle-area" id="sheet-handle"><div class="sheet-handle"></div></div>
   <div class="sheet-body">
@@ -539,6 +547,26 @@ function changeVenueStyle(style) {
   const url = window.mapboxgl && map._maplibre !== true
     ? mbStyles[style]
     : mlStyles[style];
+  map.setStyle(url);
+}
+
+// ── 지도 스타일 변경 ──
+function changeVenueStyle(style) {
+  if (!map) return;
+  const mlStyles = {
+    dark:    'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
+    light:   'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
+    streets: 'https://tiles.openfreemap.org/styles/liberty',
+    outdoor: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
+  };
+  const mbStyles = {
+    dark:    'mapbox://styles/mapbox/dark-v11',
+    light:   'mapbox://styles/mapbox/light-v11',
+    streets: 'mapbox://styles/mapbox/streets-v12',
+    outdoor: 'mapbox://styles/mapbox/outdoors-v12',
+  };
+  const useMapbox = !!(window.mapboxgl && typeof map.setStyle === 'function' && map.version);
+  const url = useMapbox ? (mbStyles[style]||mbStyles.dark) : (mlStyles[style]||mlStyles.dark);
   map.setStyle(url);
 }
 </script>
