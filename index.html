@@ -74,7 +74,7 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
   display:flex; flex-direction:column;
   justify-content:center; align-items:center;
   text-align:center;
-  padding:140px 40px 100px;
+  padding:80px 40px 160px;
   position:relative; overflow:hidden;
 }
 .hero::before {
@@ -125,7 +125,7 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 
 .omnipo-badge {
   display:inline-flex; flex-direction:column; align-items:center;
-  margin-bottom:20px; margin-top:-20px;
+  margin-bottom:16px; margin-top:0;
   position:relative;
   opacity:0; animation:fadeUp 0.7s 0.1s ease forwards;
 }
@@ -489,7 +489,7 @@ footer a { color:var(--gold); text-decoration:none; }
   .lang-btns { flex-wrap:nowrap; gap:3px; flex:1; justify-content:flex-end; order:2; }
   .lang-btn { padding:3px 7px; font-size:9.5px; white-space:nowrap; overflow:hidden; }
 
-  .hero { padding:140px 20px 64px; }
+  .hero { padding:70px 20px 150px; }
   .section-wrap { padding:72px 24px; }
   .stats-band { padding:56px 24px; }
   .stats-grid { gap:24px; }
@@ -502,7 +502,7 @@ footer a { color:var(--gold); text-decoration:none; }
 }
 @media(max-width:380px){
   .lang-bar { padding:6px 12px; }
-  .hero { padding:150px 14px 56px; }
+  .hero { padding:60px 14px 150px; }
   .lang-btn { padding:2px 6px; font-size:9px; }
 }
 </style>
@@ -559,26 +559,12 @@ footer a { color:var(--gold); text-decoration:none; }
     </div>
   </div>
   <div class="hero-bg-overlay"></div>
-  <!-- ① 유저카드 (로고 위, 플로우 안에) -->
-  <div class="hero-profile-bar" id="hero-auth-area">
-    <button class="hero-google-slim" id="hero-login-btn">
-      <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
-      Continue with Google
-    </button>
-  </div>
-  <div class="hero-profile-bar hero-user-slim" id="hero-user-area" style="display:none">
-    <img id="hero-avatar" src="" alt="avatar" class="hero-avatar-sm">
-    <span id="hero-nickname" class="hero-nick-sm">-</span>
-    <span id="hero-user-meta" class="hero-meta-sm">-</span>
-    <button class="hero-mypage-slim" id="hero-mypage-btn">마이페이지 →</button>
-  </div>
-
-  <!-- ② ICOC 로고 -->
+  <!-- ① ICOC 로고 (상단) -->
   <div class="omnipo-badge">
     <img src="assets/logo-yellow.png" alt="ICOC" class="hero-icoc-logo">
   </div>
 
-  <!-- ③ 타이틀 -->
+  <!-- ② 타이틀 -->
   <p class="hero-eyebrow" data-i18n="hero_eyebrow">ICOC · International Council of Open Competition</p>
   <h1 class="hero-title">
     <span class="accent" data-i18n="hero_t1">Brain Sports</span><br>
@@ -589,16 +575,33 @@ footer a { color:var(--gold); text-decoration:none; }
     <span class="hero-sports-count">66개 종목</span> · 세계 최초 멀티종목 국제 브레인스포츠 대회
   </p>
 
-  <!-- ④ SNS 버튼 (하단 고정) -->
-  <div class="hero-sns-bottom">
-    <a href="https://www.youtube.com/@icoc8891" target="_blank" class="hero-social-btn hero-yt">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-      YouTube
-    </a>
-    <a href="https://www.facebook.com/ICOC2019/" target="_blank" class="hero-social-btn hero-fb">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-      Facebook
-    </a>
+  <!-- ③ 하단: 구글 로그인 + SNS (절대 하단 고정) -->
+  <div class="hero-bottom-area">
+    <!-- 로그인 전 -->
+    <div id="hero-auth-area">
+      <button class="hero-google-slim" id="hero-login-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+        Continue with Google
+      </button>
+    </div>
+    <!-- 로그인 후 유저카드 -->
+    <div id="hero-user-area" style="display:none" class="hero-user-slim">
+      <img id="hero-avatar" src="" alt="avatar" class="hero-avatar-sm">
+      <span id="hero-nickname" class="hero-nick-sm">-</span>
+      <span id="hero-user-meta" class="hero-meta-sm">-</span>
+      <button class="hero-mypage-slim" id="hero-mypage-btn">마이페이지 →</button>
+    </div>
+    <!-- SNS -->
+    <div class="hero-sns-row">
+      <a href="https://www.youtube.com/@icoc8891" target="_blank" class="hero-social-btn hero-yt">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        YouTube
+      </a>
+      <a href="https://www.facebook.com/ICOC2019/" target="_blank" class="hero-social-btn hero-fb">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+        Facebook
+      </a>
+    </div>
   </div>
 </header>
 
