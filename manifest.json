@@ -1,0 +1,23 @@
+{
+  "name": "ICOC Brain Sports Omnipo 2027",
+  "short_name": "ICOC Omnipo",
+  "description": "66개 브레인스포츠 AI 대전 & 국가대표 선발전",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#0B1F3A",
+  "theme_color": "#C9A84C",
+  "orientation": "portrait-primary",
+  "icons": [
+    {"src": "assets/icon-72.png",  "sizes": "72x72",   "type": "image/png"},
+    {"src": "assets/icon-96.png",  "sizes": "96x96",   "type": "image/png"},
+    {"src": "assets/icon-128.png", "sizes": "128x128", "type": "image/png"},
+    {"src": "assets/icon-144.png", "sizes": "144x144", "type": "image/png"},
+    {"src": "assets/icon-152.png", "sizes": "152x152", "type": "image/png"},
+    {"src": "assets/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable any"},
+    {"src": "assets/icon-256.png", "sizes": "256x256", "type": "image/png"},
+    {"src": "assets/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable any"}
+  ],
+  "categories": ["games", "sports", "entertainment"],
+  "screenshots": [],
+  "lang": "ko"
+}
