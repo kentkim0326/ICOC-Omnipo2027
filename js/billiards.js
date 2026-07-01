@@ -326,6 +326,7 @@
     if (dist < 0.015 || !cue) return;
     const dir = vnorm(pull);
     const power = Math.min(MAX_SHOT_SPEED, dist * (MAX_SHOT_SPEED / 0.5) * 1.0);
+    if(global.ICOC_SFX) global.ICOC_SFX.bowl();
     cue.v = vscale(dir, power);
     shotInProgress = true;
     setStatus('');
@@ -355,12 +356,13 @@
     if (eightPotted) {
       const ownRemaining = balls.filter(b => !b.potted && b.type === shooterGroup);
       const legallyCleared = shooterGroup !== null && ownRemaining.length === 0;
-      if (legallyCleared && !scratched) { endGame(shooterIsPlayer ? 'win' : 'lose'); return; }
+      if (legallyCleared && !scratched) { endGame(shooterIsPlayer ? 'win' : 'lose');
+    if(global.ICOC_SFX) setTimeout(()=>global.ICOC_SFX[shooterIsPlayer?'win':'lose'](),200); return; }
       endGame(shooterIsPlayer ? 'lose' : 'win'); return;
     }
 
     if (scratched) {
-      cue.potted = false;
+      if(global.ICOC_SFX && !cue.potted) global.ICOC_SFX.capture(); cue.potted = false;
       cue.pos = { ...cueStartPos };
       cue.mesh.position.set(cue.pos.x, BALL_R, cue.pos.z);
       setStatus('💧 큐볼이 포켓에 들어갔습니다 (파울). 큐볼을 다시 놓고 상대 차례로 넘어갑니다.');
