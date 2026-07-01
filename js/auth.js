@@ -18,7 +18,7 @@
     const navHTML = `
 <nav class="lang-bar" id="main-nav">
   <div class="nav-row nav-row-top">
-    <span class="<span class="logo-mini"><img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img" style="height:22px;width:auto;"></span>
+    <span class="logo-mini"><img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img" style="height:22px;width:auto;"></span>
     <div class="nav-row-right">
       <span class="points-badge">
         <span class="coin">🪙</span><span id="points-badge-num">0</span>P
