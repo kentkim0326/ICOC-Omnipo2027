@@ -355,6 +355,66 @@ function sfx(type) {
 
   /* ── DOM 헬퍼 ── */
 
+
+  /* ── DOM 헬퍼 함수 ── */
+
+  function setStatus(msg) {
+    const el = document.getElementById('go-status');
+    if (el) el.textContent = msg;
+  }
+
+  function setPointsMsg(msg) {
+    const el = document.getElementById('go-points-msg');
+    if (el) el.textContent = msg;
+  }
+
+  function setTurnUI() {
+    const bEl = document.getElementById('go-turn-black');
+    const wEl = document.getElementById('go-turn-white');
+    if (bEl) {
+      bEl.style.opacity = (turn === BLACK && !gameOver) ? '1' : '0.45';
+      bEl.textContent = '⚫ 당신 (흑) · 포획 ' + capturedByBlack;
+    }
+    if (wEl) {
+      wEl.style.opacity = (turn === WHITE && !gameOver) ? '1' : '0.45';
+      wEl.textContent = '⚪ AI (백) · 포획 ' + capturedByWhite;
+    }
+  }
+
+  function renderBoard() {
+    if (!boardUI) return;
+    boardUI.clearAll();
+    for (let r = 0; r < SIZE; r++) {
+      for (let c = 0; c < SIZE; c++) {
+        if (board[r][c] === BLACK) boardUI.placeStone(r, c, 'go-black');
+        else if (board[r][c] === WHITE) boardUI.placeStone(r, c, 'go-white');
+      }
+    }
+  }
+
+  function markLastMove(r, c) {
+    // 이전 마지막 수 표시 제거
+    if (lastMoveEl) { lastMoveEl.classList.remove('go-last'); lastMoveEl = null; }
+    // 새 마지막 수 표시
+    const slot = boardUI && boardUI.cellEls && boardUI.cellEls[r] && boardUI.cellEls[r][c];
+    if (slot) {
+      const stone = slot.querySelector('.stone');
+      if (stone) { stone.classList.add('go-last'); lastMoveEl = stone; }
+    }
+  }
+
+  function checkWinAfterMove(color) {
+    // 바둑은 패스 2회로만 종료 (mid-game 즉시 승리 없음)
+    // 단, 상대방 돌이 0개면 종료
+    let oppColor = (color === BLACK) ? WHITE : BLACK;
+    let oppCount = 0;
+    for (let r = 0; r < SIZE; r++)
+      for (let c = 0; c < SIZE; c++)
+        if (board[r][c] === oppColor) oppCount++;
+    if (oppCount === 0) { endGame(); return true; }
+    return false;
+  }
+
   function reset(){
     board=Array.from({length:SIZE},()=>Array(SIZE).fill(EMPTY));
     turn=BLACK; gameOver=false; passCount=0;
