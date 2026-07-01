@@ -53,6 +53,17 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 }
 .lang-bar .logo-mini img { height:28px; width:auto; display:block; }
 .logo-nav-img { height:34px !important; width:34px !important; object-fit:contain; border-radius:3px; background:rgba(0,0,0,0.2); }
+.nav-venue-btn {
+  display:flex; align-items:center; gap:4px;
+  padding:5px 12px; font-size:11px; font-weight:600;
+  color:rgba(245,240,232,0.75);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:20px; text-decoration:none;
+  transition:all 0.2s; white-space:nowrap;
+  background:rgba(255,255,255,0.05);
+  cursor:pointer;
+}
+.nav-venue-btn:hover { color:var(--gold); border-color:rgba(201,168,76,0.4); background:rgba(201,168,76,0.08); }
 .lang-btns { display:flex; gap:6px; }
 .lang-btn {
   padding:5px 14px;
@@ -523,6 +534,9 @@ footer a { color:var(--gold); text-decoration:none; }
     <button class="lang-btn" onclick="setLang('zh')">中文</button>
     <button class="lang-btn" onclick="setLang('ja')">日本語</button>
   </div>
+  <a href="#map-section" class="nav-venue-btn" onclick="document.getElementById('map-section').scrollIntoView({behavior:'smooth'});return false;">
+    📍 경기장
+  </a>
   <div class="nav-auth-area">
     <button class="nav-login-btn" id="nav-login-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -961,12 +975,6 @@ footer a { color:var(--gold); text-decoration:none; }
       <div class="sport-players">교육적 퍼즐 게임</div>
     </div>
 
-    <div class="sport-card coming-soon" data-game="azul2">
-      <span class="sport-icon">🎴</span>
-      <div class="sport-name">한국 화투 (Korean Hwatu)</div>
-      <div class="sport-desc">꽃과 달을 상징하는 48장 화투패로 즐기는 다양한 한국 카드게임의 총칭. 맞고·고스톱·도리짓고 등 다양한 변형.</div>
-      <div class="sport-players">한국 국민 게임</div>
-    </div>
 
   <!-- 카테고리: 추가 카드 게임 -->
   <div class="sport-cat-divider reveal">
@@ -1591,7 +1599,10 @@ document.querySelectorAll('.sport-card[data-game]').forEach(card => {
 
 <!-- Supabase SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-<!-- MapLibre GL JS -->
+<!-- Mapbox GL JS -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<!-- MapLibre (폴백) -->
 <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.js"></script>
 <!-- ICOC 설정 & 인증 -->
