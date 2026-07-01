@@ -426,10 +426,12 @@
           <span class="mp-pts-label">보유 포인트</span>
           <span class="mp-pts-val">🪙 ${localPts.toLocaleString()} P</span>
         </div>
-        <div class="mp-section-title">게임 전적</div>
-        <div id="mp-records" class="mp-records">불러오는 중...</div>
+        <div class="mp-section-title">게임별 전적 & AI 레벨</div>
+        <div id="mp-records" class="mp-records">
+          <div class="mp-loading">📊 전적 불러오는 중...</div>
+        </div>
         <div class="mp-actions">
-          <button class="game-btn ghost" id="mp-signout">로그아웃</button>
+          <button class="game-btn ghost" id="mp-signout">🚪 로그아웃</button>
         </div>
       </div>
     `;
@@ -446,13 +448,47 @@
       if (!records || !records.length) {
         el.textContent = '아직 게임 기록이 없습니다.'; return;
       }
-      el.innerHTML = records.map(r => `
-        <div class="mp-record-row">
-          <span class="mp-rec-sport">${r.sport}</span>
-          <span class="mp-rec-stat">${r.wins}승 ${r.losses}패</span>
-          <span class="mp-rec-rate">${r.wins+r.losses>0?Math.round(r.wins/(r.wins+r.losses)*100):0}%</span>
-        </div>
-      `).join('');
+      // 로컬 스탯도 병합 (포인트 적립 내역)
+      const SPORT_ICONS = {
+        '바둑':'⚫','체스':'♟️','장기':'🈴','쇼기':'🎌','오목':'⚪',
+        '마작':'🀄','체커':'🔴','백개먼':'🎲','리버시':'🟢','커넥트4':'🔵',
+        '당구':'🎱','볼링':'🎳','스크린골프':'⛳','홀덤':'🃏','브릿지':'🎴',
+        '진러미':'🃏','하츠':'♥️','다트':'🎯',
+      };
+      el.innerHTML = \`<div class="mp-stat-grid">\${records.map(r => {
+        const local = JSON.parse(localStorage.getItem('icoc_stat_'+r.sport)||'{"ai_wins":0,"ai_losses":0,"pts":0}');
+        const aiW = Math.max(r.wins||0, local.ai_wins||0);
+        const aiL = Math.max(r.losses||0, local.ai_losses||0);
+        const total = aiW + aiL;
+        const rate = total>0 ? Math.round(aiW/total*100) : 0;
+        const threshold = ({바둑:5,체스:5,장기:5,쇼기:5,오목:3,체커:3,마작:3,당구:5,볼링:3,홀덤:5,브릿지:10,진러미:5,하츠:5,다트:3})[r.sport] || 3;
+        const proUnlocked = aiW >= threshold;
+        const pts = r.points_earned || local.pts || 0;
+        const icon = SPORT_ICONS[r.sport] || '🎮';
+        const pct = Math.min(100, Math.round(aiW/threshold*100));
+        return \`<div class="mp-game-card \${proUnlocked?'mp-pro':''}">
+          <div class="mp-game-top">
+            <span class="mp-game-icon">\${icon}</span>
+            <div class="mp-game-info">
+              <span class="mp-game-name">\${r.sport}</span>
+              <span class="mp-game-badge \${proUnlocked?'badge-pro':'badge-ai'}">
+                \${proUnlocked?'🏆 PRO':'🤖 AI 수련 중'}
+              </span>
+            </div>
+            <div class="mp-game-pts">🪙 \${pts.toLocaleString()}P</div>
+          </div>
+          <div class="mp-game-stats">
+            <span class="mp-stat-w">\${aiW}승</span>
+            <span class="mp-stat-l">\${aiL}패</span>
+            <span class="mp-stat-rate">\${rate}%</span>
+          </div>
+          \${!proUnlocked ? \`<div class="mp-prog-wrap">
+            <div class="mp-prog-bar" style="width:\${pct}%"></div>
+          </div>
+          <div class="mp-prog-label">AI \${aiW}/\${threshold}승 달성 시 인간 대전 해금 🔓</div>\` : \`
+          <div class="mp-unlocked-msg">✅ 인간 대전 해금 완료 — 국가대표 도전 가능!</div>\`}
+        </div>\`;
+      }).join('')}</div>\`;
     });
   }
 
@@ -472,38 +508,63 @@
     return data || [];
   }
 
-  async function recordGameResult(sport, won) {
-    if (!supabase || !currentUser) return;
+  // ── AI 승수 threshold (초보 → Pro 해금 기준) ──
+  const PRO_THRESHOLD = {
+    '바둑':5,'체스':5,'장기':5,'쇼기':5,'오목':3,'체커':3,'백개먼':3,
+    '리버시':3,'커넥트4':3,'마작':3,'당구':5,'볼링':3,'스크린골프':3,
+    '홀덤':5,'브릿지':10,'진러미':5,'하츠':5,'다트':3,
+    'default':3,
+  };
+  function getProThreshold(sport) {
+    return PRO_THRESHOLD[sport] || PRO_THRESHOLD['default'];
+  }
+  // localStorage 로컬 스탯 (오프라인 / 로그인 전 포함)
+  function getLocalStat(sport) {
+    const k = 'icoc_stat_' + sport;
+    return JSON.parse(localStorage.getItem(k) || '{"ai_wins":0,"ai_losses":0,"pts":0}');
+  }
+  function updateLocalStat(sport, won, ptsEarned) {
+    const s = getLocalStat(sport);
+    if (won) s.ai_wins++; else s.ai_losses++;
+    s.pts = (s.pts||0) + (ptsEarned||0);
+    localStorage.setItem('icoc_stat_' + sport, JSON.stringify(s));
+    return s;
+  }
+  // Pro 해금 여부 확인
+  function isProUnlocked(sport, aiWins) {
+    return (aiWins||0) >= getProThreshold(sport);
+  }
+
+  async function recordGameResult(sport, won, ptsEarned) {
+    // 로컬 스탯 항상 저장 (로그인 여부 무관)
+    const localStat = updateLocalStat(sport, won, ptsEarned||0);
+
+    if (!supabase || !currentUser) return localStat;
     try {
-      // upsert: 있으면 wins/losses 증가, 없으면 새 row
       const { data: existing } = await supabase
         .from('icoc_game_records')
-        .select('id, wins, losses')
+        .select('id, wins, losses, points_earned')
         .eq('user_id', currentUser.id)
         .eq('sport', sport)
-        .single();
+        .maybeSingle();
+
+      const newWins   = (existing?.wins   ||0) + (won?1:0);
+      const newLosses = (existing?.losses ||0) + (won?0:1);
+      const newPts    = (existing?.points_earned||0) + (ptsEarned||0);
 
       if (existing) {
-        await supabase
-          .from('icoc_game_records')
-          .update({
-            wins:   won ? existing.wins+1   : existing.wins,
-            losses: won ? existing.losses   : existing.losses+1,
-            updated_at: new Date().toISOString(),
-          })
+        await supabase.from('icoc_game_records')
+          .update({ wins:newWins, losses:newLosses,
+            points_earned:newPts, updated_at:new Date().toISOString() })
           .eq('id', existing.id);
       } else {
-        await supabase
-          .from('icoc_game_records')
-          .insert({
-            user_id: currentUser.id,
-            sport,
-            wins:   won ? 1 : 0,
-            losses: won ? 0 : 1,
-            updated_at: new Date().toISOString(),
-          });
+        await supabase.from('icoc_game_records')
+          .insert({ user_id:currentUser.id, sport,
+            wins:newWins, losses:newLosses,
+            points_earned:newPts, updated_at:new Date().toISOString() });
       }
-    } catch (e) { /* 무시 */ }
+    } catch(e) { /* 무시 */ }
+    return localStat;
   }
 
   // ── 메인 초기화 ──
