@@ -6,6 +6,10 @@
 <title>ICOC 경기장 — Brain Sports Omnipo 2027</title>
 <link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<!-- Mapbox GL JS (primary) -->
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<!-- MapLibre GL JS (fallback) -->
 <link href="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/maplibre-gl@4/dist/maplibre-gl.js"></script>
 <style>
@@ -55,24 +59,42 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 .bottom-sheet{
   position:fixed;bottom:0;left:0;right:0;z-index:100;
   transition:transform .4s cubic-bezier(.32,.72,0,1);
+  max-height:55vh; /* sheet 전체 최대 높이 */
+  display:flex;flex-direction:column;
 }
 .sheet-handle-area{
   width:100%;display:flex;justify-content:center;
-  padding:10px 0 0;cursor:pointer;
+  padding:8px 0 0;cursor:pointer;flex-shrink:0;
 }
-.sheet-handle{width:40px;height:4px;background:rgba(201,168,76,0.35);border-radius:2px;}
+.sheet-handle{width:36px;height:4px;background:rgba(201,168,76,0.35);border-radius:2px;}
 .sheet-body{
   background:var(--glass2);backdrop-filter:blur(24px);
-  border-top:1px solid rgba(201,168,76,0.2);padding:0 18px 18px;
+  border-top:1px solid rgba(201,168,76,0.2);
+  padding:0 16px 10px;
+  display:flex;flex-direction:column;flex:1;overflow:hidden;
 }
-.sheet-scroll{max-height:52vh;overflow-y:auto;}
+/* 스크롤 영역 - 최대 높이 제한 */
+.sheet-scroll{
+  overflow-y:auto;flex:1;
+  max-height:calc(55vh - 130px); /* action-row 높이 제외 */
+}
 .sheet-scroll::-webkit-scrollbar{width:3px;}
 .sheet-scroll::-webkit-scrollbar-thumb{background:rgba(201,168,76,0.25);border-radius:2px;}
 
+/* 모바일: 더 작게 */
+@media(max-width:640px){
+  .bottom-sheet{ max-height:48vh; }
+  .sheet-scroll{ max-height:calc(48vh - 120px); }
+}
+/* 접힌 상태 */
+.bottom-sheet.collapsed .sheet-scroll{ max-height:0;overflow:hidden; }
+.bottom-sheet.collapsed .sheet-expand-hint{ display:block; }
+.sheet-expand-hint{ display:none;text-align:center;font-size:11px;color:rgba(201,168,76,0.5);padding:4px 0 8px; }
+
 /* venue header */
 .venue-header{
-  display:flex;align-items:flex-start;gap:14px;
-  padding:16px 0 14px;border-bottom:1px solid rgba(201,168,76,0.1);
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0 10px;border-bottom:1px solid rgba(201,168,76,0.1);
 }
 .venue-icon-box{
   width:52px;height:52px;flex-shrink:0;border-radius:14px;
@@ -91,7 +113,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 .stats-row{display:flex;gap:0;border-bottom:1px solid rgba(201,168,76,0.1);}
 .stat-item{flex:1;text-align:center;padding:12px 0;border-right:1px solid rgba(201,168,76,0.08);}
 .stat-item:last-child{border-right:none;}
-.stat-val{font-size:18px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif;}
+.stat-val{font-size:15px;font-weight:700;color:var(--gold);font-family:'Playfair Display',serif;}
 .stat-lbl{font-size:10px;color:rgba(245,240,232,0.4);margin-top:2px;letter-spacing:.04em;}
 
 /* sports tags */
@@ -107,7 +129,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 .sport-tag:hover{border-color:var(--gold);background:rgba(201,168,76,0.1);color:var(--gold-l);}
 
 /* action buttons */
-.action-row{display:flex;gap:8px;padding-top:14px;}
+.action-row{display:flex;gap:8px;padding-top:10px;padding-bottom:4px;flex-shrink:0;}
 .btn-play{
   flex:2;display:flex;align-items:center;justify-content:center;gap:7px;
   padding:13px;background:linear-gradient(135deg,var(--gold),var(--gold-l));
@@ -222,7 +244,9 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Noto Sans KR',sans
 }
 
 /* ── 슬라이드쇼 ── */
-.venue-slides-wrap{position:relative;height:110px;border-radius:10px;overflow:hidden;margin:10px 0 8px;}
+/* 슬라이드쇼: PC에서만 표시 */
+@media(max-width:767px){ .venue-slides-wrap{ display:none !important; } }
+.venue-slides-wrap{position:relative;height:90px;border-radius:10px;overflow:hidden;margin:8px 0 6px;}
 .venue-slide{position:absolute;inset:0;opacity:0;transition:opacity 0.7s;}
 .venue-slide.vs-active{opacity:1;}
 .venue-slide img{width:100%;height:100%;object-fit:cover;filter:brightness(.65);}
@@ -422,7 +446,7 @@ if (window.mapboxgl) {
 } else {
   map = new maplibregl.Map({
     container:'map',
-    style:'https://tiles.openfreemap.org/styles/liberty',
+    style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
     center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
   });
   map.addControl(new maplibregl.NavigationControl({visualizePitch:true}),'top-left');
@@ -462,8 +486,9 @@ const chatModal = document.getElementById('chat-modal');
 chatFab.addEventListener('click', () => chatModal.classList.toggle('open'));
 document.getElementById('chat-close').addEventListener('click', () => chatModal.classList.remove('open'));
 
-// ── 슬라이드쇼 자동 재생 (2초) ──
+// ── 슬라이드쇼: PC에서만 (768px 이상) ──
 (function(){
+  if(window.innerWidth < 768) return;
   const slides = document.querySelectorAll('.venue-slide');
   if(!slides.length) return;
   let cur = 0;
