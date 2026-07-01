@@ -229,12 +229,19 @@
 
   // ── 로그아웃 ──
   async function signOut() {
-    if (!supabase) return;
-    await supabase.auth.signOut();
+    try {
+      if (supabase) await supabase.auth.signOut();
+    } catch(e) { console.warn('signOut error:', e); }
     currentUser = null;
     currentProfile = null;
+    // Clear local storage auth data
+    localStorage.removeItem('sb-qxbxwggljdbaprkdufwh-auth-token');
+    Object.keys(localStorage).filter(k=>k.startsWith('sb-')).forEach(k=>localStorage.removeItem(k));
     updateNavbar(null);
-    closeMyPage();
+    // Close any open modals
+    document.querySelectorAll('[id$="-overlay"]').forEach(el=>el.remove());
+    // Reload to clean state
+    setTimeout(()=>{ window.location.href = window.location.pathname; }, 300);
   }
 
   // ── 프로필 로드 ──
