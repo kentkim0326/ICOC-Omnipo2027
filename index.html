@@ -697,24 +697,7 @@ footer a { color:var(--gold); text-decoration:none; }
 #icoc-top-ticker-text:hover { animation-play-state: paused; }
 
 
-/* ── sport-card 이미지 ── */
-.sport-card.has-img {
-  background-size: 100% 90px;
-  background-repeat: no-repeat;
-  background-position: top center;
-  padding-top: 102px !important;
-  position: relative;
-}
-.sport-card.has-img::before {
-  content: '';
-  position: absolute;
-  top: 90px; left: 0; right: 0;
-  height: 24px;
-  background: linear-gradient(to bottom, rgba(8,20,44,0), var(--navy,#0B1F3A));
-  pointer-events: none;
-  z-index: 1;
-}
-.sport-card.has-img .sport-icon { display: none; }
+
 
 </style>
 
@@ -2391,19 +2374,41 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 </script>
 
+
+
+
+<!-- ICOC Brain Sports Omnipo BGM -->
+<audio id="bgm-player" src="assets/brainsports-bgm.mp3" loop preload="none"></audio>
 <script>
-(function(){
-  var CARD_IMGS = {'go':'assets/game-cards/go.jpg', 'chess':'assets/game-cards/chess.jpg', 'janggi':'assets/game-cards/janggi.jpg', 'omok':'assets/game-cards/omok.jpg', 'shogi':'assets/game-cards/shogi.jpg', 'checkers':'assets/game-cards/checkers.jpg', 'reversi':'assets/game-cards/reversi.jpg', 'hex':'assets/game-cards/hex.jpg', 'quoridor':'assets/game-cards/quoridor.jpg', 'billiards':'assets/game-cards/billiards.jpg', 'bowling':'assets/game-cards/bowling.jpg', 'holdem':'assets/game-cards/holdem.jpg', 'blackjack':'assets/game-cards/blackjack.jpg', 'mahjong':'assets/game-cards/mahjong.jpg', 'bridge':'assets/game-cards/bridge.jpg', 'screengolf':'assets/game-cards/speedcube.jpg'};
+(function() {
+  var bgm = document.getElementById('bgm-player');
+  var musicBtn = document.getElementById('music-toggle') || document.getElementById('bgm-btn');
+  var playing = false;
+  
+  // 기존 music toggle 버튼에 연결
+  function toggleBGM() {
+    if (!bgm) return;
+    if (playing) {
+      bgm.pause(); playing = false;
+      if (musicBtn) musicBtn.textContent = '🔇';
+    } else {
+      bgm.volume = 0.35;
+      bgm.play().catch(function(){});
+      playing = true;
+      if (musicBtn) musicBtn.textContent = '🔊';
+    }
+  }
+  
+  // 기존 버튼 이벤트 교체
   document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.sport-card[data-game]').forEach(function(card) {
-      var game = card.getAttribute('data-game');
-      var img = CARD_IMGS[game];
-      if(img) {
-        card.style.backgroundImage = 'url(' + img + ')';
-        card.classList.add('has-img');
-      }
-    });
+    var btn = document.getElementById('music-toggle') || document.getElementById('bgm-btn');
+    if (btn) {
+      btn.onclick = toggleBGM;
+      btn.title = 'ICOC Brain Sports Omnipo BGM';
+    }
   });
+  
+  window._ICOC_BGM = { toggle: toggleBGM, player: bgm };
 })();
 </script>
 
