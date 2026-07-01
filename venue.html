@@ -535,17 +535,24 @@ function changeVenueStyle(style) {
   if (pills[idx]) pills[idx].classList.add('active');
 
   // 스타일 적용
-  const newStyle = window.mapboxgl
-    ? (mapboxStyles[style] || mapboxStyles.dark)
-    : (mlStyles[style] || mlStyles.dark);
-
   try {
-    map.setStyle(newStyle);
-    // 스타일 로드 후 3D건물 + 한글 레이블 재적용
-    map.once('style.load', function() {
-      add3DBuildings();
-      applyKoreanLabels();
-    });
+    if (window.mapboxgl) {
+      // Mapbox Standard 스타일: setConfigProperty로 lightPreset 변경 (style diff 오류 방지)
+      const lightPresets = { dark:'night', light:'day', streets:'day', outdoor:'dawn' };
+      const preset = lightPresets[style] || 'night';
+      try {
+        // Standard 스타일인 경우 (lightPreset 사용)
+        map.setConfigProperty('basemap', 'lightPreset', preset);
+        setTimeout(function() { add3DBuildings(); applyKoreanLabels(); }, 500);
+      } catch(e) {
+        // Classic 스타일인 경우 (setStyle 사용)
+        map.setStyle(mapboxStyles[style] || mapboxStyles.dark);
+        map.once('style.load', function() { add3DBuildings(); applyKoreanLabels(); });
+      }
+    } else {
+      map.setStyle(mlStyles[style] || mlStyles.dark);
+      map.once('style.load', function() { applyKoreanLabels(); });
+    }
   } catch(e) { console.warn('Style change error', e); }
 }
 
