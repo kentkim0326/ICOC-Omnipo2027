@@ -493,11 +493,14 @@
   pointer-events:none;
   animation:stonePop 0.18s ease;
 }
-.stone.black { background:radial-gradient(circle at 32% 30%, #555, #050505 78%); }
-.stone.white { background:radial-gradient(circle at 32% 30%, #fff, #c9c9c9 78%); }
+.stone.black,
+.stone.go-black { background:radial-gradient(circle at 32% 30%, #555, #050505 78%); }
+.stone.white,
+.stone.go-white { background:radial-gradient(circle at 32% 30%, #fff, #c9c9c9 78%); }
+.stone.go-last::after,
 .stone.last-move::after {
   content:''; position:absolute; inset:32%;
-  border-radius:50%; border:1.5px solid #d33;
+  border-radius:50%; border:1.5px solid rgba(255,0,0,0.7);
 }
 @keyframes stonePop { from{ transform:scale(0.3); opacity:0; } to{ transform:scale(1); opacity:1; } }
 
