@@ -524,7 +524,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const sb = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
+  const sb = window._ICOC_SB || window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
 
   // 최대 5초 대기해서 세션 확인
   let session = null;
