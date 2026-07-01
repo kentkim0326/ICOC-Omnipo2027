@@ -333,11 +333,14 @@
   }
 
   function doMove(move) {
+    const isCapture = board[move.to[0]][move.to[1]] !== null || move.flag === 'enpassant';
     const { rights, ep } = applyMove(board, move, castleRights, enPassantTarget);
     castleRights = rights; enPassantTarget = ep;
     lastMove = move;
     selected = null; legalTargets = null;
-    if (global.ICOC_SFX) global.ICOC_SFX.piece();
+    // 소리
+    if (typeof _SFX !== 'undefined') { if (isCapture) _SFX.capture(); else _SFX.move(); }
+    else if (global.ICOC_SFX) global.ICOC_SFX.piece();
     renderBoard();
   }
 
