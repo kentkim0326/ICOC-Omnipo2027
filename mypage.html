@@ -512,12 +512,12 @@ function buildGameCards() {
   wrap.className = 'game-cards-grid';
   wrap.innerHTML = '';
 
-  GAMES_LIST.forEach(g => {
+  AVAILABLE_GAMES.forEach(g => {
     const stat = JSON.parse(localStorage.getItem('icoc_stat_' + g.name) || '{"ai_wins":0,"ai_losses":0}');
     const total = stat.ai_wins + stat.ai_losses;
     const rate  = total ? Math.round(stat.ai_wins / total * 100) : 0;
-    const img   = CARD_IMGS[g.key] || '';
-    const proThreshold = g.proAt || 5;
+    const img   = CARD_IMGS[g.id] || '';
+    const proThreshold = g.thresh || 5;
     const isPro = stat.ai_wins >= proThreshold;
     const progress = Math.min(100, Math.round(stat.ai_wins / proThreshold * 100));
 
@@ -527,7 +527,7 @@ function buildGameCards() {
       <div class="card-img-wrap">
         ${img ? `<img src="${img}" alt="${g.name}" loading="lazy">` : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:36px;background:rgba(14,40,71,0.8);">${g.icon}</div>`}
         <div class="card-img-overlay"></div>
-        <button class="card-play-btn" onclick="goPlay('${g.key}')" title="${g.name} 플레이">▶</button>
+        <button class="card-play-btn" onclick="goPlay('${g.id}')" title="${g.name} 플레이">▶</button>
         ${isPro ? '<div style="position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;color:#E8C97A;background:rgba(201,168,76,0.25);border:1px solid rgba(201,168,76,0.4);border-radius:6px;padding:1px 5px;">PRO</div>' : ''}
       </div>
       <div class="card-body">
