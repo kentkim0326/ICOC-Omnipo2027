@@ -226,6 +226,7 @@ body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',san
   <button class="scope-tab" onclick="setScope('city',this)">🏙 도시별</button>
   <button class="scope-tab" onclick="setScope('district',this)">📍 동네별</button>
   <button class="scope-tab" onclick="setScope('personal',this)">👤 개인</button>
+  <button class="scope-tab" onclick="setScope('generation',this)">👥 세대별</button>
 </div>
 
 <!-- SPORT FILTER -->
@@ -640,6 +641,46 @@ function renderDistrict(wrap){
       </div>`;
   });
   wrap.appendChild(list);
+}
+
+
+function renderGeneration(wrap) {
+  const GENS = [
+    {label:'10대',emoji:'🧒',range:'10~19',players:4821, topSport:'오목',  pts:125400},
+    {label:'20대',emoji:'🧑',range:'20~29',players:18432,topSport:'체스',  pts:284700},
+    {label:'30대',emoji:'👨',range:'30~39',players:22150,topSport:'바둑',  pts:412300},
+    {label:'40대',emoji:'🧔',range:'40~49',players:15280,topSport:'당구',  pts:338900},
+    {label:'50대',emoji:'👴',range:'50~59',players:9840, topSport:'장기',  pts:201500},
+    {label:'60대',emoji:'👵',range:'60~69',players:4320, topSport:'바둑',  pts:98700},
+    {label:'70대+',emoji:'🧓',range:'70+', players:1240, topSport:'바둑',  pts:42300},
+  ];
+  wrap.innerHTML += '<div class="lb-sec">👥 세대별 플레이어 현황</div>';
+  const maxPts = 412300;
+  const grid = document.createElement('div');
+  grid.style.cssText = 'display:grid;gap:10px;padding:4px 0;';
+  GENS.forEach((g,i) => {
+    const pct = Math.round(g.pts / maxPts * 100);
+    const colors = ['#C9A84C','#93c5fd','#4ade80','#f87171','#a78bfa','#34d399','#fb923c'];
+    grid.innerHTML += `
+    <div style="background:rgba(14,40,71,0.6);border:1px solid rgba(201,168,76,${i<3?'0.4':'0.15'});border-radius:12px;padding:14px 16px;">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px;">
+        <div style="width:36px;height:36px;border-radius:50%;background:rgba(201,168,76,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;">${g.emoji}</div>
+        <div style="flex:1;">
+          <div style="font-size:15px;font-weight:700;color:${colors[i]};margin-bottom:2px;">${g.label} <span style="font-size:11px;opacity:.5;">(${g.range}세)</span></div>
+          <div style="font-size:11px;color:rgba(245,240,232,0.5);">👤 ${g.players.toLocaleString()}명 · 🥇 ${g.topSport}</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:14px;font-weight:700;color:#C9A84C;">${(g.pts/1000).toFixed(0)}K P</div>
+          <div style="font-size:10px;color:rgba(245,240,232,.4);">총 포인트</div>
+        </div>
+      </div>
+      <div style="height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
+        <div style="width:${pct}%;height:100%;background:${colors[i]};border-radius:3px;transition:width .8s;"></div>
+      </div>
+    </div>`;
+  });
+  wrap.appendChild(grid);
+  wrap.innerHTML += '<div style="font-size:11px;color:rgba(245,240,232,0.3);text-align:center;padding:12px 0;">* 글로벌 AI 대전 기반 샘플 데이터</div>';
 }
 
 function renderPersonal(wrap){
