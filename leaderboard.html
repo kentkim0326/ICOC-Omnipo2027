@@ -12,11 +12,10 @@
 html{ scroll-behavior:smooth; }
 body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',sans-serif; min-height:100vh; }
 
-/* TOP BAR */
 .top-bar{
   position:sticky; top:0; z-index:100;
-  display:flex; align-items:center; gap:10px; padding:0 18px; height:56px;
-  background:rgba(11,31,58,0.95); backdrop-filter:blur(18px);
+  display:flex; align-items:center; gap:10px; padding:0 16px; height:56px;
+  background:rgba(11,31,58,0.96); backdrop-filter:blur(18px);
   border-bottom:1px solid var(--border);
 }
 .btn-back{
@@ -27,30 +26,31 @@ body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',san
 }
 .btn-back:hover{ background:rgba(201,168,76,0.16); border-color:var(--gold); }
 .bar-title{ flex:1; font-size:15px; font-weight:700; color:var(--cream); }
-.live-dot{ display:flex; align-items:center; gap:5px; font-size:11px; color:rgba(245,240,232,0.45); }
-.live-dot::before{ content:''; width:7px; height:7px; border-radius:50%; background:#4ade80; animation:blink 1.5s infinite; }
+.live-badge{
+  display:flex; align-items:center; gap:5px; font-size:11px;
+  color:rgba(245,240,232,0.5); padding:4px 10px;
+  border:1px solid rgba(201,168,76,0.15); border-radius:10px;
+}
+.live-dot{ width:7px; height:7px; border-radius:50%; background:#4ade80; animation:blink 1.5s infinite; }
 @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.3;} }
 
-/* HERO STRIP */
+/* HERO */
 .hero-strip{
-  padding:28px 18px 0;
-  background:linear-gradient(180deg,rgba(201,168,76,0.06) 0%,transparent 100%);
+  padding:24px 16px 0;
+  background:linear-gradient(180deg,rgba(201,168,76,0.07) 0%,transparent 100%);
 }
-.hero-strip h1{
-  font-family:'Playfair Display',serif; font-size:clamp(20px,5vw,32px);
-  font-weight:900; color:var(--gold); margin-bottom:4px;
-}
-.hero-strip p{ font-size:12px; color:rgba(245,240,232,0.45); margin-bottom:16px; }
+.hero-strip h1{ font-family:'Playfair Display',serif; font-size:clamp(20px,5vw,30px); font-weight:900; color:var(--gold); margin-bottom:3px; }
+.hero-strip p{ font-size:12px; color:rgba(245,240,232,0.45); margin-bottom:14px; }
 
-/* SCOPE TABS (국가/도시/동네) */
+/* SCOPE TABS */
 .scope-tabs{
   display:flex; gap:0; border-bottom:1px solid var(--border);
-  background:rgba(11,31,58,0.95); backdrop-filter:blur(12px);
-  position:sticky; top:56px; z-index:90;
-  padding:0 18px;
+  background:rgba(11,31,58,0.96); backdrop-filter:blur(12px);
+  position:sticky; top:56px; z-index:90; padding:0 16px; overflow-x:auto;
 }
+.scope-tabs::-webkit-scrollbar{ display:none; }
 .scope-tab{
-  padding:13px 20px; font-size:13px; font-weight:600;
+  padding:12px 18px; font-size:13px; font-weight:600;
   color:rgba(245,240,232,0.45); cursor:pointer;
   border-bottom:2px solid transparent; transition:all .2s;
   white-space:nowrap; background:none; border-top:none; border-left:none; border-right:none;
@@ -59,167 +59,152 @@ body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',san
 .scope-tab:hover{ color:var(--gold-l); }
 .scope-tab.active{ color:var(--gold); border-bottom-color:var(--gold); }
 
-/* FILTER ROW */
-.filter-row{
-  display:flex; gap:8px; padding:14px 18px; flex-wrap:wrap;
-  border-bottom:1px solid rgba(201,168,76,0.1);
-  background:rgba(11,31,58,0.7);
+/* SPORT FILTER - 66 sports */
+.sport-filter-wrap{
+  background:rgba(10,26,52,0.8); border-bottom:1px solid rgba(201,168,76,0.1);
+  position:sticky; top:107px; z-index:89;
 }
-.filter-pill{
-  padding:5px 14px; border:1px solid rgba(201,168,76,0.2); border-radius:20px;
+.sport-filter-header{
+  display:flex; align-items:center; gap:8px; padding:8px 16px 0;
+}
+.sport-cat-tabs{ display:flex; gap:6px; flex-wrap:nowrap; overflow-x:auto; }
+.sport-cat-tabs::-webkit-scrollbar{ display:none; }
+.sport-cat-tab{
+  padding:5px 12px; border:1px solid rgba(201,168,76,0.2); border-radius:16px;
+  background:transparent; color:rgba(245,240,232,0.55);
+  font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; font-family:inherit;
+  transition:all .2s;
+}
+.sport-cat-tab:hover{ border-color:var(--gold); color:var(--gold-l); }
+.sport-cat-tab.active{ background:var(--gold); color:var(--navy); border-color:var(--gold); }
+
+.sport-pills{
+  display:flex; gap:5px; flex-wrap:nowrap; overflow-x:auto;
+  padding:8px 16px 10px; scroll-behavior:smooth;
+}
+.sport-pills::-webkit-scrollbar{ height:3px; }
+.sport-pills::-webkit-scrollbar-thumb{ background:rgba(201,168,76,0.25); border-radius:2px; }
+.sport-pill{
+  padding:5px 12px; border:1px solid rgba(201,168,76,0.18); border-radius:16px;
   background:transparent; color:rgba(245,240,232,0.6);
-  font-size:12px; font-weight:500; cursor:pointer; transition:all .2s; font-family:inherit;
+  font-size:11px; font-weight:500; cursor:pointer; white-space:nowrap; font-family:inherit;
+  transition:all .2s; flex-shrink:0;
 }
-.filter-pill:hover{ border-color:var(--gold); color:var(--gold-l); }
-.filter-pill.active{ background:var(--gold); color:var(--navy); border-color:var(--gold); font-weight:700; }
+.sport-pill:hover{ border-color:var(--gold); color:var(--gold-l); }
+.sport-pill.active{ background:rgba(201,168,76,0.15); color:var(--gold); border-color:rgba(201,168,76,0.4); font-weight:700; }
 
-/* CONTENT */
-.lb-wrap{ padding:0 18px 80px; max-width:800px; margin:0 auto; }
+/* MAIN CONTENT */
+.lb-wrap{ padding:0 16px 80px; max-width:860px; margin:0 auto; }
 
-/* MY RANK CARD */
+/* MY RANK */
 .my-rank-card{
-  margin:16px 0 12px;
-  background:rgba(201,168,76,0.1); border:1px solid rgba(201,168,76,0.35);
-  border-radius:14px; padding:14px 16px;
-  display:flex; align-items:center; gap:14px;
+  margin:14px 0 10px;
+  background:rgba(201,168,76,0.09); border:1px solid rgba(201,168,76,0.32);
+  border-radius:14px; padding:13px 14px;
+  display:flex; align-items:center; gap:12px;
 }
-.my-rank-num{
-  font-family:'Playfair Display',serif; font-size:26px; font-weight:900;
-  color:var(--gold); min-width:50px; text-align:center;
-}
+.my-rank-num{ font-family:'Playfair Display',serif; font-size:24px; font-weight:900; color:var(--gold); min-width:46px; text-align:center; }
 .my-rank-info{ flex:1; min-width:0; }
-.my-rank-info h3{ font-size:14px; font-weight:700; color:var(--cream); margin-bottom:2px; }
-.my-rank-info p{ font-size:11px; color:rgba(245,240,232,0.45); }
-.my-rank-pts{
-  font-family:'Playfair Display',serif; font-size:20px; font-weight:900;
-  color:var(--gold); text-align:right;
-}
-.my-rank-pts span{ display:block; font-size:10px; color:rgba(245,240,232,0.4); font-family:'Noto Sans KR',sans-serif; font-weight:400; }
+.my-rank-info h3{ font-size:13px; font-weight:700; color:var(--cream); margin-bottom:2px; }
+.my-rank-info p{ font-size:11px; color:rgba(245,240,232,0.4); }
+.my-rank-pts{ font-family:'Playfair Display',serif; font-size:18px; font-weight:900; color:var(--gold); text-align:right; }
+.my-rank-pts span{ display:block; font-size:10px; color:rgba(245,240,232,0.35); font-family:'Noto Sans KR',sans-serif; font-weight:400; }
 
 /* SECTION LABEL */
-.lb-section-label{
-  font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
-  color:rgba(245,240,232,0.35); padding:16px 0 10px;
-  display:flex; align-items:center; gap:8px;
-}
-.lb-section-label::after{ content:''; flex:1; height:1px; background:rgba(201,168,76,0.12); }
+.lb-sec{ font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:rgba(245,240,232,0.32); padding:14px 0 8px; display:flex; align-items:center; gap:8px; }
+.lb-sec::after{ content:''; flex:1; height:1px; background:rgba(201,168,76,0.1); }
 
-/* TOP 3 PODIUM */
-.podium{
-  display:flex; align-items:flex-end; justify-content:center;
-  gap:10px; padding:20px 0 24px;
-}
-.podium-item{
-  display:flex; flex-direction:column; align-items:center;
-  gap:8px; flex:1; max-width:120px; text-align:center;
-}
-.podium-avatar{
-  width:56px; height:56px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:26px; border:3px solid rgba(201,168,76,0.3);
-  background:rgba(14,40,71,0.8);
-}
-.podium-item.r1 .podium-avatar{ width:68px; height:68px; font-size:32px; border-color:var(--gold); box-shadow:0 0 20px rgba(201,168,76,0.3); }
-.podium-item.r2 .podium-avatar{ border-color:#C0C0C0; }
-.podium-item.r3 .podium-avatar{ border-color:#CD7F32; }
-.podium-nick{ font-size:12px; font-weight:700; color:var(--cream); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
-.podium-flag{ font-size:16px; }
-.podium-pts{ font-family:'Playfair Display',serif; font-size:15px; font-weight:900; color:var(--gold); }
-.podium-rank-badge{
-  width:24px; height:24px; border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:11px; font-weight:900;
-}
-.r1 .podium-rank-badge{ background:var(--gold); color:var(--navy); width:28px; height:28px; font-size:13px; }
-.r2 .podium-rank-badge{ background:#C0C0C0; color:#111; }
-.r3 .podium-rank-badge{ background:#CD7F32; color:#fff; }
-.podium-base{
-  background:rgba(14,40,71,0.7); border:1px solid var(--border);
-  border-bottom:none; border-radius:8px 8px 0 0; width:100%; text-align:center;
-  padding:8px 4px 0;
-}
-.r1 .podium-base{ background:rgba(201,168,76,0.12); border-color:rgba(201,168,76,0.25); height:56px; }
-.r2 .podium-base{ height:40px; }
-.r3 .podium-base{ height:28px; }
+/* PODIUM */
+.podium{ display:flex; align-items:flex-end; justify-content:center; gap:8px; padding:16px 0 20px; }
+.p-item{ display:flex; flex-direction:column; align-items:center; gap:6px; flex:1; max-width:110px; text-align:center; }
+.p-avatar{ width:52px; height:52px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:26px; border:2px solid rgba(201,168,76,0.3); background:rgba(14,40,71,0.8); }
+.p-item.r1 .p-avatar{ width:64px; height:64px; font-size:30px; border-color:var(--gold); box-shadow:0 0 18px rgba(201,168,76,0.3); }
+.p-item.r2 .p-avatar{ border-color:#C0C0C0; }
+.p-item.r3 .p-avatar{ border-color:#CD7F32; }
+.p-nick{ font-size:12px; font-weight:700; color:var(--cream); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; width:100%; }
+.p-pts{ font-family:'Playfair Display',serif; font-size:14px; font-weight:900; color:var(--gold); }
+.p-badge{ width:22px; height:22px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:900; }
+.r1 .p-badge{ background:var(--gold); color:var(--navy); width:26px; height:26px; font-size:13px; }
+.r2 .p-badge{ background:#C0C0C0; color:#111; }
+.r3 .p-badge{ background:#CD7F32; color:#fff; }
+.p-base{ background:rgba(14,40,71,0.7); border:1px solid var(--border); border-bottom:none; border-radius:6px 6px 0 0; width:100%; padding:6px 4px 0; }
+.r1 .p-base{ background:rgba(201,168,76,0.1); border-color:rgba(201,168,76,0.22); height:52px; }
+.r2 .p-base{ height:36px; }
+.r3 .p-base{ height:24px; }
 
 /* RANK LIST */
 .rank-list{ display:flex; flex-direction:column; gap:4px; }
 .rank-item{
-  display:flex; align-items:center; gap:12px;
-  padding:12px 14px; border-radius:12px;
-  background:rgba(14,40,71,0.5); border:1px solid rgba(201,168,76,0.08);
-  transition:all .2s; cursor:default;
+  display:flex; align-items:center; gap:10px; padding:11px 12px;
+  border-radius:11px; background:rgba(14,40,71,0.5); border:1px solid rgba(201,168,76,0.07);
+  transition:all .18s; cursor:default;
 }
-.rank-item:hover{ background:rgba(14,40,71,0.8); border-color:rgba(201,168,76,0.2); }
-.rank-item.me{ background:rgba(201,168,76,0.08); border-color:rgba(201,168,76,0.28); }
-.rank-num{
-  font-family:'Playfair Display',serif; font-size:16px; font-weight:700;
-  color:rgba(245,240,232,0.3); min-width:28px; text-align:center;
-}
-.rank-item:nth-child(1) .rank-num{ color:var(--gold); }
-.rank-item:nth-child(2) .rank-num{ color:#C0C0C0; }
-.rank-item:nth-child(3) .rank-num{ color:#CD7F32; }
-.rank-avatar{ font-size:22px; flex-shrink:0; }
-.rank-info{ flex:1; min-width:0; }
-.rank-nick{ font-size:13px; font-weight:700; color:var(--cream); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.rank-sub{ font-size:11px; color:rgba(245,240,232,0.4); margin-top:1px; }
-.rank-change{ font-size:11px; min-width:30px; text-align:center; }
-.change-up{ color:#4ade80; } .change-dn{ color:#f87171; } .change-eq{ color:rgba(245,240,232,0.25); }
-.rank-pts{
-  font-family:'Playfair Display',serif; font-size:16px; font-weight:700;
-  color:var(--gold); text-align:right; white-space:nowrap;
-}
-.rank-pts small{ font-size:10px; color:rgba(245,240,232,0.3); font-family:'Noto Sans KR',sans-serif; font-weight:400; display:block; }
+.rank-item:hover{ background:rgba(14,40,71,0.85); border-color:rgba(201,168,76,0.18); }
+.rank-item.me{ background:rgba(201,168,76,0.07); border-color:rgba(201,168,76,0.25); }
+.r-num{ font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:rgba(245,240,232,0.28); min-width:26px; text-align:center; }
+.rank-item:nth-child(1) .r-num{ color:var(--gold); }
+.rank-item:nth-child(2) .r-num{ color:#C0C0C0; }
+.rank-item:nth-child(3) .r-num{ color:#CD7F32; }
+.r-flag{ font-size:22px; flex-shrink:0; }
+.r-info{ flex:1; min-width:0; }
+.r-nick{ font-size:13px; font-weight:700; color:var(--cream); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.r-sub{ font-size:11px; color:rgba(245,240,232,0.38); margin-top:1px; display:flex; gap:6px; flex-wrap:wrap; }
+.r-tag{ background:rgba(201,168,76,0.1); color:var(--gold); border-radius:6px; padding:1px 6px; font-size:10px; }
+.r-chg{ font-size:11px; min-width:24px; text-align:center; }
+.up{ color:#4ade80; } .dn{ color:#f87171; } .eq{ color:rgba(245,240,232,0.2); }
+.r-pts{ font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--gold); text-align:right; white-space:nowrap; }
+.r-pts small{ font-size:10px; color:rgba(245,240,232,0.3); font-family:'Noto Sans KR',sans-serif; font-weight:400; display:block; }
 
-/* COUNTRY RANK (different layout) */
+/* COUNTRY ITEM */
 .country-item{
-  display:flex; align-items:center; gap:12px;
-  padding:12px 14px; border-radius:12px;
-  background:rgba(14,40,71,0.5); border:1px solid rgba(201,168,76,0.08);
-  transition:all .2s; margin-bottom:4px;
+  display:flex; align-items:center; gap:10px; padding:11px 12px;
+  border-radius:11px; background:rgba(14,40,71,0.5); border:1px solid rgba(201,168,76,0.07);
+  transition:all .18s; margin-bottom:4px; cursor:pointer;
 }
-.country-item:hover{ background:rgba(14,40,71,0.8); border-color:rgba(201,168,76,0.2); }
-.country-flag-big{ font-size:28px; flex-shrink:0; }
-.country-info{ flex:1; min-width:0; }
-.country-name{ font-size:14px; font-weight:700; color:var(--cream); margin-bottom:2px; }
-.country-sub{ font-size:11px; color:rgba(245,240,232,0.4); }
-.country-bar-wrap{ width:80px; }
-.country-bar-bg{ height:4px; background:rgba(255,255,255,0.08); border-radius:2px; margin-bottom:3px; }
-.country-bar{ height:4px; background:var(--gold); border-radius:2px; }
-.country-pts{ font-family:'Playfair Display',serif; font-size:16px; font-weight:700; color:var(--gold); min-width:60px; text-align:right; }
+.country-item:hover{ background:rgba(14,40,71,0.85); border-color:rgba(201,168,76,0.2); }
+.country-item.expanded{ border-color:rgba(201,168,76,0.3); background:rgba(14,40,71,0.8); }
+.c-rank{ font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:rgba(245,240,232,0.28); min-width:26px; text-align:center; }
+.c-flag{ font-size:30px; flex-shrink:0; }
+.c-info{ flex:1; min-width:0; }
+.c-name{ font-size:14px; font-weight:700; color:var(--cream); margin-bottom:2px; }
+.c-sub{ font-size:11px; color:rgba(245,240,232,0.4); display:flex; gap:10px; flex-wrap:wrap; }
+.c-bar-wrap{ width:70px; }
+.c-bar-bg{ height:4px; background:rgba(255,255,255,0.07); border-radius:2px; margin-bottom:2px; }
+.c-bar{ height:4px; background:var(--gold); border-radius:2px; transition:width .5s; }
+.c-pts{ font-family:'Playfair Display',serif; font-size:15px; font-weight:700; color:var(--gold); text-align:right; white-space:nowrap; }
+
+/* Expanded detail */
+.c-detail{
+  display:none; padding:10px 12px 12px;
+  background:rgba(10,26,52,0.5); border-top:1px solid rgba(201,168,76,0.1);
+  grid-template-columns:repeat(auto-fill,minmax(140px,1fr)); gap:8px;
+}
+.c-detail.open{ display:grid; }
+.c-sport-stat{
+  background:rgba(14,40,71,0.7); border:1px solid rgba(201,168,76,0.12);
+  border-radius:8px; padding:8px 10px;
+}
+.c-sport-stat .sport-name{ font-size:11px; font-weight:700; color:var(--cream); margin-bottom:3px; }
+.c-sport-stat .sport-data{ font-size:10px; color:rgba(245,240,232,0.45); }
+.c-city-list{ margin-top:8px; display:flex; flex-wrap:wrap; gap:5px; }
+.c-city-tag{ font-size:10px; background:rgba(201,168,76,0.08); color:var(--gold); border:1px solid rgba(201,168,76,0.2); border-radius:6px; padding:2px 8px; }
 
 .page-end{ height:40px; }
-
-/* CITY selector */
-.city-select{
-  padding:6px 12px; background:rgba(255,255,255,0.05);
-  border:1px solid rgba(201,168,76,0.25); border-radius:8px;
-  color:var(--cream); font-size:12px; font-family:inherit; outline:none;
-  cursor:pointer;
-}
-.city-select option{ background:#0B1F3A; }
-
-@media(max-width:480px){
-  .podium-item{ max-width:90px; }
-  .podium-avatar{ width:46px; height:46px; font-size:22px; }
-  .r1 .podium-avatar{ width:56px; height:56px; font-size:26px; }
-}
 </style>
 </head>
 <body>
 
 <div class="top-bar">
   <a href="index.html" class="btn-back">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-    홈
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>홈
   </a>
-  <div class="bar-title">🏆 리더보드</div>
-  <div class="live-dot">실시간</div>
+  <div class="bar-title">🏆 글로벌 리더보드</div>
+  <div class="live-badge"><div class="live-dot"></div>실시간</div>
 </div>
 
 <div class="hero-strip">
-  <h1>글로벌 리더보드</h1>
-  <p>국가 · 도시 · 동네 단위로 브레인스포츠 국가대표를 확인하세요</p>
+  <h1>Brain Sports 글로벌 랭킹</h1>
+  <p>국가 · 도시 · 동네 단위, 66개 종목별 국가대표 현황을 확인하세요</p>
 </div>
 
 <!-- SCOPE TABS -->
@@ -230,247 +215,454 @@ body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',san
   <button class="scope-tab" onclick="setScope('personal',this)">👤 개인</button>
 </div>
 
-<!-- FILTER ROW -->
-<div class="filter-row" id="filter-row">
-  <button class="filter-pill active" onclick="setGame('all',this)">🌐 전체</button>
-  <button class="filter-pill" onclick="setGame('omok',this)">⚫ 오목</button>
-  <button class="filter-pill" onclick="setGame('chess',this)">♟️ 체스</button>
-  <button class="filter-pill" onclick="setGame('go',this)">⬛ 바둑</button>
-  <button class="filter-pill" onclick="setGame('holdem',this)">🃏 홀덤</button>
-  <button class="filter-pill" onclick="setGame('bowling',this)">🎳 볼링</button>
+<!-- SPORT FILTER -->
+<div class="sport-filter-wrap">
+  <div class="sport-filter-header">
+    <div class="sport-cat-tabs" id="cat-tabs">
+      <button class="sport-cat-tab active" onclick="filterCat('all',this)">🌐 전체</button>
+      <button class="sport-cat-tab" onclick="filterCat('classic',this)">⚫ 클래식</button>
+      <button class="sport-cat-tab" onclick="filterCat('modern',this)">🎯 보드게임</button>
+      <button class="sport-cat-tab" onclick="filterCat('card',this)">🃏 카드</button>
+      <button class="sport-cat-tab" onclick="filterCat('sport',this)">🎳 실내스포츠</button>
+      <button class="sport-cat-tab" onclick="filterCat('traditional',this)">🪅 전통게임</button>
+    </div>
+  </div>
+  <div class="sport-pills" id="sport-pills"></div>
 </div>
 
 <div class="lb-wrap" id="lb-wrap"></div>
 <div class="page-end"></div>
 
-<script src="js/points.js"></script>
 <script>
-// ── Sample Data ───────────────────────────────────────────────
-const COUNTRY_DATA = [
-  {rank:1,flag:'🇰🇷',name:'대한민국',nameEn:'South Korea',players:8420,pts:2840000,change:'up'},
-  {rank:2,flag:'🇨🇳',name:'중국',nameEn:'China',players:7100,pts:2310000,change:'up'},
-  {rank:3,flag:'🇯🇵',name:'일본',nameEn:'Japan',players:5830,pts:1990000,change:'dn'},
-  {rank:4,flag:'🇺🇸',name:'미국',nameEn:'USA',players:4920,pts:1760000,change:'up'},
-  {rank:5,flag:'🇩🇪',name:'독일',nameEn:'Germany',players:3210,pts:1120000,change:'eq'},
-  {rank:6,flag:'🇧🇷',name:'브라질',nameEn:'Brazil',players:2980,pts:1050000,change:'up'},
-  {rank:7,flag:'🇷🇺',name:'러시아',nameEn:'Russia',players:2740,pts:980000,change:'dn'},
-  {rank:8,flag:'🇫🇷',name:'프랑스',nameEn:'France',players:2410,pts:870000,change:'eq'},
-  {rank:9,flag:'🇮🇳',name:'인도',nameEn:'India',players:2290,pts:820000,change:'up'},
-  {rank:10,flag:'🇬🇧',name:'영국',nameEn:'UK',players:1980,pts:710000,change:'dn'},
+/* ── 66 SPORTS DATA ── */
+const ALL_SPORTS = [
+  // Classic 전략
+  {id:'go',       cat:'classic',     name:'바둑',        flag:'⚫', icon:'⚫'},
+  {id:'chess',    cat:'classic',     name:'체스',        flag:'♟️', icon:'♟️'},
+  {id:'janggi',   cat:'classic',     name:'장기',        flag:'🀄', icon:'🀄'},
+  {id:'omok',     cat:'classic',     name:'오목',        flag:'🖤', icon:'🖤'},
+  {id:'shogi',    cat:'classic',     name:'장기(쇼기)',  flag:'🎌', icon:'🎌'},
+  {id:'checkers', cat:'classic',     name:'체커',        flag:'🔴', icon:'🔴'},
+  {id:'backgammon',cat:'classic',    name:'백개먼',      flag:'🎲', icon:'🎲'},
+  {id:'reversi',  cat:'classic',     name:'리버시',      flag:'⬛', icon:'⬛'},
+  {id:'hex',      cat:'classic',     name:'헥스',        flag:'🔷', icon:'🔷'},
+  {id:'quoridor', cat:'classic',     name:'쿼리도',      flag:'🟫', icon:'🟫'},
+  {id:'xiangqi',  cat:'classic',     name:'중국장기',    flag:'🔆', icon:'🔆'},
+  {id:'amazons',  cat:'classic',     name:'아마조나스',  flag:'👸', icon:'👸'},
+  // Modern 보드게임
+  {id:'rummikub', cat:'modern',      name:'루미큐브',    flag:'🟧', icon:'🟧'},
+  {id:'connect4', cat:'modern',      name:'커넥트4',     flag:'🔵', icon:'🔵'},
+  {id:'davinci',  cat:'modern',      name:'다빈치코드',  flag:'🔢', icon:'🔢'},
+  {id:'catan',    cat:'modern',      name:'카탄',        flag:'🌾', icon:'🌾'},
+  {id:'splendor', cat:'modern',      name:'스플렌더',    flag:'💎', icon:'💎'},
+  {id:'avalon',   cat:'modern',      name:'아발론',      flag:'🗡️', icon:'🗡️'},
+  {id:'dixit',    cat:'modern',      name:'딕싯',        flag:'🎨', icon:'🎨'},
+  {id:'ticket',   cat:'modern',      name:'티켓투라이드',flag:'🚂', icon:'🚂'},
+  {id:'pandemic', cat:'modern',      name:'팬데믹',      flag:'🦠', icon:'🦠'},
+  {id:'7wonders', cat:'modern',      name:'7 원더스',    flag:'🏛️', icon:'🏛️'},
+  {id:'azul',     cat:'modern',      name:'아줄',        flag:'🟦', icon:'🟦'},
+  {id:'wingspn',  cat:'modern',      name:'윙스팬',      flag:'🦅', icon:'🦅'},
+  {id:'patchwork',cat:'modern',      name:'패치워크',    flag:'🧩', icon:'🧩'},
+  // Card
+  {id:'holdem',   cat:'card',        name:'텍사스 홀덤', flag:'🃏', icon:'🃏'},
+  {id:'bridge',   cat:'card',        name:'브릿지',      flag:'🂡', icon:'🂡'},
+  {id:'rummy',    cat:'card',        name:'진러미',      flag:'🎴', icon:'🎴'},
+  {id:'hearts',   cat:'card',        name:'하츠',        flag:'♥️', icon:'♥️'},
+  {id:'oldmaid',  cat:'card',        name:'올드메이드',  flag:'🃟', icon:'🃟'},
+  {id:'onecard',  cat:'card',        name:'원카드',      flag:'🀣', icon:'🀣'},
+  {id:'blackjack',cat:'card',        name:'블랙잭',      flag:'🂮', icon:'🂮'},
+  {id:'scopa',    cat:'card',        name:'스코파',      flag:'🍸', icon:'🍸'},
+  {id:'skat',     cat:'card',        name:'스캣',        flag:'🃞', icon:'🃞'},
+  {id:'canasta',  cat:'card',        name:'카나스타',    flag:'🎭', icon:'🎭'},
+  {id:'gostop',   cat:'card',        name:'고스톱',      flag:'🌸', icon:'🌸'},
+  // Indoor Sports
+  {id:'billiards',cat:'sport',       name:'당구(3구)',    flag:'🎱', icon:'🎱'},
+  {id:'pool',     cat:'sport',       name:'포켓볼',      flag:'🔵', icon:'🔵'},
+  {id:'snooker',  cat:'sport',       name:'스누커',      flag:'🟢', icon:'🟢'},
+  {id:'bowling',  cat:'sport',       name:'볼링',        flag:'🎳', icon:'🎳'},
+  {id:'screengolf',cat:'sport',      name:'스크린골프',  flag:'⛳', icon:'⛳'},
+  {id:'parkgolf', cat:'sport',       name:'파크골프',    flag:'🌿', icon:'🌿'},
+  {id:'tabletenn',cat:'sport',       name:'탁구',        flag:'🏓', icon:'🏓'},
+  {id:'darts',    cat:'sport',       name:'다트',        flag:'🎯', icon:'🎯'},
+  {id:'archery',  cat:'sport',       name:'양궁(실내)',   flag:'🏹', icon:'🏹'},
+  {id:'squash',   cat:'sport',       name:'스쿼시',      flag:'🟡', icon:'🟡'},
+  // Traditional 전통게임
+  {id:'yutnori',  cat:'traditional', name:'윷놀이',      flag:'🪅', icon:'🪅'},
+  {id:'baduk_fast',cat:'traditional',name:'속기바둑',    flag:'⚡', icon:'⚡'},
+  {id:'mahjong',  cat:'traditional', name:'마작',        flag:'🀀', icon:'🀀'},
+  {id:'nim',      cat:'traditional', name:'님 게임',     flag:'➕', icon:'➕'},
+  {id:'go_9',     cat:'traditional', name:'바둑(9로)',    flag:'⭕', icon:'⭕'},
+  {id:'mancala',  cat:'traditional', name:'만칼라',      flag:'🟤', icon:'🟤'},
+  {id:'santorini',cat:'traditional', name:'산토리니',    flag:'🏠', icon:'🏠'},
+  {id:'onitama',  cat:'traditional', name:'오니타마',    flag:'🥋', icon:'🥋'},
+  {id:'hive',     cat:'traditional', name:'하이브',      flag:'🐝', icon:'🐝'},
+  {id:'abalone',  cat:'traditional', name:'아발론(돌)',   flag:'🔘', icon:'🔘'},
+  {id:'pentago',  cat:'traditional', name:'펜타고',      flag:'🌀', icon:'🌀'},
+  {id:'loa',      cat:'traditional', name:'LOA',         flag:'〰️', icon:'〰️'},
+  {id:'janken',   cat:'traditional', name:'가위바위보',  flag:'✌️', icon:'✌️'},
+  {id:'tafl',     cat:'traditional', name:'타플',        flag:'⚔️', icon:'⚔️'},
+  {id:'sugoroku', cat:'traditional', name:'스고로쿠',    flag:'🎰', icon:'🎰'},
+  {id:'omk_blitz',cat:'traditional', name:'블리츠오목',  flag:'⚡', icon:'⚡'},
+  {id:'gomoku3',  cat:'traditional', name:'렌주',        flag:'🔵', icon:'🔵'},
 ];
 
-const CITY_DATA = [
-  {rank:1,flag:'🇰🇷',name:'서울',country:'대한민국',players:3820,pts:1340000,change:'up'},
-  {rank:2,flag:'🇨🇳',name:'베이징',country:'중국',players:2910,pts:1020000,change:'up'},
-  {rank:3,flag:'🇯🇵',name:'도쿄',country:'일본',players:2540,pts:890000,change:'dn'},
-  {rank:4,flag:'🇺🇸',name:'뉴욕',country:'미국',players:2120,pts:760000,change:'eq'},
-  {rank:5,flag:'🇩🇪',name:'베를린',country:'독일',players:1480,pts:530000,change:'up'},
-  {rank:6,flag:'🇰🇷',name:'부산',country:'대한민국',players:1310,pts:470000,change:'up'},
-  {rank:7,flag:'🇬🇧',name:'런던',country:'영국',players:1200,pts:440000,change:'eq'},
-  {rank:8,flag:'🇫🇷',name:'파리',country:'프랑스',players:1140,pts:410000,change:'dn'},
-  {rank:9,flag:'🇧🇷',name:'상파울루',country:'브라질',players:1080,pts:390000,change:'up'},
-  {rank:10,flag:'🇨🇳',name:'상하이',country:'중국',players:1020,pts:370000,change:'dn'},
+/* ── COUNTRY DATA with flags + sport breakdown ── */
+const COUNTRIES = [
+  {rank:1,flag:'🇰🇷',name:'대한민국',en:'South Korea',players:8420,pts:2840000,change:'up',
+   cities:['서울(3820)','부산(1310)','수원(890)','대구(680)','인천(520)'],
+   sports:{go:1840,omok:1620,janggi:980,chess:720,holdem:580,billiards:680}},
+  {rank:2,flag:'🇨🇳',name:'중국',en:'China',players:7100,pts:2310000,change:'up',
+   cities:['베이징(2910)','상하이(1020)','광저우(780)','선전(640)'],
+   sports:{go:2400,chess:890,mahjong:1200,xiangqi:980,holdem:430}},
+  {rank:3,flag:'🇯🇵',name:'일본',en:'Japan',players:5830,pts:1990000,change:'dn',
+   cities:['도쿄(2540)','오사카(1120)','나고야(680)','삿포로(490)'],
+   sports:{go:1680,shogi:2100,chess:380,mahjong:780,rummy:290}},
+  {rank:4,flag:'🇺🇸',name:'미국',en:'USA',players:4920,pts:1760000,change:'up',
+   cities:['뉴욕(2120)','LA(980)','시카고(680)','시애틀(420)'],
+   sports:{chess:1840,holdem:1280,bridge:680,checkers:420,bowling:500}},
+  {rank:5,flag:'🇩🇪',name:'독일',en:'Germany',players:3210,pts:1120000,change:'eq',
+   cities:['베를린(1480)','뮌헨(780)','함부르크(520)'],
+   sports:{chess:1200,skat:680,backgammon:390,catan:420,rummy:320}},
+  {rank:6,flag:'🇧🇷',name:'브라질',en:'Brazil',players:2980,pts:1050000,change:'up',
+   cities:['상파울루(1080)','리우(780)','브라질리아(420)'],
+   sports:{holdem:820,checkers:680,chess:540,bowling:480,rummy:360}},
+  {rank:7,flag:'🇷🇺',name:'러시아',en:'Russia',players:2740,pts:980000,change:'dn',
+   cities:['모스크바(1340)','상트페테르부르크(680)','노보시비르스크(380)'],
+   sports:{chess:1680,backgammon:480,reversi:280,rummy:180,billiards:120}},
+  {rank:8,flag:'🇫🇷',name:'프랑스',en:'France',players:2410,pts:870000,change:'eq',
+   cities:['파리(1140)','리옹(480)','마르세유(380)'],
+   sports:{bridge:820,chess:580,tarot:420,petanque:280,rummy:310}},
+  {rank:9,flag:'🇮🇳',name:'인도',en:'India',players:2290,pts:820000,change:'up',
+   cities:['뭄바이(820)','델리(680)','방갈로르(480)'],
+   sports:{chess:1240,carrom:480,rummy:320,bridge:180,ludo:270}},
+  {rank:10,flag:'🇬🇧',name:'영국',en:'UK',players:1980,pts:710000,change:'dn',
+   cities:['런던(1200)','맨체스터(380)','버밍엄(280)'],
+   sports:{chess:680,bridge:520,darts:420,snooker:280,backgammon:80}},
+  {rank:11,flag:'🇹🇷',name:'터키',en:'Turkey',players:1650,pts:590000,change:'up',
+   cities:['이스탄불(920)','앙카라(480)'],
+   sports:{chess:580,backgammon:620,rummy:280,checkers:170}},
+  {rank:12,flag:'🇦🇷',name:'아르헨티나',en:'Argentina',players:1420,pts:510000,change:'up',
+   cities:['부에노스아이레스(980)','코르도바(280)'],
+   sports:{chess:480,holdem:380,checkers:280,truco:280}},
+  {rank:13,flag:'🇲🇽',name:'멕시코',en:'Mexico',players:1280,pts:460000,change:'eq',
+   cities:['멕시코시티(820)','과달라하라(280)'],
+   sports:{chess:420,holdem:320,domino:280,checkers:260}},
+  {rank:14,flag:'🇵🇱',name:'폴란드',en:'Poland',players:1180,pts:420000,change:'up',
+   cities:['바르샤바(620)','크라쿠프(380)'],
+   sports:{chess:680,backgammon:280,bridge:220}},
+  {rank:15,flag:'🇻🇳',name:'베트남',en:'Vietnam',players:1060,pts:380000,change:'up',
+   cities:['하노이(580)','호치민(380)'],
+   sports:{chess:380,xiangqi:420,omok:180,holdem:80}},
 ];
 
-const DISTRICT_DATA = [
-  {rank:1,flag:'🇰🇷',name:'강남구',city:'서울',players:520,pts:184000,change:'up'},
-  {rank:2,flag:'🇰🇷',name:'마포구',city:'서울',players:410,pts:148000,change:'up'},
-  {rank:3,flag:'🇰🇷',name:'해운대구',city:'부산',players:380,pts:136000,change:'eq'},
-  {rank:4,flag:'🇰🇷',name:'수원 영통구',city:'수원',players:350,pts:126000,change:'up'},
-  {rank:5,flag:'🇯🇵',name:'신주쿠',city:'도쿄',players:320,pts:115000,change:'dn'},
-  {rank:6,flag:'🇨🇳',name:'차오양구',city:'베이징',players:290,pts:105000,change:'up'},
-  {rank:7,flag:'🇺🇸',name:'맨해튼',city:'뉴욕',players:270,pts:97000,change:'eq'},
-  {rank:8,flag:'🇰🇷',name:'중구',city:'대구',players:250,pts:90000,change:'dn'},
-  {rank:9,flag:'🇩🇪',name:'미테',city:'베를린',players:230,pts:83000,change:'up'},
-  {rank:10,flag:'🇰🇷',name:'연수구',city:'인천',players:210,pts:76000,change:'dn'},
+const CITIES=[
+  {rank:1,flag:'🇰🇷',name:'서울',country:'대한민국',players:3820,pts:1340000,change:'up',
+   districts:['강남구(520)','마포구(410)','종로구(380)','영등포구(340)','송파구(320)']},
+  {rank:2,flag:'🇨🇳',name:'베이징',country:'중국',players:2910,pts:1020000,change:'up',
+   districts:['차오양구(290)','하이뎬구(240)','둥청구(180)']},
+  {rank:3,flag:'🇯🇵',name:'도쿄',country:'일본',players:2540,pts:890000,change:'dn',
+   districts:['신주쿠(320)','시부야(280)','미나토구(240)']},
+  {rank:4,flag:'🇺🇸',name:'뉴욕',country:'미국',players:2120,pts:760000,change:'eq',
+   districts:['맨해튼(270)','브루클린(180)','퀸즈(150)']},
+  {rank:5,flag:'🇩🇪',name:'베를린',country:'독일',players:1480,pts:530000,change:'up',
+   districts:['미테(230)','프렌츨라우어베르크(180)']},
+  {rank:6,flag:'🇰🇷',name:'부산',country:'대한민국',players:1310,pts:470000,change:'up',
+   districts:['해운대구(380)','부산진구(280)','남구(220)']},
+  {rank:7,flag:'🇬🇧',name:'런던',country:'영국',players:1200,pts:440000,change:'eq',
+   districts:['웨스트민스터(180)','캠든(140)','이슬링턴(120)']},
+  {rank:8,flag:'🇫🇷',name:'파리',country:'프랑스',players:1140,pts:410000,change:'dn',
+   districts:['11구(180)','18구(140)','3구(120)']},
+  {rank:9,flag:'🇧🇷',name:'상파울루',country:'브라질',players:1080,pts:390000,change:'up',
+   districts:['빌라마리아나(160)','피냐이루스(130)']},
+  {rank:10,flag:'🇨🇳',name:'상하이',country:'중국',players:1020,pts:370000,change:'dn',
+   districts:['푸둥신구(220)','황푸구(180)']},
 ];
 
-const PERSONAL_DATA = [
-  {rank:1,avatar:'⚫',nick:'OmokGod',flag:'🇰🇷',sub:'서울 강남 · 오목 국대 #1',pts:48200,change:'up'},
-  {rank:2,avatar:'♟️',nick:'ChessMaster_RU',flag:'🇷🇺',sub:'모스크바 · 체스 국대 #1',pts:45800,change:'up'},
-  {rank:3,avatar:'⬛',nick:'GoSage88',flag:'🇨🇳',sub:'베이징 · 바둑 국대 #1',pts:43100,change:'dn'},
-  {rank:4,avatar:'🃏',nick:'PokerKing_US',flag:'🇺🇸',sub:'뉴욕 · 홀덤 국대 #2',pts:41700,change:'eq'},
-  {rank:5,avatar:'🎱',nick:'BilliardsPro_KR',flag:'🇰🇷',sub:'부산 · 당구 국대 #1',pts:39200,change:'up'},
-  {rank:6,avatar:'♟️',nick:'ShogiQueen',flag:'🇯🇵',sub:'도쿄 · 쇼기 국대 #1',pts:37500,change:'up'},
-  {rank:7,avatar:'🎯',nick:'BoardLegend',flag:'🇩🇪',sub:'베를린 · 루미큐브 국대 #1',pts:35800,change:'dn'},
-  {rank:8,avatar:'⚫',nick:'OmokWarlord',flag:'🇰🇷',sub:'서울 마포 · 오목 국대 #2',pts:33400,change:'eq'},
-  {rank:9,avatar:'⛳',nick:'ScreenGolfKing',flag:'🇰🇷',sub:'수원 · 스크린골프 국대',pts:31200,change:'up'},
-  {rank:10,avatar:'🎳',nick:'BowlingMaster',flag:'🇧🇷',sub:'상파울루 · 볼링 국대 #1',pts:29800,change:'dn'},
+const DISTRICTS=[
+  {rank:1,flag:'🇰🇷',name:'강남구',city:'서울',players:520,pts:184000,change:'up',top_sport:'오목',sport_players:180},
+  {rank:2,flag:'🇰🇷',name:'마포구',city:'서울',players:410,pts:148000,change:'up',top_sport:'체스',sport_players:140},
+  {rank:3,flag:'🇰🇷',name:'해운대구',city:'부산',players:380,pts:136000,change:'eq',top_sport:'볼링',sport_players:120},
+  {rank:4,flag:'🇰🇷',name:'수원 영통구',city:'수원',players:350,pts:126000,change:'up',top_sport:'스크린골프',sport_players:110},
+  {rank:5,flag:'🇯🇵',name:'신주쿠',city:'도쿄',players:320,pts:115000,change:'dn',top_sport:'장기(쇼기)',sport_players:180},
+  {rank:6,flag:'🇨🇳',name:'차오양구',city:'베이징',players:290,pts:105000,change:'up',top_sport:'마작',sport_players:160},
+  {rank:7,flag:'🇺🇸',name:'맨해튼',city:'뉴욕',players:270,pts:97000,change:'eq',top_sport:'체스',sport_players:140},
+  {rank:8,flag:'🇰🇷',name:'종로구',city:'서울',players:250,pts:90000,change:'dn',top_sport:'바둑',sport_players:180},
+  {rank:9,flag:'🇩🇪',name:'미테',city:'베를린',players:230,pts:83000,change:'up',top_sport:'체스',sport_players:120},
+  {rank:10,flag:'🇰🇷',name:'연수구',city:'인천',players:210,pts:76000,change:'dn',top_sport:'당구(3구)',sport_players:90},
 ];
 
-let currentScope = 'country';
-let currentGame = 'all';
+const PERSONAL=[
+  {rank:1,avatar:'⚫',nick:'OmokGod_KR',flag:'🇰🇷',city:'서울 강남',sport:'오목',pts:48200,change:'up'},
+  {rank:2,avatar:'♟️',nick:'ChessMaster_RU',flag:'🇷🇺',city:'모스크바',sport:'체스',pts:45800,change:'up'},
+  {rank:3,avatar:'⬛',nick:'GoSage88_CN',flag:'🇨🇳',city:'베이징',sport:'바둑',pts:43100,change:'dn'},
+  {rank:4,avatar:'🃏',nick:'PokerKing_US',flag:'🇺🇸',city:'뉴욕',sport:'홀덤',pts:41700,change:'eq'},
+  {rank:5,avatar:'🎱',nick:'BilliardsPro_KR',flag:'🇰🇷',city:'부산',sport:'당구(3구)',pts:39200,change:'up'},
+  {rank:6,avatar:'🎌',nick:'ShogiQueen_JP',flag:'🇯🇵',city:'도쿄',sport:'장기(쇼기)',pts:37500,change:'up'},
+  {rank:7,avatar:'🟧',nick:'RummiLegend_DE',flag:'🇩🇪',city:'베를린',sport:'루미큐브',pts:35800,change:'dn'},
+  {rank:8,avatar:'🪅',nick:'YutKing_KR',flag:'🇰🇷',city:'서울 마포',sport:'윷놀이',pts:33400,change:'eq'},
+  {rank:9,avatar:'⛳',nick:'ScreenGolf1_KR',flag:'🇰🇷',city:'수원',sport:'스크린골프',pts:31200,change:'up'},
+  {rank:10,avatar:'🎳',nick:'BowlingMaster_BR',flag:'🇧🇷',city:'상파울루',sport:'볼링',pts:29800,change:'dn'},
+];
 
-function setScope(scope, btn) {
-  currentScope = scope;
-  document.querySelectorAll('.scope-tab').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
+/* ── State ── */
+let curScope = 'country';
+let curSport = 'all';
+let curCat   = 'all';
 
-function setGame(game, btn) {
-  currentGame = game;
-  document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  render();
-}
-
-function changeIcon(c) {
-  if (c==='up') return '<span class="change-up">↑</span>';
-  if (c==='dn') return '<span class="change-dn">↓</span>';
-  return '<span class="change-eq">—</span>';
-}
-
-function fmtPts(n) {
-  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
-  if (n >= 1000) return (n/1000).toFixed(0) + 'K';
+function fmtPts(n){
+  if(n>=1e6) return (n/1e6).toFixed(1)+'M';
+  if(n>=1e3) return (n/1e3).toFixed(0)+'K';
   return n.toLocaleString();
 }
+function chgIcon(c){ return c==='up'?'<span class="up">↑</span>':c==='dn'?'<span class="dn">↓</span>':'<span class="eq">—</span>'; }
 
-function render() {
+/* ── Sport Pills ── */
+function buildSportPills(cat){
+  const pills = document.getElementById('sport-pills');
+  pills.innerHTML = '';
+  const list = cat==='all'? ALL_SPORTS : ALL_SPORTS.filter(s=>s.cat===cat);
+  
+  // All button
+  const allBtn = document.createElement('button');
+  allBtn.className = 'sport-pill'+(curSport==='all'?' active':'');
+  allBtn.textContent = '전체';
+  allBtn.onclick = () => selectSport('all', allBtn);
+  pills.appendChild(allBtn);
+  
+  list.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'sport-pill'+(curSport===s.id?' active':'');
+    btn.innerHTML = `${s.icon} ${s.name}`;
+    btn.onclick = () => selectSport(s.id, btn);
+    pills.appendChild(btn);
+  });
+}
+
+function filterCat(cat, el){
+  curCat = cat;
+  document.querySelectorAll('.sport-cat-tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  curSport = 'all';
+  buildSportPills(cat);
+  render();
+}
+
+function selectSport(id, el){
+  curSport = id;
+  document.querySelectorAll('.sport-pill').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function setScope(scope, btn){
+  curScope = scope;
+  document.querySelectorAll('.scope-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+/* ── Render ── */
+function render(){
   const wrap = document.getElementById('lb-wrap');
   wrap.innerHTML = '';
-
+  
   // My rank card
-  const myState = window.ICOC_POINTS ? ICOC_POINTS.getState() : {total:0};
-  const myRankNum = Math.floor(Math.random()*50)+10;
+  const myPts = window.ICOC_POINTS ? ICOC_POINTS.getState().total : 0;
   wrap.innerHTML += `
     <div class="my-rank-card">
-      <div class="my-rank-num">#${myRankNum}</div>
+      <div class="my-rank-num">#${Math.floor(Math.random()*50)+10}</div>
       <div class="my-rank-info">
-        <h3>나의 현재 순위</h3>
-        <p>${currentScope==='country'?'대한민국':'현재 위치'} · ${currentGame==='all'?'전체 종목':currentGame}</p>
+        <h3>나의 현재 순위 <span style="font-size:10px;color:rgba(245,240,232,0.4);">(${curScope==='country'?'국가별':curScope==='city'?'도시별':curScope==='district'?'동네별':'개인'}${curSport!=='all'?' · '+( ALL_SPORTS.find(s=>s.id===curSport)?.name||''):''})</span></h3>
+        <p>🇰🇷 대한민국 · 서울</p>
       </div>
-      <div class="my-rank-pts">${fmtPts(myState.total || 0)}<span>내 포인트</span></div>
+      <div class="my-rank-pts">${fmtPts(myPts)}<span>내 포인트</span></div>
     </div>`;
 
-  if (currentScope === 'country') renderCountry(wrap);
-  else if (currentScope === 'city') renderCity(wrap);
-  else if (currentScope === 'district') renderDistrict(wrap);
+  if(curScope==='country') renderCountry(wrap);
+  else if(curScope==='city') renderCity(wrap);
+  else if(curScope==='district') renderDistrict(wrap);
   else renderPersonal(wrap);
 }
 
-function renderCountry(wrap) {
-  const top3 = COUNTRY_DATA.slice(0,3);
-  const rest  = COUNTRY_DATA.slice(3);
-  const maxPts = COUNTRY_DATA[0].pts;
-
+function renderCountry(wrap){
+  const top3 = COUNTRIES.slice(0,3);
+  
   // Podium
-  wrap.innerHTML += `<div class="lb-section-label">🥇 TOP 3 국가</div>`;
-  const podium = document.createElement('div');
-  podium.className = 'podium';
-  // order: 2nd, 1st, 3rd
-  [top3[1], top3[0], top3[2]].forEach((d, i) => {
-    const ri = i===1?1:(i===0?2:3);
-    const cl = `r${ri}`;
-    podium.innerHTML += `
-      <div class="podium-item ${cl}">
-        <div class="podium-rank-badge">${ri}</div>
-        <div class="podium-avatar">${d.flag}</div>
-        <div class="podium-nick">${d.name}</div>
-        <div class="podium-pts">${fmtPts(d.pts)}</div>
-        <div class="podium-base"></div>
+  wrap.innerHTML += `<div class="lb-sec">🥇 TOP 3 국가</div>`;
+  const maxP = COUNTRIES[0].pts;
+  const pod = document.createElement('div');
+  pod.className = 'podium';
+  [top3[1],top3[0],top3[2]].forEach((d,i)=>{
+    const ri=i===1?1:(i===0?2:3);
+    pod.innerHTML+=`
+      <div class="p-item r${ri}">
+        <div class="p-badge">${ri}</div>
+        <div class="p-avatar" style="font-size:${ri===1?'36px':'28px'}">${d.flag}</div>
+        <div class="p-nick">${d.name}</div>
+        <div style="font-size:11px;color:rgba(245,240,232,0.45);">${d.players.toLocaleString()}명</div>
+        <div class="p-pts">${fmtPts(d.pts)}</div>
+        <div class="p-base"></div>
       </div>`;
   });
-  wrap.appendChild(podium);
+  wrap.appendChild(pod);
 
-  wrap.innerHTML += `<div class="lb-section-label">🌐 전체 국가 랭킹</div>`;
-  COUNTRY_DATA.forEach(d => {
-    const pct = Math.round(d.pts/maxPts*100);
-    wrap.innerHTML += `
-      <div class="country-item">
-        <div class="rank-num">${d.rank}</div>
-        <div class="country-flag-big">${d.flag}</div>
-        <div class="country-info">
-          <div class="country-name">${d.name}</div>
-          <div class="country-sub">${d.players.toLocaleString()} 명 참가 · ${changeIcon(d.change)}</div>
-          <div class="country-bar-bg"><div class="country-bar" style="width:${pct}%"></div></div>
+  wrap.innerHTML += `<div class="lb-sec">🌐 전체 국가 랭킹 <span style="font-size:10px;color:var(--gold);margin-left:4px;">클릭시 상세 보기</span></div>`;
+  
+  COUNTRIES.forEach(d=>{
+    const pct=Math.round(d.pts/maxP*100);
+    const sportName = curSport!=='all' ? ALL_SPORTS.find(s=>s.id===curSport)?.name : '';
+    const sportPts  = curSport!=='all' && d.sports?.[curSport] ? d.sports[curSport] : null;
+    
+    const item = document.createElement('div');
+    item.className = 'country-item';
+    item.dataset.id = d.rank;
+    item.innerHTML = `
+      <div class="c-rank">${d.rank}</div>
+      <div class="c-flag">${d.flag}</div>
+      <div class="c-info">
+        <div class="c-name">${d.name} <span style="font-size:11px;color:rgba(245,240,232,0.35);">${d.en}</span></div>
+        <div class="c-sub">
+          <span>👥 ${d.players.toLocaleString()}명</span>
+          ${sportPts?`<span class="r-tag">${sportName} ${sportPts}명</span>`:''}
+          <span>${chgIcon(d.change)}</span>
         </div>
-        <div class="country-pts">${fmtPts(d.pts)}<br><small style="font-size:10px;color:rgba(245,240,232,0.35);font-family:'Noto Sans KR'">포인트</small></div>
+      </div>
+      <div class="c-bar-wrap">
+        <div class="c-bar-bg"><div class="c-bar" style="width:${pct}%"></div></div>
+      </div>
+      <div class="c-pts">${fmtPts(d.pts)}<small>pts</small></div>`;
+    
+    // Detail panel
+    const detail = document.createElement('div');
+    detail.className = 'c-detail';
+    detail.style.cssText = 'display:none;padding:10px 12px 12px;border-top:1px solid rgba(201,168,76,0.1);background:rgba(10,26,52,0.5);';
+    
+    // Sport breakdown
+    const topSports = Object.entries(d.sports||{}).sort(([,a],[,b])=>b-a).slice(0,6);
+    let detailHtml = '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:6px;margin-bottom:8px;">';
+    topSports.forEach(([sid,cnt])=>{
+      const sp = ALL_SPORTS.find(s=>s.id===sid);
+      detailHtml += `<div style="background:rgba(14,40,71,0.7);border:1px solid rgba(201,168,76,0.12);border-radius:8px;padding:7px 9px;">
+        <div style="font-size:11px;font-weight:700;color:var(--cream);margin-bottom:2px;">${sp?.icon||''} ${sp?.name||sid}</div>
+        <div style="font-size:10px;color:rgba(245,240,232,0.45);">👥 ${cnt}명 참여</div>
       </div>`;
+    });
+    detailHtml += '</div>';
+    // Cities
+    if(d.cities?.length){
+      detailHtml += '<div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px;">';
+      d.cities.forEach(c => { detailHtml += `<span style="font-size:10px;background:rgba(201,168,76,0.08);color:var(--gold);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:2px 8px;">🏙 ${c}</span>`; });
+      detailHtml += '</div>';
+    }
+    detail.innerHTML = detailHtml;
+    
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'border-radius:11px;overflow:hidden;margin-bottom:4px;border:1px solid rgba(201,168,76,0.07);';
+    wrapper.appendChild(item);
+    wrapper.appendChild(detail);
+    
+    item.addEventListener('click',()=>{
+      const open = detail.style.display==='block';
+      detail.style.display = open?'none':'block';
+      item.style.borderColor = open?'':'rgba(201,168,76,0.3)';
+    });
+    wrap.appendChild(wrapper);
   });
 }
 
-function renderCity(wrap) {
-  wrap.innerHTML += `<div class="lb-section-label">🏙 33대 도시 랭킹</div>`;
-  const list = document.createElement('div');
-  list.className = 'rank-list';
-  CITY_DATA.forEach(d => {
-    list.innerHTML += `
+function renderCity(wrap){
+  wrap.innerHTML += `<div class="lb-sec">🏙 33대 도시 랭킹 <span style="font-size:10px;color:var(--gold);margin-left:4px;">클릭시 동네 보기</span></div>`;
+  const list = document.createElement('div'); list.className='rank-list';
+  CITIES.forEach(d=>{
+    const li = document.createElement('div');
+    li.className='rank-item'; li.style.cursor='pointer';
+    li.innerHTML=`
+      <div class="r-num">${d.rank}</div>
+      <div class="r-flag">${d.flag}</div>
+      <div class="r-info">
+        <div class="r-nick">${d.name}</div>
+        <div class="r-sub"><span>${d.country}</span><span>👥 ${d.players.toLocaleString()}명</span></div>
+      </div>
+      <div class="r-chg">${chgIcon(d.change)}</div>
+      <div class="r-pts">${fmtPts(d.pts)}<small>pts</small></div>`;
+    
+    const detail = document.createElement('div');
+    detail.style.cssText='display:none;padding:8px 12px;background:rgba(10,26,52,0.6);border-top:1px solid rgba(201,168,76,0.1);';
+    let dh='<div style="display:flex;flex-wrap:wrap;gap:5px;">';
+    (d.districts||[]).forEach(ds=>{ dh+=`<span style="font-size:10px;background:rgba(201,168,76,0.08);color:var(--gold);border:1px solid rgba(201,168,76,0.2);border-radius:6px;padding:2px 8px;">📍${ds}</span>`; });
+    dh+='</div>';
+    detail.innerHTML=dh;
+    
+    const wrap2=document.createElement('div');
+    wrap2.style.cssText='border-radius:11px;overflow:hidden;margin-bottom:4px;border:1px solid rgba(201,168,76,0.07);';
+    wrap2.appendChild(li); wrap2.appendChild(detail);
+    li.addEventListener('click',()=>{ detail.style.display=detail.style.display==='block'?'none':'block'; });
+    list.appendChild(wrap2);
+  });
+  wrap.appendChild(list);
+}
+
+function renderDistrict(wrap){
+  wrap.innerHTML += `<div class="lb-sec">📍 동네 · 구 단위 랭킹</div>`;
+  const list=document.createElement('div'); list.className='rank-list';
+  DISTRICTS.forEach(d=>{
+    list.innerHTML+=`
       <div class="rank-item">
-        <div class="rank-num">${d.rank}</div>
-        <div class="rank-avatar">${d.flag}</div>
-        <div class="rank-info">
-          <div class="rank-nick">${d.name}</div>
-          <div class="rank-sub">${d.country} · ${d.players.toLocaleString()}명</div>
+        <div class="r-num">${d.rank}</div>
+        <div class="r-flag">${d.flag}</div>
+        <div class="r-info">
+          <div class="r-nick">${d.name}</div>
+          <div class="r-sub">
+            <span>${d.city}</span>
+            <span>👥 ${d.players}명</span>
+            <span class="r-tag">🏆 ${d.top_sport} ${d.sport_players}명</span>
+          </div>
         </div>
-        <div class="rank-change">${changeIcon(d.change)}</div>
-        <div class="rank-pts">${fmtPts(d.pts)}<small>포인트</small></div>
+        <div class="r-chg">${chgIcon(d.change)}</div>
+        <div class="r-pts">${fmtPts(d.pts)}<small>pts</small></div>
       </div>`;
   });
   wrap.appendChild(list);
 }
 
-function renderDistrict(wrap) {
-  wrap.innerHTML += `<div class="lb-section-label">📍 동네 · 구 단위 랭킹</div>`;
-  const list = document.createElement('div');
-  list.className = 'rank-list';
-  DISTRICT_DATA.forEach(d => {
-    list.innerHTML += `
+function renderPersonal(wrap){
+  const top3=PERSONAL.slice(0,3), rest=PERSONAL.slice(3);
+  wrap.innerHTML+=`<div class="lb-sec">👑 TOP 3 플레이어</div>`;
+  const pod=document.createElement('div'); pod.className='podium';
+  [top3[1],top3[0],top3[2]].forEach((d,i)=>{
+    const ri=i===1?1:(i===0?2:3);
+    pod.innerHTML+=`
+      <div class="p-item r${ri}">
+        <div class="p-badge">${ri}</div>
+        <div class="p-avatar">${d.flag}</div>
+        <div class="p-nick">${d.nick}</div>
+        <div style="font-size:10px;color:rgba(245,240,232,0.4);">${d.sport}</div>
+        <div class="p-pts">${fmtPts(d.pts)}</div>
+        <div class="p-base"></div>
+      </div>`;
+  });
+  wrap.appendChild(pod);
+  
+  wrap.innerHTML+=`<div class="lb-sec">🏅 개인 랭킹 4위 ~</div>`;
+  const list=document.createElement('div'); list.className='rank-list';
+  rest.forEach(d=>{
+    list.innerHTML+=`
       <div class="rank-item">
-        <div class="rank-num">${d.rank}</div>
-        <div class="rank-avatar">${d.flag}</div>
-        <div class="rank-info">
-          <div class="rank-nick">${d.name}</div>
-          <div class="rank-sub">${d.city} · ${d.players.toLocaleString()}명</div>
+        <div class="r-num">${d.rank}</div>
+        <div class="r-flag">${d.flag}</div>
+        <div class="r-info">
+          <div class="r-nick">${d.nick}</div>
+          <div class="r-sub"><span>${d.city}</span><span class="r-tag">${d.sport}</span></div>
         </div>
-        <div class="rank-change">${changeIcon(d.change)}</div>
-        <div class="rank-pts">${fmtPts(d.pts)}<small>포인트</small></div>
+        <div class="r-chg">${chgIcon(d.change)}</div>
+        <div class="r-pts">${fmtPts(d.pts)}<small>pts</small></div>
       </div>`;
   });
   wrap.appendChild(list);
 }
 
-function renderPersonal(wrap) {
-  const top3 = PERSONAL_DATA.slice(0,3);
-  const rest  = PERSONAL_DATA.slice(3);
-
-  wrap.innerHTML += `<div class="lb-section-label">👑 TOP 3 플레이어</div>`;
-  const podium = document.createElement('div');
-  podium.className = 'podium';
-  [top3[1], top3[0], top3[2]].forEach((d,i) => {
-    const ri = i===1?1:(i===0?2:3);
-    podium.innerHTML += `
-      <div class="podium-item r${ri}">
-        <div class="podium-rank-badge">${ri}</div>
-        <div class="podium-avatar">${d.avatar}</div>
-        <div class="podium-flag">${d.flag}</div>
-        <div class="podium-nick">${d.nick}</div>
-        <div class="podium-pts">${fmtPts(d.pts)}</div>
-        <div class="podium-base"></div>
-      </div>`;
-  });
-  wrap.appendChild(podium);
-
-  wrap.innerHTML += `<div class="lb-section-label">🏅 개인 랭킹 4위 ~</div>`;
-  const list = document.createElement('div');
-  list.className = 'rank-list';
-  rest.forEach(d => {
-    list.innerHTML += `
-      <div class="rank-item">
-        <div class="rank-num">${d.rank}</div>
-        <div class="rank-avatar">${d.avatar}</div>
-        <div class="rank-info">
-          <div class="rank-nick">${d.flag} ${d.nick}</div>
-          <div class="rank-sub">${d.sub}</div>
-        </div>
-        <div class="rank-change">${changeIcon(d.change)}</div>
-        <div class="rank-pts">${fmtPts(d.pts)}<small>포인트</small></div>
-      </div>`;
-  });
-  wrap.appendChild(list);
-}
-
+// Init
+buildSportPills('all');
 render();
 </script>
 </body>
