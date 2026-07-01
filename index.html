@@ -1726,7 +1726,7 @@ document.addEventListener('DOMContentLoaded',function(){
       <svg viewBox="0 0 24 24"><path d="M23.5 6.5s-.23-1.64-.94-2.36c-.9-.95-1.9-.95-2.36-1.01C16.9 2.8 12 2.8 12 2.8h-.01s-4.9 0-8.2.33c-.46.06-1.46.06-2.36 1.01C.73 4.86.5 6.5.5 6.5S.25 8.42.25 10.35v1.3c0 1.93.25 3.85.25 3.85s.23 1.64.94 2.36c.9.95 2.08.92 2.6 1.02 1.9.18 8.2.31 8.2.31s4.9-.01 8.2-.34c.46-.06 1.46-.06 2.36-1.01.71-.72.94-2.36.94-2.36s.25-1.92.25-3.85v-1.3c0-1.93-.25-3.85-.25-3.85zM9.7 14.8V8.4l6.1 3.2-6.1 3.2z"/></svg>
     </a>
   </div>
-  <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인</p>
+  <p data-i18n="ft">© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deother) · 문화체육관광부 산하 사단법인</p>
 </footer>
 
 <!-- ── GAME MODAL (공통 셸 — 모든 게임이 이 안에서 렌더링됨) ── -->
@@ -1788,7 +1788,7 @@ const T = {
     ct_title:"참가·스폰서 문의", ct_body:"대회 참가, 스폰서십, 종목별 파트너십 문의를 환영합니다.",
     fl_name:"이름", fl_email:"이메일", fl_type:"문의 유형", fl_sport:"관심 종목", fl_msg:"메시지", fl_send:"문의 보내기",
     form_ok_title:"문의가 접수되었습니다", form_ok_body:"빠른 시일 내에 답변 드리겠습니다.",
-    ft:"© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deather) · 문화체육관광부 산하 사단법인",
+    ft:"© 2026 ICOC 국제브레인스포츠협회 · 디아더 (Deother) · 문화체육관광부 산하 사단법인",
   },
   en:{
     hero_eyebrow:"ICOC · International Brain Sports Omnipo Committee",
@@ -1833,7 +1833,7 @@ const T = {
     ct_title:"Get in Touch", ct_body:"We welcome inquiries about participation, sponsorship, and partnerships.",
     fl_name:"Name", fl_email:"Email", fl_type:"Inquiry Type", fl_sport:"Sport of Interest", fl_msg:"Message", fl_send:"Send Message",
     form_ok_title:"Message Received", form_ok_body:"We'll get back to you as soon as possible.",
-    ft:"© 2026 ICOC International Brain Sports Association · Deather · Ministry of Culture, Sports and Tourism (Korea)",
+    ft:"© 2026 ICOC International Brain Sports Association · Deother · Ministry of Culture, Sports and Tourism (Korea)",
   },
   zh:{
     hero_eyebrow:"国际开放竞技委员会 · ICOC",
@@ -1878,7 +1878,7 @@ const T = {
     ct_title:"联系我们", ct_body:"欢迎就参赛、赞助及合作事宜进行咨询。",
     fl_name:"姓名", fl_email:"电子邮件", fl_type:"咨询类型", fl_sport:"感兴趣的项目", fl_msg:"留言内容", fl_send:"发送咨询",
     form_ok_title:"咨询已收到", form_ok_body:"我们将尽快与您联系。",
-    ft:"© 2026 ICOC国际脑力运动协会 · Deather · 韩国文化体育观光部认可社团法人",
+    ft:"© 2026 ICOC国际脑力运动协会 · Deother · 韩国文化体育观光部认可社团法人",
   },
   ja:{
     hero_eyebrow:"国際オープン競技評議会 · ICOC",
@@ -1923,7 +1923,7 @@ const T = {
     ct_title:"お問い合わせ", ct_body:"参加、スポンサーシップ、パートナーシップのお問い合わせを歓迎します。",
     fl_name:"お名前", fl_email:"メールアドレス", fl_type:"お問い合わせ種別", fl_sport:"関心のある種目", fl_msg:"メッセージ", fl_send:"送信する",
     form_ok_title:"お問い合わせを受け付けました", form_ok_body:"できる限り早くご返答いたします。",
-    ft:"© 2026 ICOC国際ブレインスポーツ協会 · Deather · 文化体育観光部認可社団法人",
+    ft:"© 2026 ICOC国際ブレインスポーツ協会 · Deother · 文化体育観光部認可社団法人",
   }
 };
 
@@ -2035,20 +2035,8 @@ window.ICOC_BGM = (function() {
     audio = document.getElementById('icoc-bgm');
     if (!audio) return;
     audio.volume = 0.30;
-
-    // 첫 사용자 인터랙션 후 자동재생
-    const start = () => {
-      if (!userInteracted) {
-        userInteracted = true;
-        play();
-        document.removeEventListener('click', start);
-        document.removeEventListener('keydown', start);
-        document.removeEventListener('touchstart', start);
-      }
-    };
-    document.addEventListener('click', start, { once: true });
-    document.addEventListener('keydown', start, { once: true });
-    document.addEventListener('touchstart', start, { once: true });
+    // 기본 꺼짐 — 사용자가 버튼 누를 때만 재생
+    userInteracted = false;
   }
 
   function play() {
@@ -2213,6 +2201,16 @@ window.ICOC_BGM = (function() {
 })();
 </script>
 
+
+<script>
+// openGame 전역 브리지 (tryAutoOpenGame 용)
+document.addEventListener('DOMContentLoaded', () => {
+  // games.js의 openGame을 window에 노출
+  if (typeof openGame === "function") window.openGame = openGame;
+  // 폴백: 500ms 후 재시도
+  setTimeout(() => { if (typeof openGame === "function") window.openGame = openGame; }, 500);
+});
+</script>
 <script>
 // ── URL 파라미터로 게임 자동 실행 (?game=go 등) ──
 (function() {
