@@ -80,22 +80,29 @@
         trackUserLocation: false,
       }), 'top-right');
       map.on('load', () => {
-        // 3D 건물 레이어
-        if (map.getLayer('building')) {
-          map.setPaintProperty('building','fill-extrusion-height',['get','height']);
-          map.setPaintProperty('building','fill-extrusion-color','rgba(14,40,71,0.9)');
-          map.setPaintProperty('building','fill-extrusion-opacity',0.85);
-        }
-        map.addLayer({
-          id:'3d-buildings', source:'composite', 'source-layer':'building',
-          filter:['==','extrude','true'], type:'fill-extrusion', minzoom:12,
-          paint:{
-            'fill-extrusion-color':'#0e2847',
-            'fill-extrusion-height':['get','height'],
-            'fill-extrusion-base':['get','min_height'],
-            'fill-extrusion-opacity':0.8,
+        // Mapbox v3 3D 건물 — 'building' 레이어 존재 시 extrusion 적용
+        try {
+          const layers = map.getStyle().layers;
+          // composite source의 building layer 찾기
+          const bldLayer = layers.find(l => l['source-layer']==='building' || l.id==='building');
+          if (bldLayer) {
+            // 기존 fill 레이어 뒤에 extrusion 추가
+            map.addLayer({
+              id:'icoc-3d-buildings',
+              type:'fill-extrusion',
+              source: bldLayer.source || 'composite',
+              'source-layer': bldLayer['source-layer'] || 'building',
+              minzoom: 11,
+              filter: ['==', 'extrude', 'true'],
+              paint: {
+                'fill-extrusion-color': '#0d2244',
+                'fill-extrusion-height': ['interpolate',['linear'],['zoom'],11,0,11.5,['get','height']],
+                'fill-extrusion-base':   ['interpolate',['linear'],['zoom'],11,0,11.5,['get','min_height']],
+                'fill-extrusion-opacity': 0.82,
+              }
+            });
           }
-        });
+        } catch(e) { console.log('3D buildings skip:', e.message); }
         loadVenues(SAMPLE_VENUES); loadSupabaseVenues();
       });
     } else if (window.maplibregl) {
@@ -111,22 +118,29 @@
       });
       map.addControl(new maplibregl.NavigationControl(), 'top-right');
       map.on('load', () => {
-        // 3D 건물 레이어
-        if (map.getLayer('building')) {
-          map.setPaintProperty('building','fill-extrusion-height',['get','height']);
-          map.setPaintProperty('building','fill-extrusion-color','rgba(14,40,71,0.9)');
-          map.setPaintProperty('building','fill-extrusion-opacity',0.85);
-        }
-        map.addLayer({
-          id:'3d-buildings', source:'composite', 'source-layer':'building',
-          filter:['==','extrude','true'], type:'fill-extrusion', minzoom:12,
-          paint:{
-            'fill-extrusion-color':'#0e2847',
-            'fill-extrusion-height':['get','height'],
-            'fill-extrusion-base':['get','min_height'],
-            'fill-extrusion-opacity':0.8,
+        // Mapbox v3 3D 건물 — 'building' 레이어 존재 시 extrusion 적용
+        try {
+          const layers = map.getStyle().layers;
+          // composite source의 building layer 찾기
+          const bldLayer = layers.find(l => l['source-layer']==='building' || l.id==='building');
+          if (bldLayer) {
+            // 기존 fill 레이어 뒤에 extrusion 추가
+            map.addLayer({
+              id:'icoc-3d-buildings',
+              type:'fill-extrusion',
+              source: bldLayer.source || 'composite',
+              'source-layer': bldLayer['source-layer'] || 'building',
+              minzoom: 11,
+              filter: ['==', 'extrude', 'true'],
+              paint: {
+                'fill-extrusion-color': '#0d2244',
+                'fill-extrusion-height': ['interpolate',['linear'],['zoom'],11,0,11.5,['get','height']],
+                'fill-extrusion-base':   ['interpolate',['linear'],['zoom'],11,0,11.5,['get','min_height']],
+                'fill-extrusion-opacity': 0.82,
+              }
+            });
           }
-        });
+        } catch(e) { console.log('3D buildings skip:', e.message); }
         loadVenues(SAMPLE_VENUES); loadSupabaseVenues();
       });
     }
