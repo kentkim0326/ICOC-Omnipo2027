@@ -210,6 +210,10 @@
   }
 
   function onCellClick(r, c) {
+    if (window.ICOC_ONLINE?.active) {
+      if (!ICOC_ONLINE.isMyTurn || gameOver) return;
+      window._goingOnline = true;
+    }
     if (gameOver || turn !== PLAYER) return;
     if (mode === 'move') {
       const legal = neighborsForPawn(walls, pawns[PLAYER][0], pawns[PLAYER][1], pawns[AI]);
@@ -220,7 +224,9 @@
       turn = AI;
       setTurnUI();
       render();
-      doAiTurn();
+      
+    if (window._goingOnline) { ICOC_ONLINE.sendMove({r,c}); ICOC_ONLINE.showTurnIndicator(false); window._goingOnline=false; return; }
+    doAiTurn();
     }
   }
 
@@ -326,5 +332,12 @@
     reset();
   }
 
-  global.QuoridorGame = { start };
+  
+  function applyOpponentMove(payload) {
+    if (!payload || gameOver) return;
+    window._goingOnline = false;
+    onCellClick(payload.r, payload.c);
+    window.ICOC_ONLINE?.showTurnIndicator(true);
+  }
+  global.QuoridorGame = { start, applyOpponentMove };
 })(window);
