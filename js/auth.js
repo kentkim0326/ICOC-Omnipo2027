@@ -10,6 +10,96 @@
 (function () {
   'use strict';
 
+  // ── 네비바 동적 주입 (HTML에 없는 경우 JS로 생성) ──
+  function injectNavIfMissing() {
+    if (document.getElementById('main-nav')) return; // 이미 있음
+
+    // Insert nav bar before body's first child
+    const navHTML = `
+<nav class="lang-bar" id="main-nav">
+  <div class="nav-row nav-row-top">
+    <span class="logo-mini">
+      <img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img"> ICOC&nbsp;·&nbsp;OMNIPO
+    </span>
+    <div class="nav-row-right">
+      <span class="points-badge">
+        <span class="coin">🪙</span><span id="points-badge-num">0</span>P
+      </span>
+      <div class="lang-toggle-wrap" id="lt-wrap-main">
+        <button class="lang-trigger-main" id="lt-trigger-main" type="button">
+          <span id="lt-flag-main">🇰🇷</span>
+          <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
+          <span style="font-size:9px;opacity:.5;">▼</span>
+        </button>
+        <div class="lang-dropdown-main" id="lt-dd-main"></div>
+      </div>
+      <div class="nav-music-player" id="nav-music-player">
+        <button class="music-toggle" id="music-toggle" title="배경음악" onclick="ICOC_BGM&&ICOC_BGM.toggle()">
+          <span id="music-icon">🔇</span>
+        </button>
+        <input type="range" class="music-volume" id="music-volume" min="0" max="100" value="30" oninput="ICOC_BGM&&ICOC_BGM.setVolume(this.value)">
+      </div>
+      <audio id="icoc-bgm" loop preload="none">
+        <source src="assets/audio/bgm.ogg" type="audio/ogg">
+        <source src="assets/audio/bgm.mp3" type="audio/mpeg">
+      </audio>
+      <div class="nav-auth-area">
+        <button class="nav-login-btn" id="nav-login-btn" onclick="(function(){try{if(window.ICOC_AUTH)window.ICOC_AUTH.signIn();else alert('잠시 후 다시 시도해주세요');}catch(e){console.error(e);}})()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+            <polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/>
+          </svg>
+          <span class="login-txt">구글 로그인</span>
+        </button>
+        <div class="nav-user-area" id="nav-user-area" style="display:none;position:relative;">
+          <span id="nav-flag">🌍</span>
+          <span id="nav-nickname" class="nav-nickname">-</span>
+          <span class="nav-arrow">▾</span>
+          <div class="nav-user-dd" id="nav-user-dd">
+            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.openMyPage()" class="nav-dd-btn">👤 마이페이지</button>
+            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.signOut()" class="nav-dd-btn nav-dd-logout">🚪 로그아웃</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="nav-row nav-row-links">
+    <a href="venue.html"       class="nav-link-btn">🗺️ 경기장</a>
+    <a href="games.html"       class="nav-link-btn">🎮 게임</a>
+    <a href="leaderboard.html" class="nav-link-btn">🏆 랭킹</a>
+    <a href="referral.html"    class="nav-link-btn nav-link-gold">🎁 초대 <span class="nav-pts-tag">+10K</span></a>
+    <a href="about.html"       class="nav-link-btn">ℹ️ About</a>
+  </div>
+</nav>`;
+
+    const ticker = `<div id="icoc-top-ticker" style="position:fixed;top:var(--nav-h,96px);left:0;right:0;z-index:999;background:rgba(8,20,44,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(201,168,76,0.12);height:28px;overflow:hidden;display:flex;align-items:center;">
+  <div style="flex-shrink:0;padding:0 10px;"><span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:#C9A84C;white-space:nowrap;">📢 ICOC</span></div>
+  <div style="flex:1;overflow:hidden;"><div id="icoc-top-news" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.75);white-space:nowrap;animation:tickerScroll 38s linear infinite;padding:0 12px;line-height:28px;"></div></div>
+</div>`;
+
+    const div = document.createElement('div');
+    div.innerHTML = navHTML + ticker;
+    document.body.insertBefore(div.firstElementChild, document.body.firstChild);
+    document.body.insertBefore(div.firstElementChild, document.body.children[1]);
+
+    // Init ticker
+    const MSGS=['✦ ICOC Brain Sports Omnipo 2027 공식 사이트 오픈!',
+      '✦ 전 세계 195개국 온라인 예선 진행 중','✦ 오목 국가대표 선발전 도전하세요',
+      '✦ 친구 초대 이벤트 — 추천인·피추천인 각 10,000P',
+      '✦ 글로벌 리더보드 — 국가·도시·동네 실시간 랭킹',
+      '✦ 매 시간 체크인 보너스 — 평일 1,000P / 주말 2,000P',
+      '✦ 2027 서울 본선 — 50개국 1,000명 초청 목표',
+      '✦ 66개 브레인스포츠 AI 대전 순차 오픈 예정'];
+    const tickerEl = document.getElementById('icoc-top-news');
+    if(tickerEl) tickerEl.textContent = MSGS.join('  ') + '  ' + MSGS.join('  ');
+
+    // Init language dropdown
+    if(typeof initLangDropdown === 'function') initLangDropdown();
+    else if(typeof ICOC_LANG !== 'undefined') ICOC_LANG.init && ICOC_LANG.init();
+  }
+
+
+
   // ── Supabase 클라이언트 초기화 ──
   // js/config.js 에서 ICOC_CONFIG 로드
   let supabase = null;
@@ -641,8 +731,9 @@
   };
 
   // DOM 로드 후 초기화
+  // Nav 주입 (정적 HTML에 없는 경우)
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', () => { injectNavIfMissing(); init(); });
   } else {
     init();
   }
