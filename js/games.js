@@ -159,4 +159,6 @@
   }
 
   global.ICOC_GAMES = { GAMES, openGame, closeGame };
+  // 전역 접근 (tryAutoOpenGame, go.js 등)
+  global.openGame = openGame;
 })(window);
