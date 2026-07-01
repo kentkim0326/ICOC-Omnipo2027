@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About ICOC — Brain Sports Omnipo 2027</title>
+<link rel="icon" href="assets/favicon-32.png" type="image/png">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0B1F3A;--navy2:#0e2847;--gold:#C9A84C;--gold-l:#E8C97A;--cream:#F5F0E8;--border:rgba(201,168,76,0.22);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--navy);color:var(--cream);font-family:'Noto Sans KR',sans-serif;line-height:1.8;}
+
+/* NAV */
+.top-bar{position:sticky;top:0;z-index:100;display:flex;align-items:center;gap:10px;padding:0 20px;height:56px;background:rgba(11,31,58,0.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);}
+.btn-back{display:flex;align-items:center;gap:5px;padding:6px 14px;border:1px solid rgba(201,168,76,0.28);border-radius:24px;background:rgba(201,168,76,0.06);color:var(--gold-l);font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s;}
+.btn-back:hover{background:rgba(201,168,76,0.16);border-color:var(--gold);}
+.bar-title{flex:1;font-family:'Playfair Display',serif;font-size:14px;font-weight:700;color:var(--gold);letter-spacing:.1em;}
+.nav-btns{display:flex;gap:8px;}
+.nav-pill{padding:5px 12px;border:1px solid rgba(201,168,76,0.2);border-radius:16px;background:transparent;color:rgba(245,240,232,0.6);font-size:11px;font-weight:500;cursor:pointer;text-decoration:none;transition:all .2s;white-space:nowrap;}
+.nav-pill:hover{border-color:var(--gold);color:var(--gold-l);}
+
+/* HERO */
+.about-hero{
+  position:relative;min-height:60vh;display:flex;align-items:center;justify-content:center;
+  text-align:center;padding:80px 24px;overflow:hidden;
+  background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(201,168,76,0.1) 0%,transparent 70%);
+}
+.about-hero::before{
+  content:'';position:absolute;inset:0;z-index:-1;
+  background:url('assets/hero-bg.jpg') center/cover;
+  opacity:.2;filter:blur(2px);
+}
+.about-hero h1{font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,64px);font-weight:900;color:var(--gold);line-height:1.15;margin-bottom:16px;}
+.about-hero p{font-size:clamp(14px,2vw,18px);color:rgba(245,240,232,0.65);max-width:640px;margin:0 auto;}
+
+/* SECTIONS */
+.sec{padding:80px 24px;max-width:1100px;margin:0 auto;}
+.sec-label{font-size:11px;letter-spacing:.28em;color:var(--gold);text-transform:uppercase;margin-bottom:12px;}
+.sec-title{font-family:'Playfair Display',serif;font-size:clamp(26px,4vw,44px);font-weight:700;line-height:1.2;margin-bottom:20px;}
+.sec-body{font-size:15px;color:rgba(245,240,232,0.68);line-height:1.95;max-width:640px;}
+.divider{width:100%;height:1px;background:var(--border);}
+
+/* VISION CARDS */
+.vision-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:48px;}
+.vision-card{
+  background:rgba(14,40,71,0.7);border:1px solid var(--border);border-radius:16px;
+  padding:28px 24px;position:relative;overflow:hidden;transition:all .25s;
+}
+.vision-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.vision-card:hover::before{transform:scaleX(1);}
+.vision-card:hover{background:rgba(14,40,71,0.9);border-color:rgba(201,168,76,0.4);}
+.vc-icon{font-size:36px;margin-bottom:14px;display:block;}
+.vc-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:var(--cream);margin-bottom:8px;}
+.vc-body{font-size:13px;color:rgba(245,240,232,0.55);line-height:1.75;}
+
+/* STATS BAND */
+.stats-band{background:rgba(201,168,76,0.06);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:60px 24px;}
+.stats-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px;max-width:900px;margin:0 auto;text-align:center;}
+.sn{font-family:'Playfair Display',serif;font-size:52px;font-weight:900;color:var(--gold);line-height:1;margin-bottom:8px;}
+.sl{font-size:11px;letter-spacing:.2em;color:rgba(245,240,232,0.5);text-transform:uppercase;}
+
+/* TIMELINE */
+.timeline{position:relative;padding-left:24px;margin-top:48px;}
+.timeline::before{content:'';position:absolute;left:0;top:8px;bottom:8px;width:1px;background:linear-gradient(to bottom,var(--gold),transparent);}
+.tl-item{position:relative;padding:0 0 40px 32px;}
+.tl-item::before{content:'';position:absolute;left:-5px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--navy);box-shadow:0 0 0 4px rgba(201,168,76,0.2);}
+.tl-date{font-size:11px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase;margin-bottom:6px;}
+.tl-title{font-size:18px;font-weight:700;margin-bottom:6px;}
+.tl-body{font-size:13px;color:rgba(245,240,232,0.55);line-height:1.75;}
+
+/* SPORTS LIST */
+.sports-cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:40px;}
+.sc{background:rgba(14,40,71,0.6);border:1px solid var(--border);border-radius:12px;padding:20px;}
+.sc-head{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.sc-list{display:flex;flex-wrap:wrap;gap:5px;}
+.sc-tag{font-size:11px;background:rgba(201,168,76,0.08);color:rgba(245,240,232,0.7);border:1px solid rgba(201,168,76,0.18);border-radius:8px;padding:3px 9px;}
+
+/* CTA */
+.cta-band{text-align:center;padding:80px 24px;background:radial-gradient(ellipse 60% 50% at 50% 50%,rgba(201,168,76,0.09) 0%,transparent 70%);}
+.cta-title{font-family:'Playfair Display',serif;font-size:clamp(28px,5vw,48px);font-weight:900;color:var(--gold);margin-bottom:16px;}
+.cta-sub{font-size:15px;color:rgba(245,240,232,0.6);margin-bottom:36px;}
+.cta-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.cta-btn-gold{padding:14px 32px;background:linear-gradient(135deg,var(--gold),var(--gold-l));border:none;border-radius:10px;font-size:14px;font-weight:700;color:var(--navy);cursor:pointer;text-decoration:none;transition:all .2s;}
+.cta-btn-gold:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,0.35);}
+.cta-btn-outline{padding:14px 32px;border:1px solid rgba(201,168,76,0.35);border-radius:10px;font-size:14px;font-weight:600;color:var(--gold-l);cursor:pointer;text-decoration:none;background:transparent;transition:all .2s;}
+.cta-btn-outline:hover{background:rgba(201,168,76,0.1);border-color:var(--gold);}
+
+footer{border-top:1px solid var(--border);padding:32px 24px;text-align:center;font-size:12px;color:rgba(245,240,232,0.35);letter-spacing:.06em;}
+
+@media(max-width:640px){.sec{padding:56px 18px;}.vision-grid{grid-template-columns:1fr;}.stats-inner{gap:24px;}.sn{font-size:40px;}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <a href="index.html" class="btn-back">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg> 홈
+  </a>
+  <div class="bar-title">ICOC · OMNIPO 2027</div>
+  <div class="nav-btns">
+    <a href="games.html" class="nav-pill">🎮 게임</a>
+    <a href="leaderboard.html" class="nav-pill">🏆 랭킹</a>
+    <a href="venue.html" class="nav-pill">🗺️ 지도</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="about-hero">
+  <div>
+    <p class="sec-label" style="margin-bottom:14px;">International Council of Open Competition</p>
+    <h1>세계 최초<br>멀티종목<br>브레인스포츠 올림픽</h1>
+    <p>바둑부터 홀덤까지, 66개 두뇌 스포츠가 처음으로 하나의 무대에서 격돌합니다.<br>2027년 서울, 50개국 최정예 두뇌들이 모입니다.</p>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-band">
+  <div class="stats-inner">
+    <div><div class="sn">66</div><div class="sl">공식 종목</div></div>
+    <div><div class="sn">50+</div><div class="sl">참가국 목표</div></div>
+    <div><div class="sn">1,000</div><div class="sl">서울 초청 인원</div></div>
+    <div><div class="sn">2027</div><div class="sl">서울 본선</div></div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- VISION -->
+<div class="sec">
+  <p class="sec-label">우리의 비전</p>
+  <h2 class="sec-title">왜 Brain Sports Omnipo인가</h2>
+  <p class="sec-body">바둑(IGF), 체스(FIDE), 당구(UMB), 브릿지(WBF) — 각 종목은 수백만 명의 국제 플레이어와 정식 세계연맹을 보유하지만 지금까지 하나의 무대에서 통합된 적이 없었습니다. ICOC Omnipo 2027은 그 한계를 처음으로 깨뜨립니다.</p>
+  <div class="vision-grid">
+    <div class="vision-card">
+      <span class="vc-icon">🌐</span>
+      <div class="vc-title">온라인 → 오프라인 퍼널</div>
+      <div class="vc-body">195개국 온라인 예선으로 트래픽을 극대화하고, 글로벌 랭킹 상위 50개국 1,000명만 2027 서울 본선에 초청합니다. 디지털이 현실 축제의 연료가 됩니다.</div>
+    </div>
+    <div class="vision-card">
+      <span class="vc-icon">🧠</span>
+      <div class="vc-title">누구나 국가대표</div>
+      <div class="vc-body">올림픽 국가대표는 평생 운동한 엘리트의 전유물이지만, 브레인스포츠 국대는 스마트폰으로 도전할 수 있습니다. 전 세계 수백만 명의 "디지털 국대"가 탄생합니다.</div>
+    </div>
+    <div class="vision-card">
+      <span class="vc-icon">🏆</span>
+      <div class="vc-title">월드컵급 규모</div>
+      <div class="vc-body">2026 FIFA 월드컵 본선 선수단이 1,248명입니다. ICOC 2027은 50개국 1,000명을 서울로 초청하여 단일 마인드스포츠 대회 사상 최대 규모를 목표로 합니다.</div>
+    </div>
+    <div class="vision-card">
+      <span class="vc-icon">📺</span>
+      <div class="vc-title">글로벌 OTT 콘텐츠</div>
+      <div class="vc-body">《피지컬:100》의 두뇌 버전, 《데블스 플랜》의 국가 대항전 스케일. 50개국 천재들의 두뇌 서바이벌을 넷플릭스급 콘텐츠로 제작합니다.</div>
+    </div>
+    <div class="vision-card">
+      <span class="vc-icon">🏙️</span>
+      <div class="vc-title">O2O 브레인스포츠 지도</div>
+      <div class="vc-body">전 세계 당구장·홀덤펍·보드카페·스크린골프장을 지도로 연결합니다. 온라인 랭킹이 오프라인 거점으로 이어지는 세계 유일의 하이브리드 플랫폼입니다.</div>
+    </div>
+    <div class="vision-card">
+      <span class="vc-icon">🇰🇷</span>
+      <div class="vc-title">서울 브랜딩</div>
+      <div class="vc-body">외국인 1,000명이 서울을 소비합니다. 서울시 MICE 최고 등급 지원, 정부 수억 원 지원금, 대기업 스폰서십을 연결하는 글로벌 문화 관광 축제입니다.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- SPORTS CATEGORIES -->
+<div class="sec">
+  <p class="sec-label">공식 종목</p>
+  <h2 class="sec-title">66개 브레인스포츠 종목</h2>
+  <p class="sec-body">클래식 전략 게임부터 현대 보드게임, 카드 게임, 실내 스포츠, 전통 게임까지 — 전 세대 · 전 문화권을 아우르는 66개 종목이 하나의 무대에 모입니다.</p>
+  <div class="sports-cats">
+    <div class="sc">
+      <div class="sc-head">⚫ 클래식 전략 (12)</div>
+      <div class="sc-list">
+        <span class="sc-tag">바둑</span><span class="sc-tag">체스</span><span class="sc-tag">장기</span><span class="sc-tag">오목</span><span class="sc-tag">쇼기</span><span class="sc-tag">체커</span><span class="sc-tag">백개먼</span><span class="sc-tag">리버시</span><span class="sc-tag">헥스</span><span class="sc-tag">쿼리도</span><span class="sc-tag">중국장기</span><span class="sc-tag">아마조나스</span>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sc-head">🎯 현대 보드게임 (13)</div>
+      <div class="sc-list">
+        <span class="sc-tag">루미큐브</span><span class="sc-tag">커넥트4</span><span class="sc-tag">다빈치코드</span><span class="sc-tag">카탄</span><span class="sc-tag">스플렌더</span><span class="sc-tag">아발론</span><span class="sc-tag">딕싯</span><span class="sc-tag">티켓투라이드</span><span class="sc-tag">7원더스</span><span class="sc-tag">아줄</span><span class="sc-tag">윙스팬</span><span class="sc-tag">패치워크</span><span class="sc-tag">팬데믹</span>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sc-head">🃏 카드 게임 (11)</div>
+      <div class="sc-list">
+        <span class="sc-tag">텍사스 홀덤</span><span class="sc-tag">브릿지</span><span class="sc-tag">진러미</span><span class="sc-tag">하츠</span><span class="sc-tag">올드메이드</span><span class="sc-tag">원카드</span><span class="sc-tag">블랙잭</span><span class="sc-tag">스코파</span><span class="sc-tag">스캣</span><span class="sc-tag">카나스타</span><span class="sc-tag">고스톱</span>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sc-head">🎳 실내 스포츠 (10)</div>
+      <div class="sc-list">
+        <span class="sc-tag">당구(3구)</span><span class="sc-tag">포켓볼</span><span class="sc-tag">스누커</span><span class="sc-tag">볼링</span><span class="sc-tag">스크린골프</span><span class="sc-tag">파크골프</span><span class="sc-tag">탁구</span><span class="sc-tag">다트</span><span class="sc-tag">양궁(실내)</span><span class="sc-tag">스쿼시</span>
+      </div>
+    </div>
+    <div class="sc">
+      <div class="sc-head">🪅 전통 게임 (20)</div>
+      <div class="sc-list">
+        <span class="sc-tag">윷놀이</span><span class="sc-tag">속기바둑</span><span class="sc-tag">마작</span><span class="sc-tag">님게임</span><span class="sc-tag">바둑(9로)</span><span class="sc-tag">만칼라</span><span class="sc-tag">산토리니</span><span class="sc-tag">오니타마</span><span class="sc-tag">하이브</span><span class="sc-tag">아발론(돌)</span><span class="sc-tag">펜타고</span><span class="sc-tag">LOA</span><span class="sc-tag">가위바위보</span><span class="sc-tag">타플</span><span class="sc-tag">스고로쿠</span><span class="sc-tag">블리츠오목</span><span class="sc-tag">렌주</span><span class="sc-tag">+3</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- ROADMAP -->
+<div class="sec">
+  <p class="sec-label">로드맵</p>
+  <h2 class="sec-title">2027년까지의 여정</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">2026 — 지금</div>
+      <div class="tl-title">온라인 플랫폼 오픈 & 트래픽 빌드업</div>
+      <div class="tl-body">195개국 오픈 예선, 66개 종목 AI 대전 순차 오픈, 국가·도시·동네별 실시간 리더보드, O2O 경기장 지도 서비스 시작.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2027 — 서울 본선</div>
+      <div class="tl-title">ICOC Brain Sports Omnipo 2027 서울 개막</div>
+      <div class="tl-body">50개국 · 해외 입국자 1,000명+ · 66개 종목 동시 진행 · K-컬처 연계 개막식 · 글로벌 OTT 방영 · 대기업 타이틀 스폰서.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2028 — 아시아 확장</div>
+      <div class="tl-title">아시아 위성 예선 3개 도시 동시 개최</div>
+      <div class="tl-body">도쿄, 베이징, 방콕 위성 대회 + 30개국 이상 참여 + 미디어 파트너십 확대.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">2029~ — 글로벌 리그</div>
+      <div class="tl-title">Asia Brain Sports League 시즌제 운영</div>
+      <div class="tl-body">서울 파이널 상설화, 글로벌 브레인스포츠 올림픽으로 성장.</div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- CTA -->
+<div class="cta-band">
+  <h2 class="cta-title">지금 바로 국가대표에 도전하세요</h2>
+  <p class="cta-sub">로그인 없이 바로 AI와 대전 — 이기면 포인트, 국가대표 타이틀까지</p>
+  <div class="cta-btns">
+    <a href="games.html" class="cta-btn-gold">🎮 게임 시작하기</a>
+    <a href="leaderboard.html" class="cta-btn-outline">🏆 리더보드 보기</a>
+    <a href="referral.html" class="cta-btn-outline">🎁 친구 초대 +10,000P</a>
+  </div>
+</div>
+
+<footer>© 2026 ICOC International Brain Sports Association · Deather · Ministry of Culture, Sports and Tourism (Korea)</footer>
+
+</body>
+</html>
