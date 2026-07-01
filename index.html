@@ -218,10 +218,18 @@ body.lang-en { font-family:'Playfair Display',Georgia,serif; }
 }
 .hero-title {
   font-family:'Playfair Display',serif;
-  font-size:clamp(44px,8vw,104px);
-  font-weight:900; line-height:1.0;
-  letter-spacing:-0.025em; margin-bottom:12px;
+  font-weight:900; letter-spacing:-0.025em;
+  margin-bottom:10px;
   opacity:0; animation:fadeUp 0.7s 0.4s ease forwards;
+}
+.hero-t1 {
+  display:block; font-size:clamp(40px,7vw,88px);
+  color:var(--gold); line-height:1.05;
+}
+.hero-t2 {
+  display:block; font-size:clamp(48px,9vw,112px);
+  color:var(--cream); line-height:0.95;
+  margin-top:-0.04em; /* 글자 바짝 붙이기 */
 }
 .hero-title .accent { color:var(--gold); }
 .hero-year {
@@ -889,7 +897,7 @@ footer a { color:var(--gold); text-decoration:none; }
   <p class="hero-eyebrow" data-i18n="hero_eyebrow">ICOC · INTERNATIONAL COUNCIL OF OPEN COMPETITION</p>
 
   <h1 class="hero-title">
-    <span class="hero-t1" data-i18n="hero_t1">Brain Sports</span><br>
+    <span class="hero-t1" data-i18n="hero_t1">Brain Sports</span>
     <span class="hero-t2" data-i18n="hero_t2">Omnipo</span>
   </h1>
 
