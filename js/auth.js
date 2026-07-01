@@ -125,12 +125,12 @@
       .from('icoc_profiles')
       .select('*')
       .eq('id', userId)
-      .single();
-    if (error && error.code !== 'PGRST116') {
+      .maybeSingle();
+    if (error) {
       console.error('Profile load error:', error);
       return null;
     }
-    return data;
+    return data; // null이면 프로필 없음 → 설정 모달 표시
   }
 
   // ── 프로필 저장 (최초 설정) ──
@@ -166,7 +166,7 @@
       .select('id')
       .eq('nickname', nickname)
       .neq('id', currentUser.id)
-      .single();
+      .maybeSingle();
     return !data; // data 없으면 사용 가능
   }
 
