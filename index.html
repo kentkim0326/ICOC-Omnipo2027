@@ -682,210 +682,166 @@ footer a { color:var(--gold); text-decoration:none; }
 }
 
 
-/* ══════ HERO FULL CSS ══════ */
-.hero {
-  min-height:100svh;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  text-align:center; padding:130px 20px 60px;
-  position:relative; overflow:hidden;
-  padding-top:calc(var(--nav-h,96px) + 28px + 40px) !important;
-}
-@media(max-width:640px){
-  .hero { padding:0 16px 50px !important;
-    padding-top:calc(var(--nav-h,96px) + 28px + 24px) !important; }
-}
-.hero-bg-overlay {
-  position:absolute;inset:0;z-index:-2;pointer-events:none;
-  background:linear-gradient(to bottom,
-    rgba(5,12,24,0.75) 0%,rgba(7,17,32,0.70) 45%,rgba(11,31,58,0.88) 100%);
-}
-.omnipo-badge {
-  display:flex;flex-direction:column;align-items:center;gap:6px;
-  margin-bottom:10px;animation:fadeUp .7s .1s ease both;
-}
-.omnipo-ring { width:90px;height:auto;filter:drop-shadow(0 4px 16px rgba(201,168,76,0.4)); }
-.omnipo-logo { width:140px;height:auto; }
-.hero-eyebrow {
-  font-size:10px;letter-spacing:.22em;color:rgba(245,240,232,0.45);
-  text-transform:uppercase;margin-bottom:10px;
-  animation:fadeUp .7s .2s ease both;
-}
-.hero-title {
-  font-family:'Playfair Display',serif;
-  line-height:1.1;margin-bottom:10px;
-  animation:fadeUp .7s .3s ease both;
-}
-.hero-t1{font-size:clamp(38px,9vw,80px);font-weight:900;color:var(--gold);}
-.hero-t2{font-size:clamp(44px,10vw,92px);font-weight:900;color:var(--cream);}
-.hero-year {
-  font-family:'Playfair Display',serif;font-size:clamp(14px,3vw,22px);
-  letter-spacing:.28em;color:rgba(245,240,232,0.35);margin-bottom:10px;
-  animation:fadeUp .7s .4s ease both;
-}
-.hero-sub {
-  font-size:clamp(12px,2vw,15px);color:rgba(245,240,232,0.6);
-  margin-bottom:24px;max-width:480px;line-height:1.6;
-  animation:fadeUp .7s .45s ease both;
-}
-
-/* CTA 영역 */
-.hero-cta-area {
-  display:flex;flex-direction:column;align-items:center;gap:10px;
-  margin-bottom:20px;position:relative;z-index:10;
-  animation:fadeUp .7s .5s ease both;
-}
-/* Google 로그인 버튼 */
-.hero-google-slim {
-  display:inline-flex;align-items:center;justify-content:center;gap:9px;
-  padding:14px 28px;border-radius:30px;
-  background:rgba(255,255,255,0.13);
-  border:1.5px solid rgba(255,255,255,0.3);
-  color:#fff;font-size:15px;font-weight:700;
-  cursor:pointer;transition:all .2s;
-  backdrop-filter:blur(12px);font-family:inherit;
-  white-space:nowrap;
-  /* 탭 영역 크게 */
-  min-height:50px;min-width:240px;
-  position:relative;z-index:20;
-  -webkit-tap-highlight-color:rgba(255,255,255,0.2);
-  touch-action:manipulation;
-}
-.hero-google-slim:hover,.hero-google-slim:active {
-  background:rgba(255,255,255,0.26);
-  border-color:rgba(255,255,255,0.6);
-  transform:scale(1.02);
-}
-.hero-login-hint {
-  font-size:11px;color:rgba(245,240,232,0.38);
-  letter-spacing:.03em;margin:0;
-}
-
-/* 로그인 후 유저 카드 */
-.hero-user-slim {
-  display:flex;align-items:center;gap:10px;
-  background:rgba(255,255,255,0.09);backdrop-filter:blur(12px);
-  border:1px solid rgba(201,168,76,0.28);border-radius:28px;
-  padding:8px 16px 8px 8px;width:fit-content;
-}
-.hero-avatar-sm {
-  width:38px;height:38px;border-radius:50%;
-  border:2px solid var(--gold);object-fit:cover;flex-shrink:0;
-}
-.hero-user-info{display:flex;flex-direction:column;gap:2px;text-align:left;}
-.hero-nick-sm{font-weight:700;font-size:14px;color:var(--cream);}
-.hero-meta-sm{font-size:11px;color:rgba(245,240,232,0.5);}
-.hero-mypage-slim {
-  margin-left:8px;padding:6px 14px;border-radius:16px;
-  border:1px solid rgba(201,168,76,0.35);
-  background:rgba(201,168,76,0.12);color:var(--gold-l);
-  font-size:12px;font-weight:600;cursor:pointer;
-  font-family:inherit;white-space:nowrap;transition:all .2s;
-  touch-action:manipulation;
-}
-.hero-mypage-slim:hover,.hero-mypage-slim:active{background:rgba(201,168,76,0.25);}
-
-/* SNS 버튼 */
-.hero-sns-row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
-.hero-social-btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:10px 22px;border-radius:24px;
-  font-size:13px;font-weight:700;cursor:pointer;
-  text-decoration:none;transition:all .2s;
-  touch-action:manipulation;
-}
-.hero-yt{background:#FF0000;color:#fff;}
-.hero-fb{background:#1877F2;color:#fff;}
-.hero-social-btn:hover{transform:translateY(-2px);opacity:.9;}
-
-/* Supabase 주입 위젯 숨기기 */
-[data-supabase-ui], #supabase-auth-modal { display:none !important; }
-
-</style>
-</head>
-<body>
-
-<!-- LANG BAR -->
-<nav class="lang-bar" id="main-nav">
-  <!-- 1열: 로고 + 인증/포인트/언어 + 음악 -->
-  <div class="nav-row nav-row-top">
-    <span class="logo-mini"><img src="assets/logo-nav.png" alt="ICOC" class="logo-nav-img"> ICOC · OMNIPO</span>
-    <div class="nav-row-right">
-      <span class="points-badge">
-        <span class="coin">🪙</span>
-        <span id="points-badge-num">0</span>P
-      </span>
-      <div class="lang-toggle-wrap" id="lt-wrap-main">
-        <button class="lang-trigger-main" id="lt-trigger-main" type="button">
-          <span id="lt-flag-main">🇰🇷</span>
-          <span id="lt-code-main" style="font-size:11px;font-weight:700;">KO</span>
-          <span style="font-size:9px;opacity:.5;">▼</span>
-        </button>
-        <div class="lang-dropdown-main" id="lt-dd-main"></div>
-      </div>
-      <!-- 음악 -->
-      <div class="nav-music-player" id="nav-music-player">
-        <button class="music-toggle" id="music-toggle" title="배경음악 ON/OFF" onclick="ICOC_BGM.toggle()">
-          <span id="music-icon">🔇</span>
-        </button>
-        <input type="range" class="music-volume" id="music-volume"
-          min="0" max="100" value="30" oninput="ICOC_BGM.setVolume(this.value)" title="볼륨">
-      </div>
-      <audio id="icoc-bgm" loop preload="none">
-        <source src="assets/audio/bgm.ogg" type="audio/ogg">
-        <source src="assets/audio/bgm.mp3" type="audio/mpeg">
-      </audio>
-      <!-- 로그인 -->
-      <div class="nav-auth-area">
-        <button class="nav-login-btn" id="nav-login-btn">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10,17 15,12 10,7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
-          <span class="login-txt">로그인</span>
-        </button>
-        <div class="nav-user-area" id="nav-user-area" style="display:none;position:relative;">
-          <span id="nav-flag">🌍</span>
-          <span id="nav-nickname" class="nav-nickname">-</span>
-          <span class="nav-arrow">▾</span>
-          <!-- 드롭다운 메뉴 -->
-          <div class="nav-user-dd" id="nav-user-dd">
-            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.openMyPage()" class="nav-dd-btn">👤 마이페이지</button>
-            <button onclick="if(window.ICOC_AUTH)ICOC_AUTH.signOut()" class="nav-dd-btn nav-dd-logout">🚪 로그아웃</button>
-          </div>
-        </div>
-      </div>
-    </div><!-- /nav-row-right -->
-  </div><!-- /nav-row-top -->
-  <!-- 2열: 페이지 링크 버튼들 -->
-  <div class="nav-row nav-row-links">
-    <a href="venue.html" class="nav-link-btn">🗺️ 경기장</a>
-    <a href="games.html" class="nav-link-btn">🎮 게임</a>
-    <a href="leaderboard.html" class="nav-link-btn">🏆 랭킹</a>
-    <a href="referral.html" class="nav-link-btn nav-link-gold">🎁 초대 <span class="nav-pts-tag">+10K</span></a>
-    <a href="about.html" class="nav-link-btn">ℹ️ About</a>
-  </div>
-</nav>
-
-<!-- ── ICOC 뉴스 티커 (네비바 아래) ── -->
-<div id="icoc-top-ticker" style="
-  position:fixed; top:var(--nav-h,96px); left:0; right:0; z-index:999;
-  background:rgba(8,20,44,0.95); backdrop-filter:blur(10px);
-  border-bottom:1px solid rgba(201,168,76,0.12);
-  height:28px; overflow:hidden; display:flex; align-items:center;
-">
-  <div style="display:flex;align-items:center;flex-shrink:0;padding:0 10px;gap:5px;">
-    <span style="font-size:9px;font-weight:700;letter-spacing:.08em;color:var(--gold,#C9A84C);white-space:nowrap;">📢 ICOC</span>
-  </div>
-  <div style="flex:1;overflow:hidden;">
-    <div id="icoc-top-news" style="
-      display:inline-block;font-size:11px;color:rgba(245,240,232,0.75);
-      white-space:nowrap;animation:tickerScroll 38s linear infinite;padding:0 12px;line-height:28px;
-    "></div>
-  </div>
-</div>
-
-<style>
 @keyframes tickerScroll{0%{transform:translateX(100%);}100%{transform:translateX(-100%);}}
 :root{--nav-h:96px;}
 .hero{padding-top:calc(var(--nav-h) + 28px + 16px) !important;}
 @media(max-width:640px){.hero{padding-top:calc(var(--nav-h) + 28px + 8px) !important;}}
+/* ══════ HERO CSS ══════ */
+.hero {
+  position:relative; min-height:100svh;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  text-align:center;
+  padding-top:calc(var(--nav-h,96px) + 36px) !important;
+  padding-left:20px; padding-right:20px; padding-bottom:50px;
+  overflow:hidden;
+}
+.hero-slides {
+  position:absolute; inset:0; z-index:-3; overflow:hidden;
+}
+.hero-slide {
+  position:absolute; inset:0; opacity:0;
+  transition:opacity 1.4s ease-in-out;
+}
+.hero-slide.active { opacity:1; }
+.hero-slide video {
+  width:100%; height:100%; object-fit:cover; object-position:center;
+}
+.hero-bg-overlay {
+  position:absolute; inset:0; z-index:-2; pointer-events:none;
+  background:linear-gradient(to bottom,
+    rgba(5,12,24,0.72) 0%,
+    rgba(7,17,32,0.65) 40%,
+    rgba(11,31,58,0.85) 100%);
+}
+
+/* ── 배지 ── */
+.omnipo-badge {
+  margin-bottom:16px; animation:fadeUp .7s .1s ease both;
+}
+.omnipo-ring {
+  width:140px; height:140px;
+  border:1.5px solid var(--gold);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  animation:rotateSlow 40s linear infinite;
+}
+.omnipo-ring::before {
+  content:''; position:absolute;
+  width:124px; height:124px;
+  border:1px solid rgba(201,168,76,0.35);
+  border-radius:50%;
+}
+.omnipo-ring-inner {
+  width:110px; height:110px;
+  display:flex; align-items:center; justify-content:center;
+}
+.omnipo-logo-img {
+  width:90px; height:auto;
+  filter:drop-shadow(0 2px 12px rgba(201,168,76,0.5));
+}
+@keyframes rotateSlow { to { transform:rotate(360deg); } }
+
+/* ── 텍스트 ── */
+.hero-eyebrow {
+  font-size:clamp(9px,1.8vw,11px); letter-spacing:.22em;
+  color:rgba(245,240,232,0.4); text-transform:uppercase;
+  margin-bottom:10px; animation:fadeUp .7s .2s ease both;
+}
+.hero-title {
+  font-family:'Playfair Display',serif;
+  line-height:1.05; margin-bottom:8px;
+  animation:fadeUp .7s .3s ease both;
+}
+.hero-t1 { font-size:clamp(36px,9vw,76px); font-weight:900; color:var(--gold); display:block; }
+.hero-t2 { font-size:clamp(42px,10.5vw,88px); font-weight:900; color:var(--cream); display:block; }
+.hero-year {
+  font-family:'Playfair Display',serif;
+  font-size:clamp(13px,2.5vw,20px); letter-spacing:.3em;
+  color:rgba(245,240,232,0.32); margin-bottom:8px;
+  animation:fadeUp .7s .35s ease both;
+}
+.hero-sub {
+  font-size:clamp(12px,2vw,14px); color:rgba(245,240,232,0.58);
+  margin-bottom:24px; line-height:1.6; max-width:460px;
+  animation:fadeUp .7s .4s ease both;
+}
+
+/* ── CTA ── */
+.hero-cta-area {
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+  margin-bottom:18px; position:relative; z-index:20;
+  animation:fadeUp .7s .5s ease both;
+}
+#hero-auth-area {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+}
+.hero-google-slim {
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  padding:14px 30px; border-radius:30px;
+  background:rgba(255,255,255,0.15);
+  border:1.5px solid rgba(255,255,255,0.35);
+  color:#fff; font-size:clamp(13px,3.5vw,16px); font-weight:700;
+  cursor:pointer; font-family:inherit; white-space:nowrap;
+  min-height:52px; min-width:240px;
+  position:relative; z-index:30;
+  -webkit-tap-highlight-color:rgba(255,255,255,0.25);
+  touch-action:manipulation; user-select:none;
+  transition:background .2s, transform .15s;
+}
+.hero-google-slim:hover, .hero-google-slim:active {
+  background:rgba(255,255,255,0.28); transform:scale(1.03);
+}
+.hero-login-hint {
+  font-size:11px; color:rgba(245,240,232,0.36); margin:0;
+}
+
+/* ── 유저 카드 (로그인 후) ── */
+.hero-user-slim {
+  display:flex; align-items:center; gap:10px;
+  background:rgba(255,255,255,0.09); backdrop-filter:blur(12px);
+  border:1px solid rgba(201,168,76,0.28); border-radius:28px;
+  padding:8px 16px 8px 8px; width:fit-content; max-width:300px;
+}
+.hero-avatar-sm {
+  width:38px; height:38px; border-radius:50%;
+  border:2px solid var(--gold); object-fit:cover; flex-shrink:0;
+}
+.hero-user-info { display:flex; flex-direction:column; gap:2px; text-align:left; }
+.hero-nick-sm { font-weight:700; font-size:14px; color:var(--cream); }
+.hero-meta-sm { font-size:11px; color:rgba(245,240,232,0.5); }
+.hero-mypage-slim {
+  margin-left:auto; padding:6px 14px; border-radius:16px;
+  border:1px solid rgba(201,168,76,0.35);
+  background:rgba(201,168,76,0.12); color:var(--gold-l);
+  font-size:12px; font-weight:600; cursor:pointer;
+  font-family:inherit; white-space:nowrap; transition:all .2s;
+  touch-action:manipulation;
+}
+
+/* ── SNS ── */
+.hero-sns-row {
+  display:flex; gap:10px; justify-content:center; flex-wrap:wrap;
+  animation:fadeUp .7s .6s ease both;
+}
+.hero-social-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:10px 22px; border-radius:24px;
+  font-size:13px; font-weight:700; cursor:pointer;
+  text-decoration:none; transition:all .2s;
+  touch-action:manipulation;
+}
+.hero-yt  { background:#FF0000; color:#fff; }
+.hero-fb  { background:#1877F2; color:#fff; }
+.hero-social-btn:hover { transform:translateY(-2px); opacity:.9; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+/* Supabase 자동 위젯 숨기기 */
+[data-supabase-ui], #supabase-auth-modal, .__sb-auth { display:none !important; }
+
 </style>
 
 <script>
@@ -904,16 +860,30 @@ footer a { color:var(--gold); text-decoration:none; }
 
 <!-- HERO -->
 <header class="hero" id="hero">
+  <!-- 영상 슬라이드쇼 배경 -->
   <div class="hero-slides" id="hero-slides">
     <div class="hero-slide hero-slide-video active">
       <video class="hero-video" src="assets/videos/hero-vid-0.mp4" muted playsinline loop preload="auto"></video>
     </div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-1.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-2.mp4" muted playsinline loop preload="none"></video>
+    </div>
+    <div class="hero-slide hero-slide-video">
+      <video class="hero-video" src="assets/videos/hero-vid-3.mp4" muted playsinline loop preload="none"></video>
+    </div>
+  </div>
   <div class="hero-bg-overlay"></div>
 
-  <!-- ICOC 배지 -->
+  <!-- ICOC 배지/로고 -->
   <div class="omnipo-badge">
-    <img src="assets/crown.png" alt="crown" class="omnipo-ring" onerror="this.style.display='none'">
-    <img src="assets/logo-icoc.png" alt="ICOC" class="omnipo-logo" onerror="this.style.display='none'">
+    <div class="omnipo-ring">
+      <div class="omnipo-ring-inner">
+        <img src="assets/logo-hero.png" alt="ICOC" class="omnipo-logo-img">
+      </div>
+    </div>
   </div>
 
   <p class="hero-eyebrow" data-i18n="hero_eyebrow">ICOC · INTERNATIONAL COUNCIL OF OPEN COMPETITION</p>
@@ -923,16 +893,15 @@ footer a { color:var(--gold); text-decoration:none; }
     <span class="hero-t2" data-i18n="hero_t2">Omnipo</span>
   </h1>
 
-  <div class="hero-year">2 0 2 7</div>
+  <div class="hero-year" data-i18n="hero_year">2 0 2 7</div>
 
   <p class="hero-sub" data-i18n="hero_sub">66개 종목 · 세계 최초 멀티종목 국제 브레인스포츠 대회</p>
 
-  <!-- CTA 영역 -->
+  <!-- 구글 로그인 CTA -->
   <div class="hero-cta-area">
-    <!-- 비로그인 -->
     <div id="hero-auth-area">
       <button class="hero-google-slim" id="hero-login-btn"
-        onclick="try{if(window.ICOC_AUTH){window.ICOC_AUTH.signIn()}else{document.getElementById('nav-login-btn').click()}}catch(e){console.error(e)}">
+        onclick="(function(){try{if(window.ICOC_AUTH){window.ICOC_AUTH.signIn();}else{alert('잠시 후 다시 시도해주세요');}}catch(e){console.error(e);}})()">
         <svg width="16" height="16" viewBox="0 0 24 24" style="flex-shrink:0"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
         🇰🇷&nbsp; 국가대표 등록 / 구글 로그인
       </button>
@@ -952,19 +921,13 @@ footer a { color:var(--gold); text-decoration:none; }
 
   <!-- SNS -->
   <div class="hero-sns-row">
-    <a href="https://www.youtube.com/@icoc8891" target="_blank" class="hero-social-btn hero-yt">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
-        YouTube
-      </a>
-    <a href="https://www.facebook.com/ICOC2019/" target="_blank" class="hero-social-btn hero-fb">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-        Facebook
-      </a>
+    
+    
   </div>
 
-  <!-- 하단 스크롤 티커 -->
-  <div style="width:100%;max-width:580px;overflow:hidden;margin-top:16px;">
-    <div id="hero-news-ticker-2" style="display:inline-block;font-size:11px;color:rgba(201,168,76,0.7);white-space:nowrap;animation:tickerScroll 30s linear infinite;"></div>
+  <!-- 하단 티커 -->
+  <div style="width:100%;max-width:560px;overflow:hidden;margin-top:12px;">
+    <div id="hero-news-ticker-2" style="display:inline-block;font-size:11px;color:rgba(201,168,76,0.65);white-space:nowrap;animation:tickerScroll 32s linear infinite;"></div>
   </div>
 </header>
 
