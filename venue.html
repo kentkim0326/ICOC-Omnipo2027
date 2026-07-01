@@ -328,6 +328,33 @@ html,body{height:100%;margin:0;overflow:hidden;}
   50%      { opacity:1; }
 }
 
+
+/* ── 컴팩트 바텀시트 ── */
+.bottom-sheet { position:fixed; bottom:0; left:0; right:0; z-index:200; background:rgba(8,20,44,0.97); backdrop-filter:blur(20px); border-top:1px solid rgba(201,168,76,0.2); border-radius:16px 16px 0 0; max-height:65vh; overflow:hidden; transition:transform .3s; }
+.bs-mini { display:flex; align-items:center; gap:10px; padding:10px 14px 6px; }
+.bs-icon { width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; background:rgba(201,168,76,0.15); border:1px solid rgba(201,168,76,0.3); }
+.bs-info { flex:1; min-width:0; }
+.bs-name { font-size:14px; font-weight:700; color:#F5F0E8; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bs-addr { font-size:10px; color:rgba(245,240,232,0.4); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bs-badges { display:flex; gap:4px; flex-wrap:wrap; }
+.bs-tabs { display:flex; border-bottom:1px solid rgba(201,168,76,0.12); padding:0 10px; gap:2px; }
+.bs-tab { flex:1; padding:8px 4px; background:none; border:none; color:rgba(245,240,232,0.4); font-size:11px; font-weight:600; cursor:pointer; font-family:inherit; border-bottom:2px solid transparent; transition:all .15s; }
+.bs-tab.active { color:#E8C97A; border-bottom-color:#C9A84C; }
+.bs-panel { padding:10px 14px 16px; overflow-y:auto; max-height:calc(65vh - 110px); }
+.bs-panel-title { font-size:11px; color:rgba(245,240,232,0.4); margin-bottom:8px; font-weight:600; letter-spacing:.06em; }
+.bs-stats-row { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:12px; }
+.bs-stat { text-align:center; background:rgba(201,168,76,0.06); border-radius:8px; padding:8px 4px; border:1px solid rgba(201,168,76,0.1); }
+.bs-stat-n { font-size:16px; font-weight:700; color:#E8C97A; }
+.bs-stat-l { font-size:9px; color:rgba(245,240,232,0.4); margin-top:2px; }
+.bs-play-btn { width:100%; padding:12px; border-radius:12px; background:linear-gradient(135deg,#C9A84C,#E8C97A); border:none; color:#08143C; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit; }
+.bs-sports-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.bs-age-btns { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.bs-age-btns button { padding:8px 4px; background:rgba(201,168,76,0.08); border:1px solid rgba(201,168,76,0.2); border-radius:8px; color:#E8C97A; font-size:11px; cursor:pointer; font-family:inherit; }
+.bs-age-btns button:hover { background:rgba(201,168,76,0.2); }
+.bs-map-btn { padding:10px 16px; border-radius:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12); color:#F5F0E8; font-size:12px; text-decoration:none; font-weight:600; }
+.sheet-handle-area { cursor:pointer; padding:8px 0 4px; text-align:center; }
+.sheet-handle { width:36px; height:4px; background:rgba(201,168,76,0.3); border-radius:2px; display:inline-block; }
+
 </style>
 </head>
 <body>
@@ -411,375 +438,68 @@ html,body{height:100%;margin:0;overflow:hidden;}
 
 <div class="bottom-sheet" id="bottom-sheet">
   <div class="sheet-handle-area" id="sheet-handle"><div class="sheet-handle"></div></div>
-  <div class="sheet-body">
-    <div class="sheet-scroll">
 
-      <div class="venue-header">
-        <div class="venue-icon-box" id="v-icon">🏢</div>
-        <div class="venue-meta">
-          <h1 id="v-name">경기장</h1>
-          <div class="badges">
-            <span class="badge badge-icoc">✦ ICOC 2027 공식</span>
-            <span class="badge badge-type" id="v-type-badge">종목</span>
-          </div>
-          <div class="venue-addr" id="v-addr">주소</div>
-        </div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-item"><div class="stat-val" id="v-rank">#1</div><div class="stat-lbl">지역 랭킹</div></div>
-        <div class="stat-item"><div class="stat-val" id="v-players">—</div><div class="stat-lbl">등록 선수</div></div>
-        <div class="stat-item"><div class="stat-val" id="v-matches">—</div><div class="stat-lbl">이번 달 매치</div></div>
-        <div class="stat-item"><div class="stat-val" id="v-rating">★ 4.8</div><div class="stat-lbl">평점</div></div>
-      </div>
-
-      <div class="sports-section">
-        <div class="sports-title">🎮 플레이 가능 종목</div>
-        <div class="sports-tags" id="v-sports-tags"></div>
-      </div>
-
-      <!-- 경기장 분위기 슬라이드쇼 -->
-      <div class="venue-slides-wrap" id="venue-slides-wrap">
-        <div class="venue-slide vs-active"><img src="assets/hero-bg.jpg" alt=""></div>
-        <div class="venue-slide"><img src="assets/hero-slide-1.jpg" alt=""></div>
-        <div class="venue-slide"><img src="assets/hero-slide-2.jpg" alt=""></div>
-        <div class="venue-slide"><img src="assets/hero-slide-3.jpg" alt=""></div>
-        <div class="venue-slide"><img src="assets/hero-slide-4.jpg" alt=""></div>
-      </div>
-
-
+  <!-- 항상 보이는 미니 헤더 -->
+  <div class="bs-mini">
+    <div class="bs-icon" id="v-icon">🏢</div>
+    <div class="bs-info">
+      <div class="bs-name" id="v-name">경기장</div>
+      <div class="bs-addr" id="v-addr">주소 정보 없음</div>
     </div>
+    <div class="bs-badges">
+      <span class="badge badge-icoc">✦ ICOC 2027 공식</span>
+      <span class="badge badge-type" id="v-type-badge">보드카페</span>
+    </div>
+  </div>
 
+  <!-- 토글 버튼 탭바 -->
+  <div class="bs-tabs">
+    <button class="bs-tab active" onclick="showBsTab('info', this)">📊 정보</button>
+    <button class="bs-tab" onclick="showBsTab('sports', this)">🎮 종목</button>
+    <button class="bs-tab" onclick="showBsTab('chat', this)">💬 채팅</button>
+    <button class="bs-tab" onclick="showBsTab('route', this)">📍 길찾기</button>
+  </div>
 
+  <!-- 정보 탭 -->
+  <div class="bs-panel" id="bsp-info">
+    <div class="bs-stats-row">
+      <div class="bs-stat"><div class="bs-stat-n" id="v-rank">-</div><div class="bs-stat-l">지역 랭킹</div></div>
+      <div class="bs-stat"><div class="bs-stat-n" id="v-players">-</div><div class="bs-stat-l">등록 선수</div></div>
+      <div class="bs-stat"><div class="bs-stat-n" id="v-matches">-</div><div class="bs-stat-l">이번 달 매치</div></div>
+      <div class="bs-stat"><div class="bs-stat-n" id="v-rating">-</div><div class="bs-stat-l">평점</div></div>
+    </div>
+    <button class="bs-play-btn" onclick="window.location.href='games.html'">▶ 온라인으로 지금 플레이</button>
+  </div>
+
+  <!-- 종목 탭 -->
+  <div class="bs-panel" id="bsp-sports" style="display:none;">
+    <div class="bs-panel-title">플레이 가능 종목</div>
+    <div class="bs-sports-tags" id="v-sports-tags"></div>
+  </div>
+
+  <!-- 채팅 탭 -->
+  <div class="bs-panel" id="bsp-chat" style="display:none;">
+    <div class="bs-panel-title">연령대별 채팅방</div>
+    <div class="bs-age-btns">
+      <button onclick="openAgeChat('10대')">🧒 10대</button>
+      <button onclick="openAgeChat('20대')">🧑 20대</button>
+      <button onclick="openAgeChat('30대')">👨 30대</button>
+      <button onclick="openAgeChat('40대')">🧔 40대</button>
+      <button onclick="openAgeChat('50대')">👴 50대</button>
+      <button onclick="openAgeChat('60대')">👵 60대</button>
+      <button onclick="openAgeChat('70대+')">🧓 70대+</button>
+    </div>
+  </div>
+
+  <!-- 길찾기 탭 -->
+  <div class="bs-panel" id="bsp-route" style="display:none;">
+    <div class="bs-panel-title">길찾기</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;">
+      <a id="link-kakao" href="#" target="_blank" class="bs-map-btn">🟡 카카오맵</a>
+      <a id="link-naver" href="#" target="_blank" class="bs-map-btn">🟢 네이버맵</a>
+      <a id="link-google" href="#" target="_blank" class="bs-map-btn">🔵 구글맵</a>
+    </div>
   </div>
 </div>
 
-<script src="js/points.js"></script>
-<script>
-const p = new URLSearchParams(location.search);
-const VENUE = {
-  id:   p.get('id')   || '1',
-  name: p.get('name') || '경기장',
-  type: p.get('type') || 'board',
-  lat:  parseFloat(p.get('lat'))  || 37.5665,
-  lng:  parseFloat(p.get('lng'))  || 126.9780,
-  addr: p.get('addr') || '주소 정보 없음',
-  city: p.get('city') || '',
-};
-const TYPES = {
-  go:         { label:'기원',       icon:'⚫', color:'#2d6b2d', sports:['바둑','오목'] },
-  billiards:  { label:'당구장',     icon:'🎱', color:'#1a4a7a', sports:['당구(3구)','당구(4구)','스누커','포켓볼'] },
-  bowling:    { label:'볼링장',     icon:'🎳', color:'#7a3a1a', sports:['볼링'] },
-  screengolf: { label:'스크린골프', icon:'⛳', color:'#2a7a2a', sports:['스크린골프','파크골프'] },
-  board:      { label:'보드카페',   icon:'🎯', color:'#5a1a7a', sports:['오목','체스','장기','체커','루미큐브','블로커스'] },
-  chess:      { label:'체스클럽',   icon:'♟️', color:'#7a6a1a', sports:['체스','장기','바둑','오목'] },
-  holdem:     { label:'홀덤펍',     icon:'🃏', color:'#7a1a1a', sports:['홀덤','진러미','블랙잭','브릿지','마작'] },
-  mahjong:    { label:'마작클럽',   icon:'🀄', color:'#8a1a1a', sports:['마작','홀덤','블랙잭'] },
-  pcbang:     { label:'PC방',       icon:'🖥️', color:'#1a3a7a', sports:['체스','오목','다빈치코드','스피드큐브'] },
-};
-const T = TYPES[VENUE.type] || { label:VENUE.type||'보드카페', icon:'📍', color:'#4a4a6a', sports:[] };
-const rnd = (a,b) => Math.floor(Math.random()*(b-a+1))+a;
-
-const MAPBOX_TOKEN = 'pk.eyJ1IjoibWlsaXZlcnNlMTAwNCIsImEiOiJjbXF0NmltcjYwMWprMnpzaGFrdjF5YnA3In0.yqIA5e6OePYT65r-xZShLA';
-var map;
-var is3d = true;
-
-// ── DOM 채우기 ──
-document.title = VENUE.name + ' — ICOC 2027';
-const _tn = document.getElementById('top-name');    if(_tn) _tn.textContent = VENUE.name;
-const _tt = document.getElementById('top-type');    if(_tt) _tt.textContent = T.label;
-const _vi = document.getElementById('v-icon');      if(_vi) { _vi.textContent = T.icon; _vi.style.cssText += ';background:' + T.color + '22;border-color:' + T.color + ';'; }
-const _vn = document.getElementById('v-name');      if(_vn) _vn.textContent = VENUE.name;
-const _vt = document.getElementById('v-type-badge');if(_vt) _vt.textContent = T.label;
-const _va = document.getElementById('v-addr');      if(_va) _va.textContent = '📍 ' + VENUE.addr + (VENUE.city ? '  ·  ' + VENUE.city : '');
-const _vr = document.getElementById('v-rank');      if(_vr) _vr.textContent = '#' + rnd(1,30);
-const _vp = document.getElementById('v-players');   if(_vp) _vp.textContent = rnd(12,280);
-const _vm = document.getElementById('v-matches');   if(_vm) _vm.textContent = rnd(40,310);
-const _vg = document.getElementById('v-rating');    if(_vg) _vg.textContent = '★ ' + (3.8+Math.random()*1.2).toFixed(1);
-const _vcn = document.getElementById('chat-venue-name'); if(_vcn) _vcn.textContent = VENUE.name + ' 채팅';
-
-// Sports tags
-const tagsEl = document.getElementById('v-sports-tags');
-if(tagsEl) T.sports.forEach(function(s) {
-  const a = document.createElement('a');
-  a.href = 'games.html?game=' + encodeURIComponent(s);
-  a.className = 'sport-tag'; a.textContent = s;
-  tagsEl.appendChild(a);
-});
-
-// ── 전역 함수들 (onclick에서 직접 호출) ──
-
-function changeVenueStyle(style) {
-  if (!map) return;
-
-  // ── Mapbox 스타일 (Mapbox GL JS 사용 시) ──
-  const mapboxStyles = {
-    dark:    'mapbox://styles/mapbox/dark-v11',
-    light:   'mapbox://styles/mapbox/light-v11',
-    streets: 'mapbox://styles/mapbox/streets-v12',
-    outdoor: 'mapbox://styles/mapbox/outdoors-v12',
-  };
-  // ── MapLibre 폴백 스타일 (Mapbox 없을 때) ──
-  const mlStyles = {
-    dark:    'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-    light:   'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-    streets: 'https://basemaps.cartocdn.com/gl/voyager-gl-style/style.json',
-    outdoor: 'https://basemaps.cartocdn.com/gl/positron-gl-style/style.json',
-  };
-
-  // active 버튼 표시
-  document.querySelectorAll('.style-pill').forEach(function(b) { b.classList.remove('active'); });
-  const order = ['dark','light','streets','outdoor'];
-  const pills = document.querySelectorAll('.style-pill');
-  const idx = order.indexOf(style);
-  if (pills[idx]) pills[idx].classList.add('active');
-
-  // 스타일 적용
-  try {
-    if (window.mapboxgl) {
-      // Mapbox Standard 스타일: setConfigProperty로 lightPreset 변경 (style diff 오류 방지)
-      const lightPresets = { dark:'night', light:'day', streets:'day', outdoor:'dawn' };
-      const preset = lightPresets[style] || 'night';
-      try {
-        // Standard 스타일인 경우 (lightPreset 사용)
-        map.setConfigProperty('basemap', 'lightPreset', preset);
-        setTimeout(function() { add3DBuildings(); applyKoreanLabels(); }, 500);
-      } catch(e) {
-        // Classic 스타일인 경우 (setStyle 사용)
-        map.setStyle(mapboxStyles[style] || mapboxStyles.dark);
-        map.once('style.load', function() { add3DBuildings(); applyKoreanLabels(); });
-      }
-    } else {
-      map.setStyle(mlStyles[style] || mlStyles.dark);
-      map.once('style.load', function() { applyKoreanLabels(); });
-    }
-  } catch(e) { console.warn('Style change error', e); }
-}
-
-// ── 3D 건물 레이어 추가 (별도 함수) ──
-function add3DBuildings() {
-  if (!window.mapboxgl || !map.getSource('composite')) return;
-  try {
-    if (map.getLayer('3d-buildings')) map.removeLayer('3d-buildings');
-    map.addLayer({
-      id: '3d-buildings',
-      source: 'composite',
-      'source-layer': 'building',
-      filter: ['==', 'extrude', 'true'],
-      type: 'fill-extrusion',
-      minzoom: 14,
-      paint: {
-        'fill-extrusion-color': [
-          'interpolate', ['linear'], ['get', 'height'],
-          0, '#C9A84C', 50, '#E8C97A', 100, '#F5F0E8'
-        ],
-        'fill-extrusion-height': [
-          'interpolate', ['linear'], ['zoom'],
-          14, 0, 14.5, ['get', 'height']
-        ],
-        'fill-extrusion-base': [
-          'interpolate', ['linear'], ['zoom'],
-          14, 0, 14.5, ['get', 'min_height']
-        ],
-        'fill-extrusion-opacity': 0.75
-      }
-    });
-  } catch(e) { console.warn('3D buildings:', e); }
-}
-
-// ── 한글 레이블 적용 (별도 함수) ──
-function applyKoreanLabels() {
-  try {
-    map.getStyle().layers.forEach(function(layer) {
-      if (layer.layout && layer.layout['text-field']) {
-        map.setLayoutProperty(layer.id, 'text-field', [
-          'coalesce', ['get', 'name_ko'], ['get', 'name:ko'], ['get', 'name']
-        ]);
-      }
-    });
-  } catch(e) {}
-}
-
-function toggle3D() {
-  if (!map) return;
-  const btn = document.getElementById('btn-3d-top');
-  try {
-    const pitch = map.getPitch();
-    if (pitch < 30) {
-      map.easeTo({ pitch:60, bearing:-20, duration:800 });
-      if(btn) { btn.textContent = '2D'; btn.title = '2D 전환'; }
-    } else {
-      map.easeTo({ pitch:0, bearing:0, duration:600 });
-      if(btn) { btn.textContent = '🏢'; btn.title = '3D 전환'; }
-    }
-  } catch(e) {}
-}
-
-function toggleChatPanel() {
-  const dd = document.getElementById('tb-chat-dropdown');
-  if(dd) dd.classList.toggle('open');
-}
-
-function closeAgeChat() {
-  const modal = document.getElementById('chat-modal');
-  if(modal) modal.style.display = 'none';
-  const dd = document.getElementById('tb-chat-dropdown');
-  if(dd) dd.classList.add('open');
-}
-
-function openAgeChat(age) {
-  const modal = document.getElementById('chat-modal');
-  if(!modal) return;
-  modal.style.display = 'flex';
-  const sub = modal.querySelector('.chat-header-text p');
-  if(sub) sub.innerHTML = '<button onclick="closeAgeChat()" style="background:none;border:none;color:#C9A84C;font-size:12px;cursor:pointer;font-family:inherit;padding:0;">← 연령대 선택</button>';
-  const nameEl = document.getElementById('chat-venue-name');
-  if(nameEl) nameEl.textContent = VENUE.name + ' · ' + age + ' 채팅방';
-  const msgs = document.getElementById('chat-messages');
-  if(msgs) msgs.innerHTML = '<div class="chat-coming-soon"><span class="icon">💬</span><strong style="color:var(--gold);display:block;margin-bottom:8px;">' + age + ' 채팅방</strong>이 경기장의 ' + age + ' 유저들과 대전 신청, 정모, 팀 빌딩 등을 나눠보세요.<br><br>채팅 기능 오픈 준비 중...</div>';
-  modal.classList.add('open');
-}
-
-function checkShowVenueRegBtn() {
-  const btn = document.getElementById('tb-reg-btn');
-  if(!btn) return;
-  const loggedIn = !!(window.ICOC_AUTH && ICOC_AUTH.getCurrentUser && ICOC_AUTH.getCurrentUser());
-  btn.style.display = loggedIn ? 'flex' : 'none';
-}
-
-// ── 날씨 티커 ──
-function showWeatherTicker() {
-  if(document.getElementById('venue-weather-ticker')) return;
-  const ticker = document.createElement('div');
-  ticker.id = 'venue-weather-ticker';
-  ticker.style.cssText = 'position:fixed;bottom:0;left:0;right:0;z-index:150;background:rgba(8,20,44,0.92);backdrop-filter:blur(10px);border-top:1px solid rgba(201,168,76,0.15);height:28px;overflow:hidden;display:flex;align-items:center;';
-  ticker.innerHTML = '<div style="flex-shrink:0;padding:0 8px;"><span style="font-size:9px;font-weight:700;color:#C9A84C;">🌤 날씨</span></div><div style="flex:1;overflow:hidden;"><div id="venue-weather-text" style="display:inline-block;font-size:11px;color:rgba(245,240,232,0.7);white-space:nowrap;animation:tickerScroll 35s linear infinite;padding:0 10px;line-height:28px;">날씨 불러오는 중...</div></div>';
-  document.body.appendChild(ticker);
-  const cities = [{name:'서울',lat:37.5665,lng:126.9780},{name:'도쿄',lat:35.6762,lng:139.6503},{name:'뉴욕',lat:40.7128,lng:-74.0060},{name:'런던',lat:51.5074,lng:-0.1278},{name:'베이징',lat:39.9042,lng:116.4074},{name:'시드니',lat:-33.8688,lng:151.2093}];
-  const WMO = {0:'맑음',1:'대체로맑음',2:'흐릿',3:'흐림',45:'안개',61:'비',71:'눈',80:'소나기',95:'뇌우'};
-  Promise.all(cities.map(function(c) {
-    return fetch('https://api.open-meteo.com/v1/forecast?latitude=' + c.lat + '&longitude=' + c.lng + '&current_weather=true')
-      .then(function(r){return r.json();})
-      .then(function(d){return {name:c.name,temp:Math.round(d.current_weather.temperature),code:d.current_weather.weathercode};})
-      .catch(function(){return {name:c.name,temp:'?',code:0};});
-  })).then(function(results) {
-    const text = results.map(function(r){return '🌍 ' + r.name + ' ' + r.temp + '°C ' + (WMO[r.code]||'');}).join(' · ');
-    const el = document.getElementById('venue-weather-text');
-    if(el) el.textContent = text + ' · ' + text;
-  });
-}
-
-
-function showNewsTicker() {
-  if(document.getElementById('venue-news-ticker')) return;
-  const ticker = document.createElement('div');
-  ticker.id = 'venue-news-ticker';
-  ticker.style.cssText = 'position:fixed;bottom:28px;left:0;right:0;z-index:149;background:rgba(201,168,76,0.08);backdrop-filter:blur(8px);border-top:1px solid rgba(201,168,76,0.1);height:22px;overflow:hidden;display:flex;align-items:center;';
-  ticker.innerHTML = '<div style="flex-shrink:0;padding:0 8px;font-size:9px;font-weight:700;color:#C9A84C;white-space:nowrap;">📰 뉴스</div><div style="flex:1;overflow:hidden;"><div id="venue-news-text" style="display:inline-block;font-size:10px;color:rgba(245,240,232,0.6);white-space:nowrap;animation:tickerScroll 50s linear infinite;padding:0 10px;line-height:22px;">뉴스 로딩 중...</div></div>';
-  document.body.appendChild(ticker);
-
-  // RSS2JSON (무료 CORS 프록시)
-  const RSS_URL = encodeURIComponent('https://news.google.com/rss/search?q=브레인스포츠+바둑+체스&hl=ko&gl=KR&ceid=KR:ko');
-  fetch('https://api.rss2json.com/v1/api.json?rss_url=' + RSS_URL + '&count=10')
-    .then(function(r){return r.json();})
-    .then(function(d){
-      if(d.items && d.items.length) {
-        const text = d.items.map(function(item){ return '📌 ' + item.title; }).join('　　·　　');
-        const el = document.getElementById('venue-news-text');
-        if(el) el.textContent = text + '　　·　　' + text;
-      }
-    })
-    .catch(function(){
-      const el = document.getElementById('venue-news-text');
-      if(el) el.textContent = '📌 ICOC Brain Sports Omnipo 2027 오픈　·　195개국 온라인 두뇌스포츠 플랫폼　·　바둑·체스·장기·당구·볼링 온라인 대전　·　지금 국가대표에 도전하세요';
-    });
-}
-
-// ── 마커 추가 ──
-function addVenueMarker() {
-  const el = document.createElement('div');
-  el.className = 'my-venue-marker';
-  el.style.cssText = 'width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;border:3px solid rgba(201,168,76,0.8);box-shadow:0 4px 16px rgba(0,0,0,0.5);cursor:pointer;background:' + T.color + 'cc;';
-  el.textContent = T.icon;
-  const Lib = window.mapboxgl || window.maplibregl;
-  if(!Lib) return;
-  new Lib.Marker({element:el, anchor:'bottom'})
-    .setLngLat([VENUE.lng, VENUE.lat])
-    .addTo(map);
-
-  // 한글 레이블 + 3D 건물 (공통 함수 사용)
-  applyKoreanLabels();
-  add3DBuildings();
-
-  showWeatherTicker();
-  showNewsTicker();
-  checkShowVenueRegBtn();
-}
-
-// ── 지도 초기화 ──
-function initVenueMap() {
-  const container = document.getElementById('map');
-  if(!container || container.offsetWidth === 0) {
-    setTimeout(initVenueMap, 150);
-    return;
-  }
-  if(window.mapboxgl) {
-    mapboxgl.accessToken = MAPBOX_TOKEN;
-    map = new mapboxgl.Map({
-      container:'map', style:'mapbox://styles/mapbox/standard',
-      center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15, antialias:true,
-      language: 'ko',
-    });
-    // Standard 스타일 다크모드
-    map.on('style.load', function() {
-      try {
-        map.setConfigProperty('basemap', 'lightPreset', 'night');
-        map.setConfigProperty('basemap', 'showPointOfInterestLabels', true);
-        map.setConfigProperty('basemap', 'showRoadLabels', true);
-      } catch(e) {}
-    });
-    map.addControl(new mapboxgl.NavigationControl({visualizePitch:true}), 'top-left');
-    map.on('load', addVenueMarker);
-    map.on('error', function(e){ console.warn('Mapbox error:', e.error); });
-  } else if(window.maplibregl) {
-    map = new maplibregl.Map({
-      container:'map',
-      style:'https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json',
-      center:[VENUE.lng, VENUE.lat], zoom:16, pitch:55, bearing:-15,
-    });
-    map.addControl(new maplibregl.NavigationControl(), 'top-left');
-    map.on('load', addVenueMarker);
-  } else {
-    console.warn('No map library loaded');
-  }
-}
-
-// ── 이벤트 바인딩 (DOMContentLoaded 후) ──
-document.addEventListener('DOMContentLoaded', function() {
-  initVenueMap();
-  // Bottom sheet
-  const sheet = document.getElementById('bottom-sheet');
-  const handle = document.getElementById('sheet-handle');
-  let collapsed = false;
-  if(handle) handle.addEventListener('click', function() {
-    collapsed = !collapsed;
-    if(sheet) sheet.classList.toggle('collapsed', collapsed);
-  });
-  // Chat close
-  const chatClose = document.getElementById('chat-close');
-  if(chatClose) chatClose.addEventListener('click', closeAgeChat);
-  // 외부 클릭 시 채팅 드롭다운 닫기
-  document.addEventListener('click', function(e) {
-    if(!e.target.closest('#tb-chat-wrap')) {
-      const dd = document.getElementById('tb-chat-dropdown');
-      if(dd) dd.classList.remove('open');
-    }
-  });
-  setTimeout(checkShowVenueRegBtn, 1500);
-  setInterval(checkShowVenueRegBtn, 5000);
-});
-</script>
-</body>
-</html>
-
-<!-- rebuild -->
+>
