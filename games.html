@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Brain Sports — 게임 플레이 | ICOC 2027</title>
+<link rel="icon" href="assets/favicon-32.png" type="image/png" sizes="32x32">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --navy:  #0B1F3A;
+  --navy2: #0e2847;
+  --navy3: #112f52;
+  --gold:  #C9A84C;
+  --gold-l:#E8C97A;
+  --cream: #F5F0E8;
+  --border:rgba(201,168,76,0.22);
+  --card-bg:rgba(14,40,71,0.85);
+}
+*{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; }
+body{
+  background:var(--navy);
+  color:var(--cream);
+  font-family:'Noto Sans KR',sans-serif;
+  font-weight:300;
+  min-height:100vh;
+}
+
+/* ── TOP BAR ── */
+.top-bar{
+  position:sticky; top:0; z-index:100;
+  display:flex; align-items:center; gap:12px;
+  padding:0 20px; height:56px;
+  background:rgba(11,31,58,0.92);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--border);
+}
+.btn-back{
+  display:flex; align-items:center; gap:6px;
+  padding:6px 14px;
+  border:1px solid rgba(201,168,76,0.3); border-radius:24px;
+  background:rgba(201,168,76,0.06);
+  color:var(--gold-l); font-size:13px; font-weight:500;
+  cursor:pointer; text-decoration:none; transition:all 0.2s;
+  white-space:nowrap;
+}
+.btn-back:hover{ background:rgba(201,168,76,0.15); border-color:var(--gold); }
+.bar-title{
+  flex:1; font-size:15px; font-weight:700; color:var(--cream);
+}
+.bar-count{
+  font-size:12px; color:var(--gold);
+  padding:3px 10px; border:1px solid var(--border); border-radius:12px;
+}
+
+/* ── HERO STRIP ── */
+.hero-strip{
+  padding:36px 20px 28px;
+  text-align:center;
+  background:linear-gradient(180deg, rgba(201,168,76,0.06) 0%, transparent 100%);
+  border-bottom:1px solid var(--border);
+}
+.hero-strip h1{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(22px,5vw,36px);
+  font-weight:900; color:var(--gold);
+  letter-spacing:0.04em; margin-bottom:8px;
+}
+.hero-strip p{
+  font-size:13px; color:rgba(245,240,232,0.55);
+  max-width:480px; margin:0 auto;
+}
+
+/* ── FILTER TABS ── */
+.filter-bar{
+  display:flex; gap:8px; flex-wrap:wrap;
+  padding:18px 20px 10px;
+  border-bottom:1px solid var(--border);
+  position:sticky; top:56px; z-index:90;
+  background:rgba(11,31,58,0.95);
+  backdrop-filter:blur(12px);
+}
+.filter-btn{
+  padding:6px 16px;
+  border:1px solid var(--border); border-radius:20px;
+  background:transparent; color:rgba(245,240,232,0.6);
+  font-size:12px; font-weight:500; letter-spacing:0.04em;
+  cursor:pointer; transition:all 0.2s; font-family:inherit;
+  white-space:nowrap;
+}
+.filter-btn:hover{ border-color:var(--gold); color:var(--gold-l); background:rgba(201,168,76,0.06); }
+.filter-btn.active{ background:var(--gold); color:var(--navy); border-color:var(--gold); font-weight:700; }
+
+/* ── GAMES GRID ── */
+.games-wrap{ padding:20px; }
+
+.cat-section{ margin-bottom:32px; }
+.cat-label{
+  font-size:11px; font-weight:700; letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--gold);
+  padding-bottom:10px;
+  border-bottom:1px solid var(--border);
+  margin-bottom:14px;
+  display:flex; align-items:center; gap:8px;
+}
+.cat-label-dot{
+  width:6px; height:6px; border-radius:50%;
+  background:var(--gold); display:inline-block;
+}
+
+.games-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(150px, 1fr));
+  gap:12px;
+}
+
+/* ── GAME CARD ── */
+.game-card{
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px 14px 14px;
+  cursor:pointer; text-decoration:none;
+  display:flex; flex-direction:column; align-items:center;
+  text-align:center;
+  transition:all 0.22s;
+  position:relative; overflow:hidden;
+}
+.game-card::before{
+  content:'';
+  position:absolute; inset:0;
+  background:linear-gradient(135deg, rgba(201,168,76,0.06) 0%, transparent 60%);
+  opacity:0; transition:opacity 0.2s;
+}
+.game-card:hover{ border-color:rgba(201,168,76,0.5); transform:translateY(-3px); box-shadow:0 8px 24px rgba(0,0,0,0.3); }
+.game-card:hover::before{ opacity:1; }
+
+.game-card.playable .play-badge{
+  position:absolute; top:8px; right:8px;
+  font-size:9px; font-weight:700; letter-spacing:0.06em;
+  padding:2px 7px; border-radius:8px;
+  background:rgba(201,168,76,0.18); color:var(--gold);
+  border:1px solid rgba(201,168,76,0.3);
+}
+.game-card.soon .play-badge{
+  background:rgba(255,255,255,0.06); color:rgba(245,240,232,0.35);
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.game-emoji{
+  font-size:38px; line-height:1;
+  margin-bottom:10px;
+  filter:drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+}
+.game-name{
+  font-size:13px; font-weight:700; color:var(--cream);
+  margin-bottom:4px; line-height:1.3;
+}
+.game-name-en{
+  font-size:10px; color:rgba(245,240,232,0.35);
+  letter-spacing:0.04em; margin-bottom:8px;
+}
+.game-desc{
+  font-size:10px; color:rgba(245,240,232,0.45);
+  line-height:1.5;
+}
+
+/* bottom padding */
+.page-end{ height:40px; }
+
+/* highlight card (ICOC featured) */
+.game-card.featured{
+  border-color:rgba(201,168,76,0.4);
+  background:linear-gradient(135deg, rgba(201,168,76,0.09) 0%, var(--card-bg) 60%);
+}
+
+@media(max-width:480px){
+  .games-grid{ grid-template-columns:repeat(2, 1fr); gap:10px; }
+  .game-emoji{ font-size:32px; }
+}
+@media(min-width:900px){
+  .games-wrap{ max-width:1040px; margin:0 auto; padding:28px 32px; }
+  .hero-strip{ padding:48px 32px 36px; }
+  .filter-bar{ padding:18px 32px 12px; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="index.html" class="btn-back">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    홈
+  </a>
+  <div class="bar-title">🎮 브레인스포츠 플레이</div>
+  <div class="bar-count" id="game-count">23 종목</div>
+</div>
+
+<!-- HERO -->
+<div class="hero-strip">
+  <h1>Brain Sports Omnipo</h1>
+  <p>로그인 없이 지금 바로 AI와 대전하거나 온라인 매칭에 참여하세요.<br>ICOC 국가대표 선발전 참여 종목은 ✦ 표시됩니다.</p>
+</div>
+
+<!-- FILTER -->
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterCat('all',this)">🌐 전체</button>
+  <button class="filter-btn" onclick="filterCat('classic',this)">⚫ 클래식 전략</button>
+  <button class="filter-btn" onclick="filterCat('modern',this)">🎯 현대 보드게임</button>
+  <button class="filter-btn" onclick="filterCat('card',this)">🃏 카드 게임</button>
+  <button class="filter-btn" onclick="filterCat('sport',this)">🎳 실내 스포츠</button>
+</div>
+
+<!-- GAMES -->
+<div class="games-wrap" id="games-wrap">
+  <!-- JS가 렌더링 -->
+</div>
+<div class="page-end"></div>
+
+<script>
+const GAMES = [
+  // ── CLASSIC 전략 ──
+  { id:'go',         cat:'classic', name:'바둑',        nameEn:'Go',         emoji:'⚫', desc:'세계 최고 난이도 보드게임. 19×19판의 우주.',    play:true,  featured:true },
+  { id:'chess',      cat:'classic', name:'체스',        nameEn:'Chess',      emoji:'♟️', desc:'기사, 비숍, 킹의 64칸 두뇌 전쟁.',             play:true,  featured:true },
+  { id:'janggi',     cat:'classic', name:'장기',        nameEn:'Janggi',     emoji:'🀄', desc:'한국 전통 전략 보드게임.',                       play:true,  featured:true },
+  { id:'omok',       cat:'classic', name:'오목',        nameEn:'Omoku',      emoji:'🖤', desc:'다섯 줄을 먼저 만들면 승리. 단순하나 깊은 전략.',play:true,  featured:true },
+  { id:'shogi',      cat:'classic', name:'장기(쇼기)',  nameEn:'Shogi',      emoji:'🎌', desc:'잡은 말을 내 말로 쓸 수 있는 일본 장기.',        play:true,  featured:false },
+  { id:'checkers',   cat:'classic', name:'체커',        nameEn:'Checkers',   emoji:'🔴', desc:'대각선으로 상대 말을 점프해 잡아내는 게임.',      play:true,  featured:false },
+  { id:'backgammon', cat:'classic', name:'백개먼',      nameEn:'Backgammon', emoji:'🎲', desc:'주사위와 전략이 결합된 고대 게임.',               play:true,  featured:false },
+  { id:'reversi',    cat:'classic', name:'리버시',      nameEn:'Reversi',    emoji:'⬛', desc:'상대 돌을 뒤집어 더 많이 차지하면 승리.',        play:true,  featured:false },
+  { id:'hex',        cat:'classic', name:'헥스',        nameEn:'Hex',        emoji:'🔷', desc:'육각형 타일을 연결해 양쪽 끝을 잇는 전략 게임.', play:true,  featured:false },
+  { id:'quoridor',   cat:'classic', name:'쿼리도',      nameEn:'Quoridor',   emoji:'🟫', desc:'벽과 이동으로 상대보다 먼저 반대편에 도달하라.', play:true,  featured:false },
+
+  // ── MODERN 보드게임 ──
+  { id:'rummikub',   cat:'modern',  name:'루미큐브',    nameEn:'Rummikub',   emoji:'🟧', desc:'숫자 타일로 세트·런을 완성하는 전 세계 인기 게임.', play:true, featured:true },
+  { id:'connect4',   cat:'modern',  name:'커넥트4',     nameEn:'Connect 4',  emoji:'🔵', desc:'4개를 먼저 연결하라. 쉽지만 깊은 전략.',           play:true, featured:false },
+  { id:'davinci',    cat:'modern',  name:'다빈치코드',  nameEn:"Da Vinci",   emoji:'🔢', desc:'숫자 코드를 추리하는 두뇌 게임.',                  play:true, featured:false },
+  { id:'catan',      cat:'modern',  name:'카탄',        nameEn:'Catan',      emoji:'🌾', desc:'자원 수집과 교역, 도시 건설의 다인전 전략.',        play:false,featured:true },
+  { id:'splendor',   cat:'modern',  name:'스플렌더',    nameEn:'Splendor',   emoji:'💎', desc:'보석 토큰으로 카드를 구매하는 엔진빌딩 게임.',      play:false,featured:false },
+  { id:'avalon',     cat:'modern',  name:'아발론',      nameEn:'Avalon',     emoji:'🗡️', desc:'선과 악의 심리전. 팀 기반 정체 추리 게임.',         play:false,featured:false },
+
+  // ── CARD 게임 ──
+  { id:'holdem',     cat:'card',    name:'텍사스 홀덤', nameEn:"Texas Hold'em",emoji:'🃏', desc:'세계 최대 포커 게임. ICOC 공식 선발 종목.',    play:true, featured:true },
+  { id:'bridge',     cat:'card',    name:'브릿지',      nameEn:'Bridge',     emoji:'🂡', desc:'4인 파트너십 카드게임. 세계 정상급 두뇌 스포츠.', play:true, featured:true },
+  { id:'rummy',      cat:'card',    name:'진러미',      nameEn:'Gin Rummy',  emoji:'🎴', desc:'10장의 패로 런·세트를 완성하는 두뇌 카드전.',    play:true, featured:true },
+  { id:'hearts',     cat:'card',    name:'하츠',        nameEn:'Hearts',     emoji:'♥️', desc:'하트와 스페이드 퀸을 피하는 4인 카드게임.',       play:true, featured:false },
+  { id:'oldmaid',    cat:'card',    name:'올드메이드',  nameEn:'Old Maid',   emoji:'🃟', desc:'조커를 상대에게 넘기는 클래식 카드게임.',          play:true, featured:false },
+  { id:'onecard',    cat:'card',    name:'원카드',      nameEn:'One Card',   emoji:'🀣', desc:'마지막 카드 한 장을 남기면 승리. 한국판 UNO.',    play:true, featured:false },
+
+  // ── SPORT 실내 스포츠 ──
+  { id:'billiards',  cat:'sport',   name:'당구',        nameEn:'Billiards',  emoji:'🎱', desc:'3구·4구·스누커. 큐로 구사하는 고전 스포츠.',     play:false,featured:true },
+  { id:'bowling',    cat:'sport',   name:'볼링',        nameEn:'Bowling',    emoji:'🎳', desc:'10개의 핀을 쓰러뜨리는 실내 스포츠.',            play:false,featured:true },
+  { id:'screengolf', cat:'sport',   name:'스크린골프',  nameEn:'Screen Golf',emoji:'⛳', desc:'전 세계 코스를 실내에서. 한국 고유 실내 스포츠.', play:false,featured:true },
+  { id:'parkgolf',   cat:'sport',   name:'파크골프',    nameEn:'Park Golf',  emoji:'🌿', desc:'공원에서 즐기는 미니 골프. 전 연령 인기 급상승.', play:false,featured:false },
+];
+
+const CATS = {
+  classic: { label:'클래식 전략 게임', emoji:'⚫' },
+  modern:  { label:'현대 보드게임',   emoji:'🎯' },
+  card:    { label:'카드 게임',       emoji:'🃏' },
+  sport:   { label:'실내 스포츠',     emoji:'🎳' },
+};
+
+let activeCat = 'all';
+
+// URL 파라미터로 게임/타입 하이라이트
+const urlP = new URLSearchParams(location.search);
+const highlightType = urlP.get('type');
+const highlightGame = urlP.get('game');
+
+function buildGrid(cat){
+  const wrap = document.getElementById('games-wrap');
+  wrap.innerHTML = '';
+
+  const order = ['classic','modern','card','sport'];
+  order.forEach(c => {
+    const games = GAMES.filter(g => g.cat === c && (cat === 'all' || g.cat === cat));
+    if(!games.length) return;
+
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    sec.dataset.cat = c;
+
+    sec.innerHTML = `<div class="cat-label"><span class="cat-label-dot"></span>${CATS[c].emoji} ${CATS[c].label}</div><div class="games-grid" id="grid-${c}"></div>`;
+    wrap.appendChild(sec);
+
+    const grid = sec.querySelector('.games-grid');
+    games.forEach(g => {
+      const isHL = (highlightGame && g.name === highlightGame) || (highlightType && typeMatchesCat(highlightType, g.cat));
+      const a = document.createElement('a');
+      a.className = `game-card${g.featured?' featured':''}${g.play?'':' soon'}${isHL?' highlighted':''}`;
+      a.href = g.play ? `index.html#game-${g.id}` : '#';
+      if(!g.play) a.addEventListener('click', e => { e.preventDefault(); showComingSoon(g.name); });
+
+      a.innerHTML = `
+        <span class="play-badge">${g.play ? '▶ PLAY' : 'SOON'}</span>
+        <div class="game-emoji">${g.emoji}</div>
+        <div class="game-name">${g.name}${g.featured ? ' <span style="color:var(--gold);font-size:9px;">✦</span>' : ''}</div>
+        <div class="game-name-en">${g.nameEn}</div>
+        <div class="game-desc">${g.desc}</div>
+      `;
+      grid.appendChild(a);
+
+      if(isHL){ setTimeout(()=>{ a.scrollIntoView({behavior:'smooth',block:'center'}); },300); }
+    });
+  });
+
+  document.getElementById('game-count').textContent =
+    (cat === 'all' ? GAMES.length : GAMES.filter(g=>g.cat===cat).length) + ' 종목';
+}
+
+function typeMatchesCat(type, cat){
+  const map = { go:'classic', chess:'classic', board:'classic', billiards:'sport', bowling:'sport', screengolf:'sport', parkgolf:'sport', holdem:'card', pcbang:'modern' };
+  return map[type] === cat;
+}
+
+function filterCat(cat, btn){
+  activeCat = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  buildGrid(cat);
+}
+
+function showComingSoon(name){
+  const d = document.createElement('div');
+  d.style.cssText = `
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+    background:rgba(14,40,71,0.96); border:1px solid rgba(201,168,76,0.4);
+    border-radius:12px; padding:14px 22px; z-index:9999;
+    color:#E8C97A; font-size:13px; font-weight:600;
+    backdrop-filter:blur(16px); text-align:center;
+    box-shadow:0 8px 32px rgba(0,0,0,0.4);
+  `;
+  d.textContent = `${name} — 온라인 버전 출시 준비 중입니다 🧠`;
+  document.body.appendChild(d);
+  setTimeout(()=>{ d.style.opacity='0'; d.style.transition='opacity 0.4s'; setTimeout(()=>d.remove(),400); }, 2200);
+}
+
+buildGrid('all');
+</script>
+</body>
+</html>
