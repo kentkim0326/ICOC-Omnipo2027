@@ -122,15 +122,36 @@ body{
   background:var(--card-bg);
   border:1px solid var(--border);
   border-radius:14px;
-  padding:18px 14px 14px;
+  padding:0;
   cursor:pointer; text-decoration:none;
-  display:flex; flex-direction:column; align-items:center;
+  display:flex; flex-direction:column;
   text-align:center;
   transition:all 0.22s;
   position:relative; overflow:hidden;
-  background-size:100% 90px;
-  background-repeat:no-repeat;
-  background-position:top center;
+}
+/* 상단 이미지/아이콘 영역 */
+.card-top{
+  width:100%; height:110px;
+  overflow:hidden; flex-shrink:0;
+  background:linear-gradient(135deg,rgba(14,40,71,0.95),rgba(8,20,44,0.8));
+  display:flex; align-items:center; justify-content:center;
+  position:relative;
+}
+.card-top img{
+  width:100%; height:100%;
+  object-fit:cover; object-position:center top;
+  transition:transform 0.3s;
+}
+.game-card:hover .card-top img{ transform:scale(1.05); }
+.card-top-emoji{
+  font-size:40px; line-height:1;
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+}
+/* 하단 정보 영역 */
+.card-bottom{
+  padding:10px 12px 12px;
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; text-align:center;
 }
 .game-card::before{
   content:'';
@@ -352,15 +373,13 @@ function buildGrid(cat){
       if(!g.play) a.addEventListener('click', e => { e.preventDefault(); showComingSoon(g.name); });
 
       const imgSrc = GAME_IMGS[g.id];
-      if(imgSrc){
-        // background-image 방식: CSS 복잡도 없이 확실하게 이미지 표시
-        a.style.backgroundImage = 'url(' + imgSrc + ')';
-        a.style.paddingTop = '102px'; // 이미지(90px) + 여백(12px)
-        a.classList.add('has-img');
-      }
-      a.innerHTML = `
+      // 상단: 이미지 있으면 img 태그, 없으면 이모지
+      const topHTML = imgSrc
+        ? `<div class="card-top"><img src="${imgSrc}" alt="${g.name}" loading="lazy"></div>`
+        : `<div class="card-top"><div class="card-top-emoji">${g.emoji}</div></div>`;
+      a.innerHTML = topHTML + `
+        <div class="card-bottom">
         <span class="play-badge">${g.play ? '▶ PLAY' : 'SOON'}</span>
-        <div class="game-emoji"${imgSrc ? ' style="display:none"' : ''}>${g.emoji}</div>
         <div class="game-name">${g.name}${g.featured ? ' <span style="color:var(--gold);font-size:9px;">✦</span>' : ''}</div>
         <div class="game-name-en">${g.nameEn}</div>
         <div class="game-desc">${g.desc}</div>
