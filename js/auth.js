@@ -502,60 +502,9 @@
 
   // ── 마이페이지 모달 ──
   function openMyPage() {
-    if (!currentProfile) return;
-    const p = currentProfile;
-    const localPts = parseInt(localStorage.getItem('icoc_points') || '0');
-
-    const overlay = document.createElement('div');
-    overlay.id = 'mypage-overlay';
-    overlay.innerHTML = `
-      <div class="mp-modal">
-        <button class="mp-close" id="mp-close">✕</button>
-        <div class="mp-header">
-          <img src="${currentUser?.user_metadata?.avatar_url || 'assets/logo-nav.png'}" class="mp-avatar" alt="avatar">
-          <div>
-            <div class="mp-nickname">${p.nickname}</div>
-            <div class="mp-meta">${countryFlag(p.country)} ${p.country} · ${p.city || ''} ${p.district || ''} ${p.dong || ''}</div>
-            <div class="mp-gen">${p.generation} · 주종목: ${(p.main_sports||[]).join(', ') || '미설정'}</div>
-          </div>
-        </div>
-        <div class="mp-points-box">
-          <span class="mp-pts-label">보유 포인트</span>
-          <span class="mp-pts-val">🪙 ${localPts.toLocaleString()} P</span>
-        </div>
-        <div class="mp-section-title">게임별 전적 & AI 레벨</div>
-        <div id="mp-records" class="mp-records">
-          <div class="mp-loading">📊 전적 불러오는 중...</div>
-        </div>
-        <div class="mp-actions">
-          <button class="game-btn ghost" id="mp-signout">🚪 로그아웃</button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(overlay);
-
-    overlay.addEventListener('click', e => { if (e.target===overlay) closeMyPage(); });
-    document.getElementById('mp-close').addEventListener('click', closeMyPage);
-    document.getElementById('mp-signout').addEventListener('click', signOut);
-
-    // 전적 로드
-    loadGameRecords(currentUser.id).then(records => {
-      const el = document.getElementById('mp-records');
-      if (!el) return;
-      if (!records || !records.length) {
-        el.textContent = '아직 게임 기록이 없습니다.'; return;
-      }
-      // 로컬 스탯도 병합 (포인트 적립 내역)
-      const SPORT_ICONS = {
-        '바둑':'⚫','체스':'♟️','장기':'🈴','쇼기':'🎌','오목':'⚪',
-        '마작':'🀄','체커':'🔴','백개먼':'🎲','리버시':'🟢','커넥트4':'🔵',
-        '당구':'🎱','볼링':'🎳','스크린골프':'⛳','홀덤':'🃏','브릿지':'🎴',
-        '진러미':'🃏','하츠':'♥️','다트':'🎯',
-      };
-      el.innerHTML = buildGameStatsHTML(records);
-    });
+    // 새 마이페이지로 이동
+    window.location.href = 'mypage.html';
   }
-
   function closeMyPage() {
     const el = document.getElementById('mypage-overlay');
     if (el) el.remove();
