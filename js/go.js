@@ -291,9 +291,11 @@ function sfx(type) {
 
 
   function doAiTurn(){
+    console.log('[Go] doAiTurn running, board:', board[9][9]);
     setStatus('AI가 생각 중...');
     setTimeout(()=>{
       const mv=aiPickMove();
+      console.log('[Go] AI picked move:', mv);
       if(!mv){
         passCount++;
         sfx('pass');
@@ -447,7 +449,7 @@ function sfx(type) {
       if(res.newKo){koPoint=res.newKo.pt;koColor=res.newKo.col;}else{koPoint=null;}
       passCount=0; renderBoard(); markLastMove(r,c); sfx(res.captured>0?'capture':'place');
       if(checkWinAfterMove(BLACK)){return;}
-      turn=WHITE; setTurnUI(); setTimeout(doAiTurn,400);
+      turn=WHITE; setTurnUI(); console.log('[Go] AI turn starting...'); setTimeout(doAiTurn,400);
     }
     boardUI=global.BoardUI.createGoban(container, SIZE, {
       onIntersectionClick: onCellClick,
