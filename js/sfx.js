@@ -174,8 +174,38 @@
 
   function isMuted() { return muted; }
 
-  document.addEventListener('DOMContentLoaded', buildToggleBtn);
+  /* ── 모달 헤드 버튼 동기화 ── */
+  function syncModalBtn() {
+    const btn = document.getElementById('game-sfx-btn');
+    if (!btn) return;
+    btn.textContent = muted ? '🔇' : '🔊';
+    btn.style.opacity = muted ? '0.5' : '1';
+    btn.style.color = muted ? 'rgba(245,240,232,0.4)' : '#F5F0E8';
+  }
 
-  global.ICOC_SFX = { ...SFX, isMuted, buildToggleBtn };
+  function toggleMute() {
+    muted = !muted;
+    localStorage.setItem(MUTE_KEY, muted ? '1' : '0');
+    syncModalBtn();
+    updateBtn(document.getElementById('sfx-toggle-btn'));
+    if (!muted) SFX.click();
+  }
+
+  /* 게임 모달이 열릴 때마다 버튼 상태 동기화 (MutationObserver) */
+  function watchModal() {
+    const modal = document.getElementById('game-modal');
+    if (!modal) return;
+    new MutationObserver(() => {
+      if (modal.classList.contains('open')) syncModalBtn();
+    }).observe(modal, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    buildToggleBtn(); // 기존 fixed 버튼 유지 (모달 밖에서도 접근 가능)
+    watchModal();
+    syncModalBtn();
+  });
+
+  global.ICOC_SFX = { ...SFX, isMuted, toggleMute, buildToggleBtn, syncModalBtn };
 
 })(window);
