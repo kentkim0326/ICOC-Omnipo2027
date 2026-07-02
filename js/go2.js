@@ -1,3 +1,22 @@
+/* ── 효과음 래퍼 (ICOC_SFX 뮤트 연동) ── */
+function sfx(type) {
+  if (window.ICOC_SFX && window.ICOC_SFX.isMuted()) return;
+  const S = window.ICOC_SFX;
+  if (!S) return;
+  const map = {
+    place:   () => S.stone(),
+    stone:   () => S.stone(),
+    capture: () => S.capture(),
+    invalid: () => S.click(),
+    win:     () => S.win(),
+    lose:    () => S.lose(),
+    draw:    () => S.draw(),
+    pass:    () => S.pass(),
+    atari:   () => S.atari(),
+  };
+  if (map[type]) map[type]();
+}
+
 /* ============================================================
    ICOC OMNIPO — 바둑 (Go / Baduk) vs AI  v2
    19×19 보드 · 개선된 AI (후보 추출 + 몬테카를로 경량 평가)
