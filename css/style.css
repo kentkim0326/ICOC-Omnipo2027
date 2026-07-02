@@ -151,6 +151,7 @@
   /* 모달 내부에 꽉 맞게: 부모 너비 100% 기준 */
   width:min(calc(100% - 0px), calc(96vh - 200px));
   max-width:100%;
+  overflow: visible; /* 가장자리 돌 clip 방지 */
   box-shadow:inset 0 0 30px rgba(0,0,0,0.2), 0 4px 24px rgba(0,0,0,0.35);
 }
 /* 19×19 전용 래퍼 */
@@ -167,7 +168,12 @@
   .goban { width:min(100%, min(76vh, 700px)); max-width:100%; }
   .go-board-wrap-19 .goban { width:min(100%, min(84vh, 820px)); max-width:100%; }
 }
-.goban-inner { position:absolute; inset:5%; }
+.goban-inner {
+  position:absolute;
+  /* 격자 간격(100/(n-1))의 절반만큼 여백 → 가장자리 교차점이 정확히 테두리에 위치 */
+  inset: 4%;
+  overflow: visible; /* 가장자리 돌이 clip되지 않도록 */
+}
 .grid-line { position:absolute; background:rgba(0,0,0,0.4); }
 .grid-line-h { left:0; right:0; height:1px; }
 .grid-line-v { top:0; bottom:0; width:1px; }
