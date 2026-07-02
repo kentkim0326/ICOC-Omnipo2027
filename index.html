@@ -581,7 +581,7 @@ footer a { color:var(--gold); text-decoration:none; }
   /* PC: 보드에 맞게 충분히 크게 — 바둑19×19 기준 */
   width: min(860px, calc(100vw - 16px));
   max-height: 96vh;
-  overflow: hidden;
+  overflow: visible; /* 가장자리 돌 clip 방지 */
   display: flex; flex-direction: column;
   box-shadow: 0 24px 64px rgba(0,0,0,.7);
 }
