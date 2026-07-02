@@ -595,7 +595,7 @@ footer a { color:var(--gold); text-decoration:none; }
 .game-modal-body {
   flex: 1;
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: visible; /* 가장자리 돌 clip 방지 */
   box-sizing: border-box;
   padding: 8px 10px;
   /* 스크롤 없이 보드가 꽉 차도록 */
