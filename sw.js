@@ -1,5 +1,5 @@
 /* ICOC Brain Sports — Service Worker v2.1 */
-const CACHE_NAME = 'icoc-omnipo-v3';
+const CACHE_NAME = 'icoc-omnipo-v4';
 
 // Install — 핵심 파일만 캐시
 self.addEventListener('install', e => {
