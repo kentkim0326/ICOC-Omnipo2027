@@ -149,6 +149,19 @@
     document.body.style.overflow = 'hidden';
     game.init();
 
+    // 안전 가드: 게임 구현이 로드 안 됐으면 안내 표시 (빈 모달 방지)
+    setTimeout(() => {
+      const body = document.getElementById('game-modal-body');
+      if (body && body.innerHTML.trim().length < 50) {
+        body.innerHTML = `
+          <div style="text-align:center;padding:60px 20px;">
+            <div style="font-size:44px;margin-bottom:14px;">🛠️</div>
+            <div style="font-size:16px;font-weight:700;color:#F5F0E8;margin-bottom:8px;">준비 중인 종목입니다</div>
+            <div style="font-size:12px;color:rgba(245,240,232,0.5);">곧 플레이하실 수 있도록 준비하고 있어요!</div>
+          </div>`;
+      }
+    }, 600);
+
     // 온라인 지원 종목: 자동 백그라운드 방 생성 (AI 플레이 중 상대 기다리기)
     const _onlineGames = ['omok','go','chess','janggi','shogi','reversi','checkers','hex','quoridor'];
     if (_onlineGames.includes(key) && window.ICOC_AUTH?.getCurrentUser?.() && window.ICOC_ONLINE) {
@@ -207,11 +220,6 @@
   }
 
   // 스피드 큐브 추가
-  GAMES.speedcube = {
-    title: '스피드 큐브 (Speed Cube)',
-    icon: '🎲',
-    init: () => global.SpeedCubeGame && global.SpeedCubeGame.start()
-  };
   global.ICOC_GAMES = { GAMES, openGame, closeGame };
   // 전역 접근 (tryAutoOpenGame, go.js 등)
   global.openGame = openGame;
