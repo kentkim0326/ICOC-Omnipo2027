@@ -517,12 +517,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     </div>
     <style>@keyframes mpspin{to{transform:rotate(360deg);}}</style>`;
 
-  // Supabase 직접 세션 확인
+  // Supabase 직접 세션 확인 (무한 리로드 방지: 1회만 재시도)
   const cfg = window.ICOC_CONFIG;
   if (!cfg || !window.supabase) {
-    setTimeout(() => window.location.reload(), 1500);
+    const retried = sessionStorage.getItem('mp_retry');
+    if (!retried) {
+      sessionStorage.setItem('mp_retry', '1');
+      setTimeout(() => window.location.reload(), 1500);
+    } else {
+      sessionStorage.removeItem('mp_retry');
+      mpBody.innerHTML = `
+        <div style="text-align:center;padding:80px 20px;">
+          <div style="font-size:44px;margin-bottom:14px;">📡</div>
+          <div style="font-size:16px;font-weight:700;color:#F5F0E8;margin-bottom:8px;">연결에 실패했습니다</div>
+          <div style="font-size:12px;color:rgba(245,240,232,0.5);margin-bottom:24px;">네트워크 상태를 확인한 뒤 다시 시도해주세요.</div>
+          <button onclick="sessionStorage.removeItem('mp_retry');location.reload()"
+            style="padding:12px 28px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.4);
+            color:#C9A84C;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;">다시 시도</button>
+        </div>`;
+    }
     return;
   }
+  sessionStorage.removeItem('mp_retry');
 
   const sb = window._ICOC_SB || window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON);
 
