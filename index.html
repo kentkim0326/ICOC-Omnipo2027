@@ -859,10 +859,6 @@ footer a { color:var(--gold); text-decoration:none; }
 .hero-fb  { background:#1877F2; color:#fff; }
 .hero-social-btn:hover { transform:translateY(-2px); opacity:.9; }
 
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(20px); }
-  to   { opacity:1; transform:translateY(0); }
-}
 /* Supabase 자동 위젯 숨기기 */
 [data-supabase-ui], #supabase-auth-modal, .__sb-auth { display:none !important; }
 
@@ -980,7 +976,7 @@ footer a { color:var(--gold); text-decoration:none; }
     <span class="hero-t2" data-i18n="hero_t2">Omnipo</span>
   </h1>
 
-  <div class="hero-year" data-i18n="hero_year">2 0 2 7</div>
+  <div class="hero-year">2 0 2 7</div>
 
   <p class="hero-sub" data-i18n="hero_sub">66개 종목 · 멀티종목 국제 브레인스포츠 옴니포 대회</p>
 
@@ -1836,7 +1832,7 @@ const T = {
     c22n:"Blackjack", c22d:"Get as close to 21 as possible without going over. Played against AI for points only — no betting at ICOC.", c22p:"The world's most popular card game",
     c23n:"Bowling", crn:"Gin Rummy", crd:"Official MSO event. Form runs & sets with 10 cards to reduce deadwood to zero — call GIN!", crp:"Tens of millions worldwide", c23d:"A casual scoring game across 10 frames — whoever scores higher wins. One of the world's most popular recreational sports.", c23p:"100M+ enthusiasts worldwide",
     ab_title:"Why Brain Sports Omnipo?",
-    ab_quote:'"World First.<br>24 Brain Sports.<br>One Stage."',
+    ab_quote:'"World First.<br>66 Brain Sports.<br>One Stage."',
     ab_body:"Go (IGF), Chess (FIDE), Billiards (UMB), Bridge (WBF) — each discipline has millions of international players and a governing body. Yet no event in history has unified them on a single platform. Brain Sports Omnipo 2027 changes that.",
     org_l:"Organizer", org_d:"Incorporated Association under<br>Ministry of Culture, Sports and Tourism (Korea)",
     rm_title:"Tournament Roadmap", rm_body:"Starting in Seoul, expanding across Asia, growing into the global Brain Sports Omnipo.",
@@ -1855,8 +1851,8 @@ const T = {
     hero_sub:"围棋·国际象棋·将棋·台球·桥牌·模拟高尔夫等<br>多项目国际脑力运动锦标赛",
     cta_reg:"联系我们", cta_play:"立即游玩",
     s1:"正式项目", s2:"全球选手", s3:"目标参赛国", s4:"首尔 2027",
-    sp_title:"二十三大官方项目",
-    sp_body:'二十三个项目，一个舞台。标有"▶ PLAY"的卡片可立即与AI对战，无需登录。',
+    sp_title:"66大官方项目",
+    sp_body:'六十六个项目，一个舞台。标有"▶ PLAY"的卡片可立即与AI对战，无需登录。',
     c1n:"围棋", c1d:"拥有数千年历史的战略棋盘游戏。在13x13棋盘上俘获更多对方棋子即可获胜，现在就可以挑战AI！", c1p:"全球6000万玩家",
     c2n:"国际象棋", c2d:"覆盖170个国家、拥有6亿玩家的世界最大脑力运动。将死对方即获胜，现在就可以挑战AI！", c2p:"全球6亿玩家",
     c3n:"韩国将棋", c3d:"韩国传统棋盘游戏，致力于扩大全球影响力。", c3p:"全球1000万玩家",
@@ -1881,7 +1877,7 @@ const T = {
     c22n:"21点 (Blackjack)", c22d:"牌面总和尽量接近21点又不超过的纸牌游戏。ICOC仅与AI比分，不涉及投注。", c22p:"全球最受欢迎的纸牌游戏",
     c23n:"保龄球 (Bowling)", c23d:"十局中得分更高者获胜的休闲计分游戏，是全球最普及的休闲运动之一。", c23p:"全球1亿以上爱好者",
     ab_title:"为什么是Brain Sports全能波？",
-    ab_quote:'"世界首创。<br>24大脑力运动。<br>同台竞技。"',
+    ab_quote:'"世界首创。<br>66大脑力运动。<br>同台竞技。"',
     ab_body:"围棋(IGF)、国际象棋(FIDE)、台球(UMB)、桥牌(WBF)——将这些项目整合于同一平台的国际赛事，迄今为止在全球尚属空白。Brain Sports全能波2027将填补这一历史空白。",
     org_l:"主办机构", org_d:"韩国文化体育观光部认可社团法人",
     rm_title:"赛事路线图", rm_body:"从首尔出发，走向亚洲，迈向世界。",
@@ -1900,8 +1896,8 @@ const T = {
     hero_sub:"囲碁·チェス·チャンギ·ビリヤード·ブリッジ·スクリーンゴルフ他<br>世界初・複数種目国際ブレインスポーツ選手権",
     cta_reg:"お問い合わせ", cta_play:"今すぐプレイ",
     s1:"公式種目", s2:"グローバル競技人口", s3:"参加国目標", s4:"ソウル 2027",
-    sp_title:"24の公式種目",
-    sp_body:'24種目、1つのステージ。「▶ PLAY」表示のカードはログイン不要でAIと即対戦できます。',
+    sp_title:"66の公式種目",
+    sp_body:'66種目、1つのステージ。「▶ PLAY」表示のカードはログイン不要でAIと即対戦できます。',
     c1n:"囲碁", c1d:"数千年の歴史を持つ戦略ボードゲーム。13x13の盤面で相手の石をより多く取れば勝利。今すぐAIと対戦！", c1p:"世界6000万人",
     c2n:"チェス", c2d:"170カ国・6億人が楽しむ世界最大のマインドスポーツ。チェックメイトで勝負が決まります。今すぐAIと対戦！", c2p:"世界6億人",
     c3n:"チャンギ", c3d:"韓国固有の伝統ボードゲーム。グローバルな普及を目指します。", c3p:"世界1000万人",
@@ -1926,7 +1922,7 @@ const T = {
     c22n:"ブラックジャック (Blackjack)", c22d:"カードの合計が21を超えない範囲で最も近づけるカードゲーム。ICOCでは賭けなしでAIとスコアのみ対戦。", c22p:"世界で最も人気なカードゲーム",
     c23n:"ボウリング (Bowling)", c23d:"10フレームでより高い得点を出した方が勝つカジュアルなスコアゲーム。世界で最も大衆的なレジャースポーツ。", c23p:"世界1億人以上の愛好家",
     ab_title:"なぜBrain Sports Omnipoなのか",
-    ab_quote:'"世界初。<br>24のブレインスポーツを<br>ひとつの舞台で。"',
+    ab_quote:'"世界初。<br>66のブレインスポーツを<br>ひとつの舞台で。"',
     ab_body:"囲碁(IGF)、チェス(FIDE)、ビリヤード(UMB)、ブリッジ(WBF) — これら種目を一つのプラットフォームで統合運営する国際大会は、世界に前例がありません。Brain Sports Omnipo 2027がその歴史を刻みます。",
     org_l:"主催機関", org_d:"文化体育観光部認可社団法人<br>Ministry of Culture, Sports and Tourism (Korea)",
     rm_title:"大会ロードマップ", rm_body:"ソウルから始まり、アジアへ、そして世界へ。",
