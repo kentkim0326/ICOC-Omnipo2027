@@ -181,7 +181,7 @@
         .from('icoc_profiles')
         .select('points')
         .eq('id', currentUser.id)
-        .single();
+        .maybeSingle();
       if (data && data.points !== undefined) {
         // 로컬 포인트가 DB보다 낮으면 DB 기준으로 업데이트
         const localPts = parseInt(localStorage.getItem('icoc_points') || '0');
