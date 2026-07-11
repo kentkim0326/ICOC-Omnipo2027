@@ -196,6 +196,8 @@ body{ background:var(--navy); color:var(--cream); font-family:'Noto Sans KR',san
 
 .page-end{ height:40px; }
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<script src="js/config.js"></script>
 </head>
 <body>
 
@@ -424,6 +426,60 @@ const PERSONAL=[
 ];
 
 /* ── State ── */
+/* ── 실시간 DB 랭킹 ── */
+function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+const FLAG_MAP = {'대한민국':'🇰🇷','미국':'🇺🇸','일본':'🇯🇵','중국':'🇨🇳','영국':'🇬🇧','프랑스':'🇫🇷','독일':'🇩🇪','캐나다':'🇨🇦','호주':'🇦🇺','브라질':'🇧🇷','인도':'🇮🇳','러시아':'🇷🇺','인도네시아':'🇮🇩','멕시코':'🇲🇽','스페인':'🇪🇸','이탈리아':'🇮🇹','네덜란드':'🇳🇱','스웨덴':'🇸🇪','노르웨이':'🇳🇴','폴란드':'🇵🇱','태국':'🇹🇭','베트남':'🇻🇳','필리핀':'🇵🇭','말레이시아':'🇲🇾','싱가포르':'🇸🇬','홍콩':'🇭🇰','대만':'🇹🇼','아르헨티나':'🇦🇷','터키':'🇹🇷','이집트':'🇪🇬','사우디아라비아':'🇸🇦','남아프리카공화국':'🇿🇦','나이지리아':'🇳🇬','케냐':'🇰🇪'};
+
+let LIVE = { players: null, myRank: null, loading: false };
+
+async function loadLiveRanking(){
+  if (LIVE.loading || LIVE.players !== null) return;
+  LIVE.loading = true;
+  try {
+    if (!window.supabase || !window.ICOC_CONFIG) throw new Error('no sdk');
+    const sb = window._ICOC_SB || window.supabase.createClient(
+      window.ICOC_CONFIG.SUPABASE_URL, window.ICOC_CONFIG.SUPABASE_ANON);
+    window._ICOC_SB = sb;
+
+    const { data, error } = await sb
+      .from('icoc_profiles')
+      .select('nickname, country, city, generation, main_sports, points, avatar_url')
+      .order('points', { ascending: false })
+      .limit(100);
+    if (error) throw error;
+    LIVE.players = (data || []).filter(p => p.nickname);
+
+    // 내 순위 계산 (로그인 상태면)
+    try {
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        const me = await sb.from('icoc_profiles').select('points,nickname,country,city').eq('id', session.user.id).maybeSingle();
+        if (me.data) {
+          const { count } = await sb.from('icoc_profiles')
+            .select('id', { count: 'exact', head: true })
+            .gt('points', me.data.points);
+          LIVE.myRank = { rank: (count || 0) + 1, ...me.data };
+        }
+      }
+    } catch(e){}
+
+    // 개인 탭 보고 있으면 다시 그리기
+    if (curScope === 'personal') render();
+    else updateMyRankCard();
+  } catch(e) {
+    LIVE.players = []; // 실패 → 샘플 폴백
+  }
+  LIVE.loading = false;
+}
+
+function updateMyRankCard(){
+  const numEl = document.querySelector('.my-rank-num');
+  const infoEl = document.querySelector('.my-rank-info p');
+  if (numEl && LIVE.myRank) numEl.textContent = '#' + LIVE.myRank.rank;
+  if (infoEl && LIVE.myRank) infoEl.textContent =
+    (FLAG_MAP[LIVE.myRank.country]||'🌍') + ' ' + LIVE.myRank.country + (LIVE.myRank.city ? ' · ' + LIVE.myRank.city : '');
+}
+
 let curScope = 'country';
 let curSport = 'all';
 let curCat   = 'all';
@@ -489,10 +545,10 @@ function render(){
   const myPts = window.ICOC_POINTS ? ICOC_POINTS.getState().total : 0;
   wrap.innerHTML += `
     <div class="my-rank-card">
-      <div class="my-rank-num">#${Math.floor(Math.random()*50)+10}</div>
+      <div class="my-rank-num">${LIVE.myRank ? '#'+LIVE.myRank.rank : '—'}</div>
       <div class="my-rank-info">
         <h3>나의 현재 순위 <span style="font-size:10px;color:rgba(245,240,232,0.4);">(${curScope==='country'?'국가별':curScope==='city'?'도시별':curScope==='district'?'동네별':'개인'}${curSport!=='all'?' · '+( ALL_SPORTS.find(s=>s.id===curSport)?.name||''):''})</span></h3>
-        <p>🇰🇷 대한민국 · 서울</p>
+        <p>${LIVE.myRank ? esc((FLAG_MAP[LIVE.myRank.country]||'🌍')+' '+LIVE.myRank.country+(LIVE.myRank.city?' · '+LIVE.myRank.city:'')) : '로그인하면 실제 순위가 표시됩니다'}</p>
       </div>
       <div class="my-rank-pts">${fmtPts(myPts)}<span>내 포인트</span></div>
     </div>`;
@@ -793,6 +849,18 @@ function toggleGen(id) {
 
 
 function renderPersonal(wrap){
+  // ── 실데이터 있으면 실데이터, 없으면 샘플 ──
+  if (LIVE.players === null) {
+    loadLiveRanking();
+    wrap.innerHTML += `<div class="lb-sec">👑 실시간 랭킹 불러오는 중...</div>`;
+  }
+  if (LIVE.players && LIVE.players.length >= 3) {
+    return renderPersonalLive(wrap);
+  }
+  if (LIVE.players && LIVE.players.length > 0 && LIVE.players.length < 3) {
+    // 유저 3명 미만: 실유저 + 샘플 혼합 대신 안내 배너 + 샘플
+    wrap.innerHTML += `<div style="text-align:center;padding:8px 12px;margin-bottom:12px;background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.2);border-radius:10px;font-size:11px;color:rgba(245,240,232,0.6);">🔥 현재 등록 플레이어 ${LIVE.players.length}명 — 지금 가입하면 초기 랭커가 될 수 있습니다!</div>`;
+  }
   const top3=PERSONAL.slice(0,3), rest=PERSONAL.slice(3);
   wrap.innerHTML+=`<div class="lb-sec">👑 TOP 3 플레이어</div>`;
   const pod=document.createElement('div'); pod.className='podium';
@@ -828,9 +896,55 @@ function renderPersonal(wrap){
   wrap.appendChild(list);
 }
 
+function renderPersonalLive(wrap){
+  const P = LIVE.players;
+  const top3 = P.slice(0,3), rest = P.slice(3);
+  const myNick = LIVE.myRank ? LIVE.myRank.nickname : null;
+
+  wrap.innerHTML += `<div class="lb-sec">👑 TOP 3 플레이어 <span style="font-size:9px;color:#5dc85d;margin-left:4px;">● LIVE</span></div>`;
+  const pod=document.createElement('div'); pod.className='podium';
+  [top3[1],top3[0],top3[2]].forEach((d,i)=>{
+    if(!d) return;
+    const ri=i===1?1:(i===0?2:3);
+    const flag = FLAG_MAP[d.country] || '🌍';
+    const sport = (d.main_sports && d.main_sports[0]) || '';
+    pod.innerHTML+=`
+      <div class="p-item r${ri}">
+        <div class="p-badge">${ri}</div>
+        <div class="p-avatar">${d.avatar_url?`<img src="${esc(d.avatar_url)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" alt="">`:flag}</div>
+        <div class="p-nick">${esc(d.nickname)}</div>
+        <div style="font-size:10px;color:rgba(245,240,232,0.4);">${esc(sport)}</div>
+        <div class="p-pts">${fmtPts(d.points||0)}</div>
+        <div class="p-base"></div>
+      </div>`;
+  });
+  wrap.appendChild(pod);
+
+  wrap.innerHTML+=`<div class="lb-sec">🏅 개인 랭킹 4위 ~ <span style="font-size:9px;color:rgba(245,240,232,0.35);">(총 ${P.length}명)</span></div>`;
+  const list=document.createElement('div'); list.className='rank-list';
+  rest.forEach((d,idx)=>{
+    const flag = FLAG_MAP[d.country] || '🌍';
+    const sport = (d.main_sports && d.main_sports[0]) || '';
+    const isMe = myNick && d.nickname === myNick;
+    list.innerHTML+=`
+      <div class="rank-item" ${isMe?'style="border:1px solid rgba(201,168,76,0.5);background:rgba(201,168,76,0.07);"':''}>
+        <div class="r-num">${idx+4}</div>
+        <div class="r-flag">${flag}</div>
+        <div class="r-info">
+          <div class="r-nick">${esc(d.nickname)}${isMe?' <span style="font-size:9px;color:#C9A84C;">← 나</span>':''}</div>
+          <div class="r-sub"><span>${esc(d.city||d.country||'')}</span>${sport?`<span class="r-tag">${esc(sport)}</span>`:''}${d.generation?`<span>${esc(d.generation)}</span>`:''}</div>
+        </div>
+        <div class="r-chg"><span class="eq">—</span></div>
+        <div class="r-pts">${fmtPts(d.points||0)}<small>pts</small></div>
+      </div>`;
+  });
+  wrap.appendChild(list);
+}
+
 // Init
 buildSportPills('all');
 render();
+loadLiveRanking();
 </script>
 
 <script>
